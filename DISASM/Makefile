@@ -1,4 +1,3 @@
-
 CFLAGS = -g -c -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equal -Winline \
 		 -Wunreachable-code -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default \
  		 -Weffc++ -Wmain -Wextra -Wall -g -pipe -fexceptions -Wcast-qual -Wconversion -Wctor-dtor-privacy \
@@ -9,7 +8,7 @@ CFLAGS = -g -c -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wflo
 EXE_FLAG = valgrind -s --leak-check=yes --show-leak-kinds=all --log-file="valgrind_log.txt"
 
 CC = g++
-TARGET = CPU
+TARGET = DISASM
 
 
 PREF_OBJ = ./obj/
@@ -27,11 +26,10 @@ $(PREF_OBJ)%.o : $(PREF_SRC)%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run_program :
-	$(EXE_FLAG) ./$(TARGET).exe
+	$(EXE_FLAG) ./$(TARGET).exe 
 
-open_files: 
-	code ./valgrind_log.txt
-
+open_files : 
+	code ./test_code.txt ./test.asm ./valgrind_log.txt
 
 clean : 
-	rm $(TARGET).exe $(PREF_OBJ)*.o valgrind_log.txt
+	rm $(TARGET).exe $(PREF_OBJ)*.o valgrind_log.txt test.asm

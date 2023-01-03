@@ -17,7 +17,7 @@ PREF_SRC = ./src/
 SRC = $(wildcard $(PREF_SRC)*.cpp)
 OBJ = $(patsubst $(PREF_SRC)%.cpp, $(PREF_OBJ)%.o, $(SRC))
 
-all : $(TARGET) run_program open_files
+all : $(TARGET) run_program 
 
 $(TARGET) : $(OBJ) 
 	$(CC) $(OBJ) -o $(TARGET).exe

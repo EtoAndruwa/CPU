@@ -11,20 +11,29 @@ EXE_FLAG = valgrind -s --leak-check=yes --show-leak-kinds=all --log-file="valgri
 CC = g++
 TARGET = CPU
 
-
+PREF_STK = ../STACK/src/
 PREF_OBJ = ./obj/
 PREF_SRC = ./src/
 
 SRC = $(wildcard $(PREF_SRC)*.cpp)
-OBJ = $(patsubst $(PREF_SRC)%.cpp, $(PREF_OBJ)%.o, $(SRC))
+STK_SRC = $(wildcard $(PREF_STK)*.cpp)
+
+CPU_OBJ = $(patsubst $(PREF_SRC)%.cpp, $(PREF_OBJ)%.o, $(SRC))
+STK_OBJ = $(patsubst $(PREF_STK)%.cpp, $(PREF_OBJ)%.o, $(STK_SRC))
+
+OBJ = $(CPU_OBJ) $(STK_OBJ)
 
 all : $(TARGET) run_program open_files
 
-$(TARGET) : $(OBJ) 
+$(TARGET) : $(OBJ) 	
 	$(CC) $(OBJ) -o $(TARGET).exe
 
 $(PREF_OBJ)%.o : $(PREF_SRC)%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(PREF_OBJ)%.o : $(PREF_STK)%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
 
 run_program :
 	$(EXE_FLAG) ./$(TARGET).exe

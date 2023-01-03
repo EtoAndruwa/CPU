@@ -5,14 +5,15 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-// #include "../Stack/stack.h"
+
+#include "../../STACK/src/stack.h"
 
 
 typedef struct
 {
-    // stack_type ax = 0;
-    // stack_type bx = 0;
-    // stack_type cx = 0;
+    stack_type ax = 0;
+    stack_type bx = 0;
+    stack_type cx = 0;
 }CPU;   
 
 #endif // CPU_H

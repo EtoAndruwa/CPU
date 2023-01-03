@@ -2,11 +2,12 @@
 
 int main()
 {
-    printf("ITS ALIVE\n");
-    // Stack stack = {}; 
-    // StackCtor(&stack);
-    // StackPush(&stack, 5);
-    // StackPrint(&stack);
-    // StackDtor(&stack);
+    Stack st = {};
+    StackCtor(&st);
+    StackPrint(&st);
+    StackPush(&st, 5);
+    StackPrint(&st);
+    StackDtor(&st);
+
     return 0;
 }

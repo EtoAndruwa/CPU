@@ -1,8 +1,5 @@
 #include  "stack.h"
 
-#define FUNC_NAME __func__ // Used in order to get name of the function which called the error
-#define FUNC_LINE __LINE__ // Used in order to get the line from which the error was called
-
 void StackCtor(Stack * st) // (OK) Creates and initializes stack
 {   
     st->capacity = 5;

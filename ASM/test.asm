@@ -1,13 +1,7 @@
-PUSH 5
-PUSH 460
+PUSH 10
+ADD
+PUSH 5.000023
+POP 3,asdasd
 MUL
+OUT
 HLT
-
-
-
-
-
-
-
-
-

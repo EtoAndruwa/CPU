@@ -1,9 +1,14 @@
-PUSH ax ADD
-POP cx  3
-ADD 
-:2
-MUL
+PUSH ax
+ADD
+JMP :6
+POP ax
+ADD
+:6
+MUL 
 HLT
 DIV
-JMP: 3
+JMP :3
+ADD
+MUL
+:3
 HLT

@@ -23,6 +23,9 @@ const char* enum_token_err_to_string(size_t code) // (OK) Сonverts an enum's in
         case ERR_INVALID_FLAG:
             return "ERR_INVALID_FLAG";
             break;
+        case ERR_NO_FLAG_TO_JMP:
+            return "ERR_NO_FLAG_TO_JMP";
+            break;
         default:
             return "NEW_ERROR_CODE";
             break;        
@@ -78,6 +81,9 @@ const char* enum_type_to_string(size_t code) // (OK) Сonverts an enum's int val
             break;
         case val:
             return "val";
+            break;  
+        case flg:
+            return "flg";
             break;
         default:
             return "---";

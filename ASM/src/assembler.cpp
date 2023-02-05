@@ -74,7 +74,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i) // Puts appropriate 
         }
         else
         {   
-            if(strcmp(assembly_struct->toks[i+1].text, "ax") == 0 || strcmp(assembly_struct->toks[i+1].text, "bx") == 0 || strcmp(assembly_struct->toks[i+1].text, "cx") == 0)
+            if(strcmp(assembly_struct->toks[i+1].text, "ax") == 0 || strcmp(assembly_struct->toks[i+1].text, "bx") == 0 || strcmp(assembly_struct->toks[i+1].text, "cx") == 0 || strcmp(assembly_struct->toks[i+1].text, "dx") == 0)
             {
                 assembly_struct->toks[i].value = 1 | (1 << 6);
                 assembly_struct->toks[i].type = cmd;
@@ -267,6 +267,57 @@ void get_token_value(asm_struct* assembly_struct, size_t i) // Puts appropriate 
             assembly_struct->toks[i].error_code = ERR_INVALID_FLAG;;
         }
     }
+    else if(strcmp(assembly_struct->toks[i].text, "JMPR") == 0)
+    {
+        if(strcmp(assembly_struct->toks[i+1].text, "rax") == 0 || strcmp(assembly_struct->toks[i+1].text, "rbx") == 0 || strcmp(assembly_struct->toks[i+1].text, "rcx") == 0)
+            {
+                assembly_struct->toks[i].value = 32;
+                assembly_struct->toks[i].type = cmd;
+                strcpy((char*)assembly_struct->toks[i].status, "OK");
+            }
+            else
+            {
+                strcpy((char*)assembly_struct->toks[i].status, "--");
+                assembly_struct->toks[i].error_code = ERR_INVALID_REG;
+            }
+    }
+    else if((strcmp(assembly_struct->toks[i].text, "rax") == 0) || (strcmp(assembly_struct->toks[i].text, "rbx") == 0) || (strcmp(assembly_struct->toks[i].text, "rcx") == 0))
+    {
+        if(strcmp(assembly_struct->toks[i].text, "rax") == 0)
+        {
+            assembly_struct->toks[i].value = 25; 
+
+        }
+        else if(strcmp(assembly_struct->toks[i].text, "rbx") == 0)
+        {
+            assembly_struct->toks[i].value = 26;
+        }
+        else if(strcmp(assembly_struct->toks[i].text, "rcx") == 0)
+        {
+            assembly_struct->toks[i].value = 27;
+        }
+        assembly_struct->toks[i].type = reg;
+        strcpy((char*)assembly_struct->toks[i].status, "OK");
+    }
+    else if(strcmp(assembly_struct->toks[i].text, "CALL") == 0)
+    {
+        if((check_next_token(assembly_struct, i) == 0) && (assembly_struct->toks[i+1].text[(strlen(assembly_struct->toks[i+1].text) - 1)] == ':'))
+        {
+            assembly_struct->toks[i].value = 30;
+            assembly_struct->toks[i].type = cmd;
+            strcpy((char*)assembly_struct->toks[i].status, "OK");
+        }
+        else
+        {
+            strcpy((char*)assembly_struct->toks[i].status, "--");
+            assembly_struct->toks[i].error_code = ERR_NO_FNC_NAME;
+        }
+    }
+    else if(assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':')
+    {
+        assembly_struct->toks[i].type = fnc;
+        strcpy((char*)assembly_struct->toks[i].status, "OK");
+    }
     else
     {
         strcpy((char*)assembly_struct->toks[i].status, "--");
@@ -374,7 +425,7 @@ void translate_to_asm(asm_struct* assembly_struct) // (OK) Gets asm codes for al
 
 void write_asm(asm_struct* assembly_struct) // (OK) Writes all asm code into the translated file
 {
-    if(check_all_valid(assembly_struct) && check_flags(assembly_struct))
+    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct))
     {
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
         {
@@ -388,7 +439,11 @@ void write_asm(asm_struct* assembly_struct) // (OK) Writes all asm code into the
             {
                 fprintf(assembly_struct->translated_file, "%s\n", assembly_struct->toks[i].text);
             }
-            else
+            else if(assembly_struct->toks[i].type == fnc)
+            {
+                fprintf(assembly_struct->translated_file, "%s\n", assembly_struct->toks[i].text);
+            }
+            else 
             {
                 fprintf(assembly_struct->translated_file, "%d\n", assembly_struct->toks[i].value);
             }

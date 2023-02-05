@@ -113,3 +113,44 @@ size_t check_flags(asm_struct* assembly_struct) // (OK) Checks all flags
     //printf("flag_ok: %d\n", flags_ok);
     return flags_ok; // Returns 1 if all flags are ok
 }
+
+size_t check_func(asm_struct* assembly_struct)
+{
+    size_t funcs_ok = 1;
+
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    {   
+        if(strcmp(assembly_struct->toks[i].text, "CALL") == 0)
+        {
+            char* func_name = assembly_struct->toks[i+1].text;
+            //printf("\nfunc_name: %s\n", func_name);
+            //printf("func_flag_num: %d\n\n", i);
+            for(size_t j = 0; j < assembly_struct->num_toks ; j++)
+            {   
+                if(assembly_struct->toks[j].type == fnc)
+                {   
+                    //printf("tok_j_num: %d\n", j);
+                    if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0)))
+                    {   
+                        funcs_ok = 1;
+                        //printf("Result of search: %d\n\n", funcs_ok);
+                        break;
+                    }
+                    else 
+                    {
+                        funcs_ok = 0;
+                        //printf("Result of search: %d\n", funcs_ok);    
+                    }
+                }
+            }
+            if(funcs_ok == 0)
+            {   
+                assembly_struct->toks[i].error_code = ERR_CALLS_NON_EXISTEN;
+                strcpy((char*)assembly_struct->toks[i].status, "--");
+                //printf("assembly_struct->toks[i].error_code: %d\n", assembly_struct->toks[i].error_code);
+            }
+        }
+    }
+
+    return funcs_ok;
+}

@@ -14,6 +14,13 @@
 |0012|		JMP 		|    cmd     |011|      OK      |
 |0013|		:3  		|    flg     |000|      OK      |
 |0014|		ADD 		|    cmd     |003|      OK      |
-|0015|		MUL 		|    cmd     |005|      OK      |
-|0016|		:3  		|    flg     |000|      OK      |
-|0017|		HLT 		|    cmd     |000|      OK      |
+|0015|		ABV:		|    fnc     |000|      OK      |
+|0016|		MUL 		|    cmd     |005|      OK      |
+|0017|		:3  		|    flg     |000|      OK      |
+|0018|		MUL 		|    cmd     |005|      OK      |
+|0019|		ADD 		|    cmd     |003|      OK      |
+|0020|		JMPR		|    cmd     |032|      OK      |
+|0021|		rcx 		|    reg     |027|      OK      |
+|0022|		CALL		|    cmd     |030|      OK      |
+|0023|		ABV:		|    fnc     |000|      OK      |
+|0024|		HLT 		|    cmd     |000|      OK      |

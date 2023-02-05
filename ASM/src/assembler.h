@@ -32,10 +32,11 @@ enum asm_errors // The enum used in order to determine the type of error connect
 enum type // The enum used in order to determine the type of token (command, register or value)
 {
     empty = 0, // for initializing
-    cmd = 1,   // 'command'
-    reg = 2,   // 'register'
-    val = 3,   // 'value' 
-    flg = 4    // 'flag'
+    cmd   = 1,   // 'command'
+    reg   = 2,   // 'register'
+    val   = 3,   // 'value' 
+    flg   = 4,    // 'flag'
+    fnc   = 5
 };
 
 enum token_error_code // The enum is used in order to determine the error connected with token
@@ -46,12 +47,11 @@ enum token_error_code // The enum is used in order to determine the error connec
     ERR_TOKEN_WITH_VALUE     = 3, // Example: 'PUSH ______'
     ERR_NO_FLAG              = 4,
     ERR_INVALID_FLAG         = 5,
-    ERR_NO_FLAG_TO_JMP       = 6
+    ERR_NO_FLAG_TO_JMP       = 6,
+    ERR_INVALID_REG          = 7,
+    ERR_CALLS_NON_EXISTEN    = 8,
+    ERR_NO_FNC_NAME          = 9
 };
-
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 typedef struct tokens
@@ -101,6 +101,8 @@ void count_num_of_lines_in_buf(asm_struct* assembly_struct);                    
 size_t check_brackets(char* token_text);
 size_t check_num_int(char* num_text);                                                               // (OK) Checks does the number contain only digits (in integer)
 size_t check_flags(asm_struct* assembly_struct);
+size_t check_func(asm_struct* assembly_struct);
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 

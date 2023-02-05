@@ -9,6 +9,11 @@ HLT
 DIV
 JMP :3
 ADD
+ABV:
 MUL
 :3
+MUL
+ADD
+JMPR rcx
+CALL ABV:
 HLT

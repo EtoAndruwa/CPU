@@ -42,15 +42,20 @@ enum token_error_code // The enum is used in order to determine the error connec
     TOKEN_OK                 = 0, // Example: 'PUSH 10'
     ERR_INVALID_TOKEN        = 1, // Example: 'asdfadfas'
     ERR_TOKEN_WITHOUT_VALUE  = 2, // Example: 'POP 10'
-    ERR_TOKEN_WITH_VALUE     = 3  // Example: 'PUSH ______'
+    ERR_TOKEN_WITH_VALUE     = 3, // Example: 'PUSH ______'
+    ERR_NO_FLAG              = 4,
+    ERR_INVALID_FLAG         = 5
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 typedef struct tokens
 {
     char* text           = nullptr;   // The pointer to the string containing text of the token
-    size_t value         = 0;         // The value reponsible for asm code of the token
+    char value           = 0;         // The value reponsible for asm code of the token
     size_t type          = 0;         // The value responsible for type of token ('cmd','reg', 'val')
     const char status[3] = {};        // The value responsible for status (valid/invalid) of token ('OK', '---')
     size_t error_code    = TOKEN_OK;  // The value responsible for error code of the token
@@ -63,8 +68,8 @@ typedef struct asm_struct
     FILE* asm_file        = nullptr;   // The pointer to the file with assembly code 
     FILE* translated_file = nullptr;   // The pointer to the file with translated code 
     tokens* toks          = nullptr;   // The pointer to the array with tokens
-    char** arr_lines      = nullptr;
-    size_t position_in_buffer = 0;
+    char** arr_lines      = nullptr;   //
+    size_t position_in_buffer = 0;     // 
     size_t err_code       = STRUCT_OK; // The error code of program
     size_t size           = 0;         // The size of the assembly file
     size_t num_toks       = 1;         // The total number of tokens
@@ -93,6 +98,8 @@ const char* enum_token_err_to_string(size_t code);                              
 void write_asm(asm_struct* assembly_struct);                                                        // (OK) Cheks all token for being valid
 size_t check_all_valid(asm_struct* assembly_struct);                                                // (OK) Writes all asm code into the translated file
 void count_num_of_lines_in_buf(asm_struct* assembly_struct);                                        // (OK) Counts the number of lines
+size_t check_brackets(char* token_text);
+size_t check_num_int(char* num_text);                                                               // (OK) Checks does the number contain only digits (in integer)
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

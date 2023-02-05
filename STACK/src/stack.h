@@ -1,13 +1,19 @@
 #ifndef STACK_H
 #define STACK_H
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #define FUNC_NAME __func__ // Used in order to get name of the function which called the error
 #define FUNC_LINE __LINE__ // Used in order to get the line from which the error was called
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 typedef double stack_type;
 
@@ -38,6 +44,7 @@ enum error_list_codes
     ERR_HASH_CHANGED       = 6
 };
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 const char* Enum_to_string(size_t code);                              // (OK) Converts an enum's int value to the enum's string value
 stack_type StackPop(Stack* st);                                       // (OK) Deletes the value from the stack
@@ -59,5 +66,7 @@ void StackRealocDown(Stack* st);                                      // (OK) De
 void Calculate_hash(Stack* st);                                       // (OK) Recalculates the value of hash everytime when called
 void StackOut(Stack * st);                                            // (OK) Prints the stack's current structure in the console
 void StackSqrt(Stack * st);                                           // (OK) Gets the root of the value 
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #endif // STACK_H

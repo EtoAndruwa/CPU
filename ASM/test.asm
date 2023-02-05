@@ -1,6 +1,9 @@
-PUSH .02
-ADD
+PUSH ax ADD
+POP cx  3
+ADD 
+:2
 MUL
-DIV 
-OUT
+HLT
+DIV
+JMP: 3
 HLT

@@ -114,7 +114,7 @@ size_t check_flags(asm_struct* assembly_struct) // (OK) Checks all flags
     return flags_ok; // Returns 1 if all flags are ok
 }
 
-size_t check_func(asm_struct* assembly_struct)
+size_t check_func(asm_struct* assembly_struct) // (OK) Checks all function declarations for double declaration
 {
     size_t funcs_ok = 1;
 
@@ -123,34 +123,68 @@ size_t check_func(asm_struct* assembly_struct)
         if(strcmp(assembly_struct->toks[i].text, "CALL") == 0)
         {
             char* func_name = assembly_struct->toks[i+1].text;
-            //printf("\nfunc_name: %s\n", func_name);
-            //printf("func_flag_num: %d\n\n", i);
             for(size_t j = 0; j < assembly_struct->num_toks ; j++)
             {   
                 if(assembly_struct->toks[j].type == fnc)
                 {   
-                    //printf("tok_j_num: %d\n", j);
                     if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0)))
                     {   
                         funcs_ok = 1;
-                        //printf("Result of search: %d\n\n", funcs_ok);
                         break;
                     }
                     else 
                     {
-                        funcs_ok = 0;
-                        //printf("Result of search: %d\n", funcs_ok);    
+                        funcs_ok = 0; 
                     }
                 }
             }
             if(funcs_ok == 0)
             {   
-                assembly_struct->toks[i].error_code = ERR_CALLS_NON_EXISTEN;
+                assembly_struct->toks[i].error_code = ERR_CALLS_NON_EXISTEN_FNC;
                 strcpy((char*)assembly_struct->toks[i].status, "--");
-                //printf("assembly_struct->toks[i].error_code: %d\n", assembly_struct->toks[i].error_code);
             }
         }
     }
 
-    return funcs_ok;
+    return funcs_ok; // Returns 1 if all CALL cmd calls declared functions 
+}
+
+size_t check_fnc_declaration(asm_struct* assembly_struct)
+{
+    size_t declaration_ok = 1; 
+
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    {   
+        size_t positon_of_first_decl = i;
+        if((assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') && (strcmp(assembly_struct->toks[i-1].text, "CALL") != 0))
+        {
+            char* func_name = assembly_struct->toks[i].text;
+            for(size_t j = i + 1; j < assembly_struct->num_toks ; j++)
+            {   
+                if(assembly_struct->toks[j].type == fnc)
+                {   
+                    if((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0))
+                    {   
+                        i = j;
+                        declaration_ok = 0;
+                        assembly_struct->toks[j].error_code = ERR_DOUBLE_DECL_OF_FNC;
+                        strcpy((char*)assembly_struct->toks[i].status, "--");
+                        break;
+                    }
+                    else 
+                    {
+                        declaration_ok = 1;  
+                    }
+                }
+            }
+            if(declaration_ok == 0)
+            {   
+                assembly_struct->toks[positon_of_first_decl].error_code = ERR_FIRST_DECL_OF_FNC;
+                strcpy((char*)assembly_struct->toks[positon_of_first_decl].status, "--");
+                break;
+            }
+        }
+    }    
+
+    return declaration_ok; // Returns 1 if all declarations of function are uniqe
 }

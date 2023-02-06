@@ -29,11 +29,17 @@ const char* enum_token_err_to_string(size_t code) // (OK) Сonverts an enum's in
         case ERR_INVALID_REG:
             return "ERR_INVALID_REG";
             break;
-        case ERR_CALLS_NON_EXISTEN:
-            return "ERR_CALLS_NON_EXISTEN";
+        case ERR_CALLS_NON_EXISTEN_FNC:
+            return "ERR_CALLS_NON_EXISTEN_FNC";
             break;
         case ERR_NO_FNC_NAME:
             return "ERR_NO_FNC_NAME";
+            break;
+        case ERR_DOUBLE_DECL_OF_FNC:
+            return "ERR_DOUBLE_DECL_OF_FNC";
+            break;
+        case ERR_FIRST_DECL_OF_FNC:
+            return "ERR_FIRST_DECL_OF_FNC";
             break;
         default:
             return "NEW_ERROR_CODE";

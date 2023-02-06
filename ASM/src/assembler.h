@@ -29,8 +29,12 @@ enum asm_errors // The enum used in order to determine the type of error connect
     ERR_CLOSE_LOG_FILE        = 9
 };
 
-enum type // The enum used in order to determine the type of token (command, register or value)
-{
+/**
+ * @brief The enum used in order to determine the type of token (command, register or value)
+
+ * 
+ */
+enum type{
     empty = 0, // for initializing
     cmd   = 1,   // 'command'
     reg   = 2,   // 'register'
@@ -39,21 +43,31 @@ enum type // The enum used in order to determine the type of token (command, reg
     fnc   = 5
 };
 
-enum token_error_code // The enum is used in order to determine the error connected with token
+/**
+ * @brief The enum is used in order to determine the error connected with token
+ * 
+ */
+enum token_error_code 
 {
-    TOKEN_OK                 = 0, // Example: 'PUSH 10'
-    ERR_INVALID_TOKEN        = 1, // Example: 'asdfadfas'
-    ERR_TOKEN_WITHOUT_VALUE  = 2, // Example: 'POP 10'
-    ERR_TOKEN_WITH_VALUE     = 3, // Example: 'PUSH ______'
-    ERR_NO_FLAG              = 4,
-    ERR_INVALID_FLAG         = 5,
-    ERR_NO_FLAG_TO_JMP       = 6,
-    ERR_INVALID_REG          = 7,
-    ERR_CALLS_NON_EXISTEN    = 8,
-    ERR_NO_FNC_NAME          = 9
+    TOKEN_OK                     = 0,  // Example: 'PUSH 10'
+    ERR_INVALID_TOKEN            = 1,  // Example: 'asdfadfas'
+    ERR_TOKEN_WITHOUT_VALUE      = 2,  // Example: 'POP 10'
+    ERR_TOKEN_WITH_VALUE         = 3,  // Example: 'PUSH ______'
+    ERR_NO_FLAG                  = 4,  // 
+    ERR_INVALID_FLAG             = 5,  // 
+    ERR_NO_FLAG_TO_JMP           = 6,  // 
+    ERR_INVALID_REG              = 7,  // 
+    ERR_CALLS_NON_EXISTEN_FNC    = 8,  // 
+    ERR_NO_FNC_NAME              = 9,  //
+    ERR_DOUBLE_DECL_OF_FNC       = 10, // 
+    ERR_FIRST_DECL_OF_FNC        = 11  //
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/**
+ * @brief 
+ * 
+ */
 typedef struct tokens
 {
     char* text           = nullptr;   // The pointer to the string containing text of the token
@@ -64,6 +78,10 @@ typedef struct tokens
     size_t line_number   = 0;         // The value responsible for the number of the command's line 
 }tokens;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct asm_struct
 {
     char* asm_buf         = nullptr;   // The pointer to the buffer with commands
@@ -97,11 +115,46 @@ size_t check_next_token(asm_struct* assembly_struct, size_t i);                 
 const char* enum_token_err_to_string(size_t code);                                                  // (OK) Сonverts an enum's int value to the enum's string value
 void write_asm(asm_struct* assembly_struct);                                                        // (OK) Cheks all token for being valid
 size_t check_all_valid(asm_struct* assembly_struct);                                                // (OK) Writes all asm code into the translated file
-void count_num_of_lines_in_buf(asm_struct* assembly_struct);                                        // (OK) Counts the number of lines
+void count_num_of_lines_in_buf(asm_struct* assembly_struct); 
+/**
+ * @brief 
+ * 
+ * @param token_text 
+ * @return size_t 
+ */
 size_t check_brackets(char* token_text);
-size_t check_num_int(char* num_text);                                                               // (OK) Checks does the number contain only digits (in integer)
+
+/**
+ * @brief 
+ * 
+ * @param num_text 
+ * @return size_t 
+ */
+size_t check_num_int(char* num_text); 
+
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ * @return size_t 
+ */
 size_t check_flags(asm_struct* assembly_struct);
+
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ * @return size_t 
+ */
 size_t check_func(asm_struct* assembly_struct);
+
+/**
+ * @brief (OK) Checks all function declarations for double declaration
+ * 
+ * @param assembly_struct 
+ * @return size_t - 1 if all declarations are uniqe, 0 if double declarations occured
+ */
+size_t check_func(asm_struct* assembly_struct); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

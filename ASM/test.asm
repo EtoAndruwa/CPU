@@ -2,6 +2,7 @@ PUSH ax
 ADD
 JMP :6
 POP ax
+ABV:
 ADD
 :6
 MUL 
@@ -9,11 +10,13 @@ HLT
 DIV
 JMP :3
 ADD
-ABV:
 MUL
 :3
 MUL
 ADD
+ABV:
+MUL
 JMPR rcx
+CALL ABV:
 CALL ABV:
 HLT

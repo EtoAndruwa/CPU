@@ -425,7 +425,7 @@ void translate_to_asm(asm_struct* assembly_struct) // (OK) Gets asm codes for al
 
 void write_asm(asm_struct* assembly_struct) // (OK) Writes all asm code into the translated file
 {
-    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct))
+    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct))
     {
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
         {

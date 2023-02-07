@@ -1,9 +1,14 @@
 #include "assembler.h"
 
-const char* enum_token_err_to_string(size_t code) // (OK) Сonverts an enum's int value to the enum's string value
+/**
+ * @brief               | (OK) Сonverts an enum's int value to the enum's string value
+ * 
+ * @param code          | The enum code of the command
+ * @return const char*  | Returns the string value of the tokens's error code 
+ */
+const char* enum_token_err_to_string(size_t code) 
 {
-    size_t check_code = code;
-    switch(check_code)
+    switch(code)
     {
         case TOKEN_OK:
             return "OK";
@@ -47,7 +52,13 @@ const char* enum_token_err_to_string(size_t code) // (OK) Сonverts an enum's in
     }
 }
 
-const char* enum_to_string(size_t code) // (OK) Сonverts an enum's int value to the enum's string value
+/**
+ * @brief               | (OK) Сonverts an enum's int value to the enum's string value
+ * 
+ * @param code          | The enum code of the command
+ * @return const char*  | Returns the string value of the asm struct's error code  
+ */
+const char* enum_struct_err_to_string(size_t code) 
 {
     switch(code)
     {
@@ -84,7 +95,13 @@ const char* enum_to_string(size_t code) // (OK) Сonverts an enum's int value to
     }
 }
 
-const char* enum_type_to_string(size_t code) // (OK) Сonverts an enum's int value to the enum's string value
+/**
+ * @brief              | (OK) Сonverts an enum's int value to the enum's string value
+ * 
+ * @param code         | The enum code of the command
+ * @return const char* | Returns the string value of the token's type code 
+ */
+const char* enum_type_to_string(size_t code) 
 {
     switch(code)
     {

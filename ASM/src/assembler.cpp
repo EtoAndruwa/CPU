@@ -1,9 +1,14 @@
 #include "assembler.h"
 
-void file_openning_check(asm_struct* assembly_struct) // (OK) Opens and checks files with assembly code and translated code
+/**
+ * @brief                  | (OK) Opens and checks files with assembly code and translated code   
+ *  
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void file_openning_check(asm_struct* assembly_struct) 
 {   
-    FILE* test_asm = fopen("test.asm", "rb"); // Opens file with text
-    FILE* test_code = fopen("test_code.txt", "wb"); // Opens empty file
+    FILE* test_asm = fopen("test.asm", "rb"); // Opens the file with text
+    FILE* test_code = fopen("test_code.txt", "wb"); // Opens an empty file
 
     if(test_asm == nullptr)
     {
@@ -28,7 +33,13 @@ void file_openning_check(asm_struct* assembly_struct) // (OK) Opens and checks f
     }
 }
 
-void get_token_value(asm_struct* assembly_struct, size_t i) // Puts appropriate asm code to the each token 
+/**
+ * @brief                  | (OK) Puts an appropriate asm code to the each token
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ * @param i                | The positon of the token in the array
+ */
+void get_token_value(asm_struct* assembly_struct, size_t i) 
 {
     if(((assembly_struct->num_toks - 1) == i) && (strcmp(assembly_struct->toks[i].text, "HLT") != 0)) // Checks if the last token 'HLT' is missing
     {
@@ -326,21 +337,28 @@ void get_token_value(asm_struct* assembly_struct, size_t i) // Puts appropriate 
     }
 }
 
-void get_commands_into_buf(asm_struct* assembly_struct) // (OK) Creates buffer for commands and copies all commands into it
+/**
+ * @brief                  | (OK) Creates buffer for commands and copies all commands into it
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void get_commands_into_buf(asm_struct* assembly_struct) 
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
 
     assembly_struct->asm_buf = (char*)calloc(1, sizeof(char) * (assembly_struct->size + 1)); // Allocates enough memmory for the buffer of chars  
     size_t num_read = fread(assembly_struct->asm_buf, sizeof(char), assembly_struct->size, assembly_struct->asm_file); // Reads the file into the buffer
-    //printf("in buffer : %ld\n", num_read);
-    assembly_struct->asm_buf[assembly_struct->size] = '\0'; // Makes form file null-terminated string
-
-    //printf("%s\n", assembly_struct->asm_buf);
+    assembly_struct->asm_buf[assembly_struct->size] = '\0'; // Makes form the file null-terminated string
 
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file
 }
 
-void get_size_asm(asm_struct* assembly_struct) // (OK) Gets the size of asm code file 
+/**
+ * @brief                  | (OK) Gets the size of asm code file 
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void get_size_asm(asm_struct* assembly_struct) 
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
 
@@ -357,9 +375,25 @@ void get_size_asm(asm_struct* assembly_struct) // (OK) Gets the size of asm code
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
 }
 
-void dtor_asm(asm_struct* assembly_struct) // (OK) Closes all file, frees all pointers, deletes all data of struct
+/**
+ * @brief                  | (OK) Closes all file, frees all pointers, deletes all data of struct
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void dtor_asm(asm_struct* assembly_struct) 
 {
     dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+
+    for(size_t i = 0; i < assembly_struct->num_toks; i ++)
+    {
+        assembly_struct->toks[i].error_code = 0;
+        assembly_struct->toks[i].line_number = 0;
+        assembly_struct->toks[i].text = nullptr;
+        strcpy((char*)assembly_struct->toks[i].status, "--"); 
+        assembly_struct->toks[i].value = 0;
+        assembly_struct->toks[i].type = 0;
+    }
+
     free(assembly_struct->asm_buf);
     free(assembly_struct->toks);
     if(fclose(assembly_struct->asm_file) == EOF)
@@ -384,10 +418,14 @@ void dtor_asm(asm_struct* assembly_struct) // (OK) Closes all file, frees all po
     assembly_struct->err_code = 0;
     assembly_struct->size = 0;
     assembly_struct->num_toks = 0;
-    
 }
 
-void get_tokens(asm_struct* assembly_struct) // (OK) Gets all tokens from the buffer 
+/**
+ * @brief                  | (OK) Gets all tokens from the buffer
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void get_tokens(asm_struct* assembly_struct) 
 {
     char* token = strtok(assembly_struct->asm_buf," \n\r");
     assembly_struct->toks = (tokens*)calloc(1, sizeof(tokens));
@@ -395,10 +433,9 @@ void get_tokens(asm_struct* assembly_struct) // (OK) Gets all tokens from the bu
     size_t  tok_num = 0;
     while (token != NULL)                        
     {   
-        realloc_toks(assembly_struct, tok_num);
-        assembly_struct->toks[tok_num].text = token;
+        realloc_toks(assembly_struct, tok_num); // Reallocs the struct with tokens
+        assembly_struct->toks[tok_num].text = token; // Adds the new token to the array
 
-        //printf("token %ld: %s\n", tok_num, token);
         token = strtok(NULL, " \n\r");
         tok_num++;
     }
@@ -406,16 +443,27 @@ void get_tokens(asm_struct* assembly_struct) // (OK) Gets all tokens from the bu
     free(token);
 }
 
-void realloc_toks(asm_struct* assembly_struct, size_t i) // (OK) Reallocs the array with tokens
+/**
+ * @brief                  | (OK) Reallocs the array with tokens
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ * @param i                | The position of the token in the array of tokens
+ */
+void realloc_toks(asm_struct* assembly_struct, size_t i) 
 {
     if(assembly_struct->num_toks == i)
     {
         assembly_struct->num_toks++;
-        assembly_struct->toks = (tokens*)realloc(assembly_struct->toks, assembly_struct->num_toks * sizeof(tokens));
+        assembly_struct->toks = (tokens*)realloc(assembly_struct->toks, assembly_struct->num_toks * sizeof(tokens)); // The pointer to the array of structs
     }
 }
 
-void translate_to_asm(asm_struct* assembly_struct) // (OK) Gets asm codes for all tokens 
+/**
+ * @brief                  | (OK) Gets asm codes for all tokens 
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void translate_to_asm(asm_struct* assembly_struct)  
 {
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {
@@ -423,9 +471,14 @@ void translate_to_asm(asm_struct* assembly_struct) // (OK) Gets asm codes for al
     }
 }
 
-void write_asm(asm_struct* assembly_struct) // (OK) Writes all asm code into the translated file
+/**
+ * @brief                  | (OK) Writes all asm code into the translated file
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void write_asm(asm_struct* assembly_struct) 
 {
-    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct))
+    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
     {
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
         {
@@ -456,24 +509,29 @@ void write_asm(asm_struct* assembly_struct) // (OK) Writes all asm code into the
     }
 }
 
-void count_num_of_lines_in_buf(asm_struct* assembly_struct) // (OK) Counts the number of lines
-{
-    size_t number_of_lines = 0;
+// /**
+//  * @brief                  | (OK) Counts the number of lines in the buffer
+//  * 
+//  * @param assembly_struct  | The struct containing all information about the asm struct
+//  */
+// void count_num_of_lines_in_buf(asm_struct* assembly_struct) 
+// {
+//     size_t number_of_lines = 0;
 
-    for(size_t i = 0; i < assembly_struct->size; i++)
-    {       
-        if(assembly_struct->asm_buf[i] == '\n')
-        {  
-            number_of_lines++;
-        }
-        if((assembly_struct->asm_buf[i] != '\n') && (i == (assembly_struct->size - 1))) // If it is the last line without \n
-        {
-            assembly_struct->asm_buf[assembly_struct->size] = '\n';
-            assembly_struct->size++;
-            number_of_lines++;
-            break;
-        }
-    }
-    assembly_struct->num_lines = number_of_lines;
-    //printf("assembly_struct->num_line: %ld\n\n", assembly_struct->num_lines);
-}
+//     for(size_t i = 0; i < assembly_struct->size; i++)
+//     {       
+//         if(assembly_struct->asm_buf[i] == '\n')
+//         {  
+//             number_of_lines++;
+//         }
+//         if((assembly_struct->asm_buf[i] != '\n') && (i == (assembly_struct->size - 1))) // If it is the last line without '\n'
+//         {
+//             assembly_struct->asm_buf[assembly_struct->size] = '\n';
+//             assembly_struct->size++;
+//             number_of_lines++;
+//             break;
+//         }
+//     }
+
+//     assembly_struct->num_lines = number_of_lines;
+// }

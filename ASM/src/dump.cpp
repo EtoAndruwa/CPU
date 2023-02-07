@@ -1,6 +1,11 @@
 #include "assembler.h"
 
-void listing(asm_struct* assembly_struct) // (OK) Makes listing of the assembled code
+/**
+ * @brief                  | (OK) Makes listing of the assembled code
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void listing(asm_struct* assembly_struct)
 {
     FILE* listing_file = fopen("asm_listing.txt", "wb");
 
@@ -23,7 +28,14 @@ void listing(asm_struct* assembly_struct) // (OK) Makes listing of the assembled
     fclose(listing_file);
 }
 
-void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LINE) // (OK) Creates LOG_FILE.txt with all information about asm_struct
+/**
+ * @brief                  | (OK) Creates LOG_FILE.txt with all information about asm_struct
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ * @param FUNCT_NAME       | The string containing the name of the function which called the error
+ * @param FUNCT_LINE       | The number of the line which called the error
+ */
+void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LINE) 
 {
     FILE* logfile = fopen("LOG_FILE.txt", "wb");
 
@@ -39,7 +51,7 @@ void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LI
         fprintf(logfile, "-------------------------------------------------\n");
         fprintf(logfile, "assembly_struct->asm_buf: %p\n", assembly_struct->asm_buf);
         fprintf(logfile, "assembly_struct->asm_file: %p\n", assembly_struct->asm_file);
-        fprintf(logfile, "assembly_struct->err_code: %ld (%s)\n", assembly_struct->err_code, enum_to_string(assembly_struct->err_code));
+        fprintf(logfile, "assembly_struct->err_code: %ld (%s)\n", assembly_struct->err_code, enum_struct_err_to_string(assembly_struct->err_code));
         fprintf(logfile, "FUNC_NAME: %s\n", FUNCT_NAME);
         fprintf(logfile, "FUNC_LINE: %d\n", FUNCT_LINE);  
         fprintf(logfile, "assembly_struct->num_toks:: %ld\n", assembly_struct->num_toks);
@@ -61,7 +73,12 @@ void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LI
     }
 }
 
-void print_all_toks(asm_struct* assembly_struct) // (OK) Prints all information about the tokens
+/**
+ * @brief                  | (OK) Prints all information about all tokens
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void print_all_toks(asm_struct* assembly_struct)
 {
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {
@@ -73,7 +90,12 @@ void print_all_toks(asm_struct* assembly_struct) // (OK) Prints all information 
     }
 }
 
-void print_struct(asm_struct* assembly_struct) // (OK) Prints information about the struct 
+/**
+ * @brief                  | (OK) Prints information about the struct 
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ */
+void print_struct(asm_struct* assembly_struct) 
 {
     printf("\nassembly_struct->asm_buf: %p\n", assembly_struct->asm_buf);
     printf("assembly_struct->asm_file: %p\n", assembly_struct->asm_file);

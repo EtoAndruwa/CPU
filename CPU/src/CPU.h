@@ -14,6 +14,7 @@ typedef struct
     stack_type ax = 0;
     stack_type bx = 0;
     stack_type cx = 0;
+    stack_type dx = 0;
 }CPU;   
 
 #endif // CPU_H

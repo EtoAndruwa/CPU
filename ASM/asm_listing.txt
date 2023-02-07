@@ -6,7 +6,7 @@
 |0004|		:6  		|    flg     |000|      OK      |
 |0005|		POP 		|    cmd     |066|      OK      |
 |0006|		ax  		|    reg     |021|      OK      |
-|0007|		ABV:		|    fnc     |000|      --      | <----- ERR_FIRST_DECL_OF_FNC
+|0007|		ABV:		|    fnc     |000|      OK      |
 |0008|		ADD 		|    cmd     |003|      OK      |
 |0009|		:6  		|    flg     |000|      OK      |
 |0010|		MUL 		|    cmd     |005|      OK      |
@@ -19,7 +19,7 @@
 |0017|		:3  		|    flg     |000|      OK      |
 |0018|		MUL 		|    cmd     |005|      OK      |
 |0019|		ADD 		|    cmd     |003|      OK      |
-|0020|		ABV:		|    fnc     |000|      --      | <----- ERR_DOUBLE_DECL_OF_FNC
+|0020|		ABC:		|    fnc     |000|      OK      |
 |0021|		MUL 		|    cmd     |005|      OK      |
 |0022|		JMPR		|    cmd     |032|      OK      |
 |0023|		rcx 		|    reg     |027|      OK      |

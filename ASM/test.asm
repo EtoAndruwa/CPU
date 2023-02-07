@@ -14,7 +14,7 @@ MUL
 :3
 MUL
 ADD
-ABV:
+ABC:
 MUL
 JMPR rcx
 CALL ABV:

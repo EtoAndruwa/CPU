@@ -338,7 +338,7 @@ void StackRealocDown(Stack* st) // (OK) Decreases the capacity of the stack, rea
 
     if((st->next_empty_cell <= (st->capacity - 2) / 2) && (st->capacity > 3))
     {   
-        st->capacity = st->capacity - ((st->capacity -1 )/2); // Decreases the capacity of the array
+        st->capacity = st->capacity - ((st->capacity - 1)/2); // Decreases the capacity of the array
 
         st->stack_pointer = realloc(st->stack_pointer, st->capacity * sizeof(stack_type) + 2 * sizeof(size_t)); // Realocs the memory 
 
@@ -418,8 +418,3 @@ void StackSqrt(Stack * st) // (OK) Gets the root of the value
 
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 }
-
-
-
-
-

@@ -1,138 +1,102 @@
-==1437== Memcheck, a memory error detector
-==1437== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==1437== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==1437== Command: ./ASM.exe
-==1437== Parent PID: 1436
-==1437== 
-==1437== error calling PR_SET_PTRACER, vgdb might block
-==1437== Conditional jump or move depends on uninitialised value(s)
-==1437==    at 0x10BA04: check_all_valid(asm_struct*) (check_toks.cpp:40)
-==1437==    by 0x10B5AD: write_asm(asm_struct*) (assembler.cpp:404)
-==1437==    by 0x10CCA6: main (main.cpp:46)
-==1437== 
-==1437== Invalid read of size 8
-==1437==    at 0x10BF9E: check_fnc_declaration(asm_struct*) (check_toks.cpp:159)
-==1437==    by 0x10B5E0: write_asm(asm_struct*) (assembler.cpp:404)
-==1437==    by 0x10CCA6: main (main.cpp:46)
-==1437==  Address 0x4a8cb20 is 16 bytes after a block of size 144 free'd
-==1437==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10B533: realloc_toks(asm_struct*, unsigned long) (assembler.cpp:392)
-==1437==    by 0x10B486: get_tokens(asm_struct*) (assembler.cpp:380)
-==1437==    by 0x10CC8E: main (main.cpp:43)
-==1437==  Block was alloc'd at
-==1437==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10B533: realloc_toks(asm_struct*, unsigned long) (assembler.cpp:392)
-==1437==    by 0x10B486: get_tokens(asm_struct*) (assembler.cpp:380)
-==1437==    by 0x10CC8E: main (main.cpp:43)
-==1437== 
-==1437== Invalid read of size 1
-==1437==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10BFB2: check_fnc_declaration(asm_struct*) (check_toks.cpp:159)
-==1437==    by 0x10B5E0: write_asm(asm_struct*) (assembler.cpp:404)
-==1437==    by 0x10CCA6: main (main.cpp:46)
-==1437==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==1437== 
-==1437== 
-==1437== Process terminating with default action of signal 11 (SIGSEGV)
-==1437==  Access not within mapped region at address 0x0
-==1437==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10BFB2: check_fnc_declaration(asm_struct*) (check_toks.cpp:159)
-==1437==    by 0x10B5E0: write_asm(asm_struct*) (assembler.cpp:404)
-==1437==    by 0x10CCA6: main (main.cpp:46)
-==1437==  If you believe this happened as a result of a stack
-==1437==  overflow in your program's main thread (unlikely but
-==1437==  possible), you can try to increase the size of the
-==1437==  main thread stack using the --main-stacksize= flag.
-==1437==  The main thread stack size used in this run was 8388608.
-==1437== 
-==1437== HEAP SUMMARY:
-==1437==     in use at exit: 2,195 bytes in 6 blocks
-==1437==   total heap usage: 9 allocs, 3 frees, 2,483 bytes allocated
-==1437== 
-==1437== 35 bytes in 1 blocks are still reachable in loss record 1 of 6
-==1437==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10B1BF: get_commands_into_buf(asm_struct*) (assembler.cpp:320)
-==1437==    by 0x10CC82: main (main.cpp:41)
-==1437== 
-==1437== 192 bytes in 1 blocks are still reachable in loss record 2 of 6
-==1437==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10B533: realloc_toks(asm_struct*, unsigned long) (assembler.cpp:392)
-==1437==    by 0x10B486: get_tokens(asm_struct*) (assembler.cpp:380)
-==1437==    by 0x10CC8E: main (main.cpp:43)
-==1437== 
-==1437== 472 bytes in 1 blocks are still reachable in loss record 3 of 6
-==1437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x48E06CD: __fopen_internal (iofopen.c:65)
-==1437==    by 0x48E06CD: fopen@@GLIBC_2.2.5 (iofopen.c:86)
-==1437==    by 0x109411: file_openning_check(asm_struct*) (assembler.cpp:5)
-==1437==    by 0x10CC6A: main (main.cpp:39)
-==1437== 
-==1437== 472 bytes in 1 blocks are still reachable in loss record 4 of 6
-==1437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x48E06CD: __fopen_internal (iofopen.c:65)
-==1437==    by 0x48E06CD: fopen@@GLIBC_2.2.5 (iofopen.c:86)
-==1437==    by 0x10942E: file_openning_check(asm_struct*) (assembler.cpp:6)
-==1437==    by 0x10CC6A: main (main.cpp:39)
-==1437== 
-==1437== 512 bytes in 1 blocks are still reachable in loss record 5 of 6
-==1437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x48DFC23: _IO_file_doallocate (filedoalloc.c:101)
-==1437==    by 0x48EED5F: _IO_doallocbuf (genops.c:347)
-==1437==    by 0x48EDFDF: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
-==1437==    by 0x48EC754: _IO_new_file_xsputn (fileops.c:1243)
-==1437==    by 0x48EC754: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
-==1437==    by 0x48E1F9B: puts (ioputs.c:40)
-==1437==    by 0x1094C6: file_openning_check(asm_struct*) (assembler.cpp:25)
-==1437==    by 0x10CC6A: main (main.cpp:39)
-==1437== 
-==1437== 512 bytes in 1 blocks are still reachable in loss record 6 of 6
-==1437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x48DFC23: _IO_file_doallocate (filedoalloc.c:101)
-==1437==    by 0x48EED5F: _IO_doallocbuf (genops.c:347)
-==1437==    by 0x48EBA94: _IO_file_seekoff@@GLIBC_2.2.5 (fileops.c:937)
-==1437==    by 0x48E8FF6: rewind (rewind.c:35)
-==1437==    by 0x10B239: get_size_asm(asm_struct*) (assembler.cpp:328)
-==1437==    by 0x10CC76: main (main.cpp:40)
-==1437== 
-==1437== LEAK SUMMARY:
-==1437==    definitely lost: 0 bytes in 0 blocks
-==1437==    indirectly lost: 0 bytes in 0 blocks
-==1437==      possibly lost: 0 bytes in 0 blocks
-==1437==    still reachable: 2,195 bytes in 6 blocks
-==1437==         suppressed: 0 bytes in 0 blocks
-==1437== 
-==1437== ERROR SUMMARY: 5 errors from 3 contexts (suppressed: 0 from 0)
-==1437== 
-==1437== 1 errors in context 1 of 3:
-==1437== Invalid read of size 1
-==1437==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10BFB2: check_fnc_declaration(asm_struct*) (check_toks.cpp:159)
-==1437==    by 0x10B5E0: write_asm(asm_struct*) (assembler.cpp:404)
-==1437==    by 0x10CCA6: main (main.cpp:46)
-==1437==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==1437== 
-==1437== 
-==1437== 1 errors in context 2 of 3:
-==1437== Invalid read of size 8
-==1437==    at 0x10BF9E: check_fnc_declaration(asm_struct*) (check_toks.cpp:159)
-==1437==    by 0x10B5E0: write_asm(asm_struct*) (assembler.cpp:404)
-==1437==    by 0x10CCA6: main (main.cpp:46)
-==1437==  Address 0x4a8cb20 is 16 bytes after a block of size 144 free'd
-==1437==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10B533: realloc_toks(asm_struct*, unsigned long) (assembler.cpp:392)
-==1437==    by 0x10B486: get_tokens(asm_struct*) (assembler.cpp:380)
-==1437==    by 0x10CC8E: main (main.cpp:43)
-==1437==  Block was alloc'd at
-==1437==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1437==    by 0x10B533: realloc_toks(asm_struct*, unsigned long) (assembler.cpp:392)
-==1437==    by 0x10B486: get_tokens(asm_struct*) (assembler.cpp:380)
-==1437==    by 0x10CC8E: main (main.cpp:43)
-==1437== 
-==1437== 
-==1437== 3 errors in context 3 of 3:
-==1437== Conditional jump or move depends on uninitialised value(s)
-==1437==    at 0x10BA04: check_all_valid(asm_struct*) (check_toks.cpp:40)
-==1437==    by 0x10B5AD: write_asm(asm_struct*) (assembler.cpp:404)
-==1437==    by 0x10CCA6: main (main.cpp:46)
-==1437== 
-==1437== ERROR SUMMARY: 5 errors from 3 contexts (suppressed: 0 from 0)
+==1700== Memcheck, a memory error detector
+==1700== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1700== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1700== Command: ./ASM.exe
+==1700== Parent PID: 1699
+==1700== 
+==1700== error calling PR_SET_PTRACER, vgdb might block
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x10BA04: check_all_valid(asm_struct*) (check_toks.cpp:40)
+==1700==    by 0x10B5AD: write_asm(asm_struct*) (assembler.cpp:404)
+==1700==    by 0x10CD15: main (main.cpp:46)
+==1700== 
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48D7B56: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== Use of uninitialised value of size 8
+==1700==    at 0x48BB33B: _itoa_word (_itoa.c:177)
+==1700==    by 0x48D6B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48BB34C: _itoa_word (_itoa.c:177)
+==1700==    by 0x48D6B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48D7643: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48D6C85: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== 
+==1700== HEAP SUMMARY:
+==1700==     in use at exit: 0 bytes in 0 blocks
+==1700==   total heap usage: 13 allocs, 13 frees, 4,446 bytes allocated
+==1700== 
+==1700== All heap blocks were freed -- no leaks are possible
+==1700== 
+==1700== ERROR SUMMARY: 13 errors from 6 contexts (suppressed: 0 from 0)
+==1700== 
+==1700== 2 errors in context 1 of 6:
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48D6C85: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== 
+==1700== 2 errors in context 2 of 6:
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48D7643: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== 
+==1700== 2 errors in context 3 of 6:
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48BB34C: _itoa_word (_itoa.c:177)
+==1700==    by 0x48D6B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== 
+==1700== 2 errors in context 4 of 6:
+==1700== Use of uninitialised value of size 8
+==1700==    at 0x48BB33B: _itoa_word (_itoa.c:177)
+==1700==    by 0x48D6B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== 
+==1700== 2 errors in context 5 of 6:
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x48D7B56: __vfprintf_internal (vfprintf-internal.c:1516)
+==1700==    by 0x48C1749: fprintf (fprintf.c:32)
+==1700==    by 0x10C6BA: listing(asm_struct*) (dump.cpp:10)
+==1700==    by 0x10CD21: main (main.cpp:47)
+==1700== 
+==1700== 
+==1700== 3 errors in context 6 of 6:
+==1700== Conditional jump or move depends on uninitialised value(s)
+==1700==    at 0x10BA04: check_all_valid(asm_struct*) (check_toks.cpp:40)
+==1700==    by 0x10B5AD: write_asm(asm_struct*) (assembler.cpp:404)
+==1700==    by 0x10CD15: main (main.cpp:46)
+==1700== 
+==1700== ERROR SUMMARY: 13 errors from 6 contexts (suppressed: 0 from 0)

@@ -1,4 +1,5 @@
 |NUMB|		COMMAND		|    TYPE    |ASM|    STATUS    |
-|0000|		CALL		|    cmd     |030|      OK      |
-|0001|		fucntL:		|    fnc     |000|      OK      |
-|0002|		fucntL:		|    fnc     |000|      OK      |
+|0000|		funcL:		|    fnc     |000|      --      | <----- ERR_FIRST_DECL_OF_FNC
+|0001|		CALL		|    cmd     |030|      OK      |
+|0002|		funcL:		|    fnc     |000|      OK      |
+|0003|		funcL:		|    fnc     |000|      --      | <----- ERR_DOUBLE_DECL_OF_FNC

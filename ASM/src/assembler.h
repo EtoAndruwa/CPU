@@ -300,6 +300,13 @@ size_t check_func(asm_struct* assembly_struct);
  */
 size_t check_fnc_declaration(asm_struct* assembly_struct); 
 
+/**
+ * @brief                  | (OK)
+ * 
+ * @param assembly_struct  | The struct containing all information about the asm struct
+ * @param i                | The position of the token in the array of tokens
+ * @return size_t          | Returns '1' if the next token has type 'reg' and '0' if another type
+ */
 size_t check_next_reg(asm_struct* assembly_struct, size_t i);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

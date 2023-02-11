@@ -1,5 +1,4 @@
-fucntL:
+funcL:
+CALL funcL:
 
-CALL fucntL:
-
-fucntL:
+funcL:

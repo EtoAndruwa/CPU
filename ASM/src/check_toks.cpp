@@ -117,35 +117,41 @@ size_t check_func(asm_struct* assembly_struct)
 {
     size_t funcs_ok = 1;
 
-    for(size_t i = 0; i < assembly_struct->num_toks; i++)
-    {   
-        if(strcmp(assembly_struct->toks[i].text, "CALL") == 0) // Checks all tokens after CALL
-        {
-            char* func_name = assembly_struct->toks[i+1].text; // Gets the name of the function which is called
-            for(size_t j = 0; j < assembly_struct->num_toks ; j++) // Searches through the ALL tokens!
-            {   
-                if(assembly_struct->toks[j].type == fnc) // If the token is a function
+    if(assembly_struct->num_toks > 1)
+    {
+        for(size_t i = 0; i < assembly_struct->num_toks; i++)
+        {   
+            if(strcmp(assembly_struct->toks[i].text, "CALL") == 0) // Checks all tokens after CALL
+            {
+                char* func_name = assembly_struct->toks[i+1].text; // Gets the name of the function which is called
+                for(size_t j = 0; j < assembly_struct->num_toks ; j++) // Searches through the ALL tokens!
                 {   
-                    if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0))) // The token is not a call of the function or is the firts command in the assembly code
+                    if(assembly_struct->toks[j].type == fnc) // If the token is a function
                     {   
-                        funcs_ok = 1; // Calls declared function
-                        break;
-                    }
-                    else 
-                    {
-                        funcs_ok = 0; // Calls undeclared function
+                        if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0))) // The token is not a call of the function or is the firts command in the assembly code
+                        {   
+                            funcs_ok = 1; // Calls declared function
+                            break;
+                        }
+                        else 
+                        {
+                            funcs_ok = 0; // Calls undeclared function
+                        }
                     }
                 }
-            }
-            if(funcs_ok == 0)
-            {   
-                assembly_struct->toks[i].error_code = ERR_CALLS_NON_EXISTEN_FNC;
-                strcpy((char*)assembly_struct->toks[i].status, "--");
-            }
+                if(funcs_ok == 0)
+                {   
+                    assembly_struct->toks[i].error_code = ERR_CALLS_NON_EXISTEN_FNC;
+                    strcpy((char*)assembly_struct->toks[i].status, "--");
+                }
+            }  
         }
+        return funcs_ok; // Returns '1' if all CALL commands call declared functions 
     }
-
-    return funcs_ok; // Returns '1' if all CALL commands call declared functions 
+    else
+    {
+        return funcs_ok; // Returns '1' if all CALL commands call declared functions 
+    }
 }
 
 size_t check_fnc_declaration(asm_struct* assembly_struct) 
@@ -156,7 +162,7 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
             {   
                 size_t positon_of_first_decl = i; // This value stores the first position of the function declaration
-                if((assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') && (strcmp(assembly_struct->toks[i-1].text, "CALL") != 0) && (i > 0)) // If the token is the fist declaration of the function and is not a call of the function 
+                if(((assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') &&  (i > 0) && (strcmp(assembly_struct->toks[i-1].text, "CALL") != 0)) || (assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') &&  (i == 0)) // If the token is the fist declaration of the function and is not a call of the function 
                 {
                     char* func_name = assembly_struct->toks[i].text; // The function name that is used in order to search another declarations of the function with the same name
                     for(size_t j = i + 1; j < assembly_struct->num_toks ; j++) // Check the tokens after the firts function declaration

@@ -1,22 +1,5 @@
-PUSH ax
-ADD
-JMP :6
-POP ax
-ABV:
-ADD
-:6
-MUL 
-HLT
-DIV
-JMP :3
-ADD
-MUL
-:3
-MUL
-ADD
-ABC:
-MUL
-JMPR rcx
-CALL ABV:
-CALL ABV:
-HLT
+fucntL:
+
+CALL fucntL:
+
+fucntL:

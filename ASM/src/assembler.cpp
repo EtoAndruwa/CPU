@@ -1,10 +1,5 @@
 #include "assembler.h"
 
-/**
- * @brief                  | (OK) Opens and checks files with assembly code and translated code   
- *  
- * @param assembly_struct  | The struct containing all information about the asm struct
- */
 void file_openning_check(asm_struct* assembly_struct) 
 {   
     FILE* test_asm = fopen("test.asm", "rb"); // Opens the file with text
@@ -32,23 +27,11 @@ void file_openning_check(asm_struct* assembly_struct)
         assembly_struct->translated_file = test_code;
     }
 }
-
-/**
- * @brief                  | (OK) Puts an appropriate asm code to the each token
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- * @param i                | The positon of the token in the array
- */
 void get_token_value(asm_struct* assembly_struct, size_t i) 
 {
-    if(((assembly_struct->num_toks - 1) == i) && (strcmp(assembly_struct->toks[i].text, "HLT") != 0)) // Checks if the last token 'HLT' is missing
-    {
-        assembly_struct->err_code = ERR_NO_HLT;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
-    }
-    else if((strcmp(assembly_struct->toks[i].text, "ax") == 0) || (strcmp(assembly_struct->toks[i].text, "bx") == 0) || (strcmp(assembly_struct->toks[i].text, "cx") == 0) || (strcmp(assembly_struct->toks[i].text, "dx") == 0))
+    if((strcmp(assembly_struct->toks[i].text, "ax") == 0) || (strcmp(assembly_struct->toks[i].text, "bx") == 0) || (strcmp(assembly_struct->toks[i].text, "cx") == 0) || (strcmp(assembly_struct->toks[i].text, "dx") == 0))
     {  
-        if((check_next_token(assembly_struct, i) == 0) && ((strcmp(assembly_struct->toks[i+1].text, "ax") != 0) && (strcmp(assembly_struct->toks[i+1].text, "bx") != 0) && (strcmp(assembly_struct->toks[i+1].text, "cx") != 0)))
+        if((((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             if(strcmp(assembly_struct->toks[i].text, "ax") == 0)
             {
@@ -77,7 +60,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(strcmp(assembly_struct->toks[i].text, "PUSH") == 0)
     {  
-        if(check_next_token(assembly_struct, i) == 1)
+        if(((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i)))
         {   
             assembly_struct->toks[i].value = 1 | (1 << 5);
             assembly_struct->toks[i].type = cmd;
@@ -85,7 +68,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
         }
         else
         {   
-            if(strcmp(assembly_struct->toks[i+1].text, "ax") == 0 || strcmp(assembly_struct->toks[i+1].text, "bx") == 0 || strcmp(assembly_struct->toks[i+1].text, "cx") == 0 || strcmp(assembly_struct->toks[i+1].text, "dx") == 0)
+            if(((assembly_struct->num_toks - 1) > i) && check_next_reg(assembly_struct, i))
             {
                 assembly_struct->toks[i].value = 1 | (1 << 6);
                 assembly_struct->toks[i].type = cmd;
@@ -99,31 +82,22 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
         }
     }
     else if(strcmp(assembly_struct->toks[i].text, "POP") == 0)
-    {   
-        if((check_next_token(assembly_struct, i) == 0) && ((strcmp(assembly_struct->toks[i+1].text, "ax") != 0) && (strcmp(assembly_struct->toks[i+1].text, "bx") != 0) && (strcmp(assembly_struct->toks[i+1].text, "cx") != 0)))
+    {     
+        if(((assembly_struct->num_toks - 1) > i) && check_next_reg(assembly_struct, i))
         {
-            assembly_struct->toks[i].value = 2 | (1 << 5);
+            assembly_struct->toks[i].value = 2 | (1 << 6);
             assembly_struct->toks[i].type = cmd;
             strcpy((char*)assembly_struct->toks[i].status, "OK");
         }
         else
-        {   
-            if(strcmp(assembly_struct->toks[i+1].text, "ax") == 0 || strcmp(assembly_struct->toks[i+1].text, "bx") == 0 || strcmp(assembly_struct->toks[i+1].text, "cx") == 0)
-            {
-                assembly_struct->toks[i].value = 2 | (1 << 6);
-                assembly_struct->toks[i].type = cmd;
-                strcpy((char*)assembly_struct->toks[i].status, "OK");
-            }
-            else
-            {
-                strcpy((char*)assembly_struct->toks[i].status, "--");
-                assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
-            }
+        {
+            strcpy((char*)assembly_struct->toks[i].status, "--");
+            assembly_struct->toks[i].error_code = ERR_TOKEN_WITH_VALUE;
         }
     }
     else if(strcmp(assembly_struct->toks[i].text, "ADD") == 0)
     {   
-        if(check_next_token(assembly_struct, i) == 0)
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             assembly_struct->toks[i].value = 3;
             assembly_struct->toks[i].type = cmd;
@@ -137,7 +111,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(strcmp(assembly_struct->toks[i].text, "SUB") == 0)
     {   
-        if(check_next_token(assembly_struct, i) == 0)
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             assembly_struct->toks[i].value = 4;
             assembly_struct->toks[i].type = cmd;
@@ -151,7 +125,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(strcmp(assembly_struct->toks[i].text, "MUL") == 0)
     {   
-        if(check_next_token(assembly_struct, i) == 0)
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             assembly_struct->toks[i].value = 5;
             assembly_struct->toks[i].type = cmd;
@@ -165,7 +139,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(strcmp(assembly_struct->toks[i].text, "DIV") == 0)
     {   
-        if(check_next_token(assembly_struct, i) == 0)
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             assembly_struct->toks[i].value = 6;
             assembly_struct->toks[i].type = cmd;
@@ -179,7 +153,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(strcmp(assembly_struct->toks[i].text, "SQRT") == 0)
     {   
-        if(check_next_token(assembly_struct, i) == 0)
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             assembly_struct->toks[i].value = 7;
             assembly_struct->toks[i].type = cmd;
@@ -193,7 +167,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(strcmp(assembly_struct->toks[i].text, "HLT") == 0)
     {   
-        if((assembly_struct->num_toks - 1) == i) // Checks if it is the last token
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             assembly_struct->toks[i].value = 0;
             assembly_struct->toks[i].type = cmd;
@@ -201,22 +175,13 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
         }
         else
         {
-            if(check_next_token(assembly_struct, i) == 0)
-            {
-                assembly_struct->toks[i].value = 0;
-                assembly_struct->toks[i].type = cmd;
-                strcpy((char*)assembly_struct->toks[i].status, "OK");
-            }   
-            else
-            {
-                strcpy((char*)assembly_struct->toks[i].status, "--");
-                assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
-            }
+            strcpy((char*)assembly_struct->toks[i].status, "--");
+            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
         }
     }
     else if(strcmp(assembly_struct->toks[i].text, "OUT") == 0)
     {   
-        if((assembly_struct->num_toks - 1) == i)
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {   
             assembly_struct->toks[i].value = 8;
             assembly_struct->toks[i].type = cmd;
@@ -224,22 +189,13 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
         }
         else
         {
-            if(check_next_token(assembly_struct, i) == 0)
-            {
-                assembly_struct->toks[i].value = 8;
-                assembly_struct->toks[i].type = cmd;
-                strcpy((char*)assembly_struct->toks[i].status, "OK");
-            }
-            else
-            {
-                strcpy((char*)assembly_struct->toks[i].status, "--");
-                assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
-            }
+            strcpy((char*)assembly_struct->toks[i].status, "--");
+            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
         }
     }
     else if(strcmp(assembly_struct->toks[i].text, "JMP") == 0)
     {
-        if(check_num_int(assembly_struct->toks[i+1].text + 1) == 1)
+        if(((assembly_struct->num_toks - 1) > i) && (strlen(assembly_struct->toks[i+1].text) > 1) && (check_num_int(assembly_struct->toks[i+1].text + 1) == 1))
         {
             assembly_struct->toks[i].value = 11;
             assembly_struct->toks[i].type = cmd;
@@ -253,7 +209,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(check_num(assembly_struct->toks[i].text) == 1)
     {
-        if(check_next_token(assembly_struct, i) == 0)
+        if((((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
         {
             assembly_struct->toks[i].value = 9;
             assembly_struct->toks[i].type = val;
@@ -280,7 +236,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if(strcmp(assembly_struct->toks[i].text, "JMPR") == 0)
     {
-        if(strcmp(assembly_struct->toks[i+1].text, "rax") == 0 || strcmp(assembly_struct->toks[i+1].text, "rbx") == 0 || strcmp(assembly_struct->toks[i+1].text, "rcx") == 0)
+        if(((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && (strcmp(assembly_struct->toks[i+1].text, "rax") == 0 || strcmp(assembly_struct->toks[i+1].text, "rbx") == 0 || strcmp(assembly_struct->toks[i+1].text, "rcx") == 0))
             {
                 assembly_struct->toks[i].value = 32;
                 assembly_struct->toks[i].type = cmd;
@@ -294,25 +250,32 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
     }
     else if((strcmp(assembly_struct->toks[i].text, "rax") == 0) || (strcmp(assembly_struct->toks[i].text, "rbx") == 0) || (strcmp(assembly_struct->toks[i].text, "rcx") == 0))
     {
-        if(strcmp(assembly_struct->toks[i].text, "rax") == 0)
-        {
-            assembly_struct->toks[i].value = 25; 
-
+        if((((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        {   
+            if(strcmp(assembly_struct->toks[i].text, "rax") == 0)
+            {
+                assembly_struct->toks[i].value = 25; 
+            }
+            else if(strcmp(assembly_struct->toks[i].text, "rbx") == 0)
+            {
+                assembly_struct->toks[i].value = 26;
+            }
+            else if(strcmp(assembly_struct->toks[i].text, "rcx") == 0)
+            {
+                assembly_struct->toks[i].value = 27;
+            }
+            assembly_struct->toks[i].type = reg;
+            strcpy((char*)assembly_struct->toks[i].status, "OK");
         }
-        else if(strcmp(assembly_struct->toks[i].text, "rbx") == 0)
+        else    
         {
-            assembly_struct->toks[i].value = 26;
+            strcpy((char*)assembly_struct->toks[i].status, "--");
+            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
         }
-        else if(strcmp(assembly_struct->toks[i].text, "rcx") == 0)
-        {
-            assembly_struct->toks[i].value = 27;
-        }
-        assembly_struct->toks[i].type = reg;
-        strcpy((char*)assembly_struct->toks[i].status, "OK");
     }
     else if(strcmp(assembly_struct->toks[i].text, "CALL") == 0)
     {
-        if((check_next_token(assembly_struct, i) == 0) && (assembly_struct->toks[i+1].text[(strlen(assembly_struct->toks[i+1].text) - 1)] == ':'))
+        if(((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && (assembly_struct->toks[i+1].text[(strlen(assembly_struct->toks[i+1].text) - 1)] == ':'))
         {
             assembly_struct->toks[i].value = 30;
             assembly_struct->toks[i].type = cmd;
@@ -324,10 +287,24 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
             assembly_struct->toks[i].error_code = ERR_NO_FNC_NAME;
         }
     }
-    else if(assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':')
+    else if((assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':'))
     {
         assembly_struct->toks[i].type = fnc;
         strcpy((char*)assembly_struct->toks[i].status, "OK");
+    }
+    else if(strcmp(assembly_struct->toks[i].text, "RET") == 0)
+    {
+        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        {
+            assembly_struct->toks[i].value = 10;
+            assembly_struct->toks[i].type = ret;
+            strcpy((char*)assembly_struct->toks[i].status, "OK");
+        }
+        else
+        {
+            strcpy((char*)assembly_struct->toks[i].status, "--");
+            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+        }
     }
     else
     {
@@ -336,12 +313,6 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
     }
 }
-
-/**
- * @brief                  | (OK) Creates buffer for commands and copies all commands into it
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- */
 void get_commands_into_buf(asm_struct* assembly_struct) 
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
@@ -352,12 +323,6 @@ void get_commands_into_buf(asm_struct* assembly_struct)
 
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file
 }
-
-/**
- * @brief                  | (OK) Gets the size of asm code file 
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- */
 void get_size_asm(asm_struct* assembly_struct) 
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
@@ -374,28 +339,13 @@ void get_size_asm(asm_struct* assembly_struct)
 
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
 }
-
-/**
- * @brief                  | (OK) Closes all file, frees all pointers, deletes all data of struct
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- */
 void dtor_asm(asm_struct* assembly_struct) 
 {
     dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
 
-    for(size_t i = 0; i < assembly_struct->num_toks; i ++)
-    {
-        assembly_struct->toks[i].error_code = 0;
-        assembly_struct->toks[i].line_number = 0;
-        assembly_struct->toks[i].text = nullptr;
-        strcpy((char*)assembly_struct->toks[i].status, "--"); 
-        assembly_struct->toks[i].value = 0;
-        assembly_struct->toks[i].type = 0;
-    }
-
     free(assembly_struct->asm_buf);
     free(assembly_struct->toks);
+
     if(fclose(assembly_struct->asm_file) == EOF)
     {
         printf("ERROR: %s.txt cannot be closed\n", FILE_1);
@@ -419,36 +369,21 @@ void dtor_asm(asm_struct* assembly_struct)
     assembly_struct->size = 0;
     assembly_struct->num_toks = 0;
 }
-
-/**
- * @brief                  | (OK) Gets all tokens from the buffer
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- */
 void get_tokens(asm_struct* assembly_struct) 
 {
     char* token = strtok(assembly_struct->asm_buf," \n\r");
     assembly_struct->toks = (tokens*)calloc(1, sizeof(tokens));
-    
-    size_t  tok_num = 0;
+
+    size_t toks_num = 0;
     while (token != NULL)                        
     {   
-        realloc_toks(assembly_struct, tok_num); // Reallocs the struct with tokens
-        assembly_struct->toks[tok_num].text = token; // Adds the new token to the array
-
+        realloc_toks(assembly_struct, toks_num); // Reallocs the struct with tokens
+        assembly_struct->toks[toks_num].text = token; // Adds the new token to the array
         token = strtok(NULL, " \n\r");
-        tok_num++;
+        toks_num++;
     }
 
-    free(token);
 }
-
-/**
- * @brief                  | (OK) Reallocs the array with tokens
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- * @param i                | The position of the token in the array of tokens
- */
 void realloc_toks(asm_struct* assembly_struct, size_t i) 
 {
     if(assembly_struct->num_toks == i)
@@ -457,12 +392,6 @@ void realloc_toks(asm_struct* assembly_struct, size_t i)
         assembly_struct->toks = (tokens*)realloc(assembly_struct->toks, assembly_struct->num_toks * sizeof(tokens)); // The pointer to the array of structs
     }
 }
-
-/**
- * @brief                  | (OK) Gets asm codes for all tokens 
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- */
 void translate_to_asm(asm_struct* assembly_struct)  
 {
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -470,14 +399,8 @@ void translate_to_asm(asm_struct* assembly_struct)
         get_token_value(assembly_struct, i);
     }
 }
-
-/**
- * @brief                  | (OK) Writes all asm code into the translated file
- * 
- * @param assembly_struct  | The struct containing all information about the asm struct
- */
 void write_asm(asm_struct* assembly_struct) 
-{
+{   
     if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
     {
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -490,11 +413,17 @@ void write_asm(asm_struct* assembly_struct)
             }
             else if(assembly_struct->toks[i].type == flg)
             {
-                fprintf(assembly_struct->translated_file, "%s\n", assembly_struct->toks[i].text);
+                fputs(assembly_struct->toks[i].text, assembly_struct->translated_file);
+                fputc('\n', assembly_struct->translated_file);
             }
             else if(assembly_struct->toks[i].type == fnc)
             {
-                fprintf(assembly_struct->translated_file, "%s\n", assembly_struct->toks[i].text);
+                fputs(assembly_struct->toks[i].text, assembly_struct->translated_file);
+                fputc('\n', assembly_struct->translated_file);
+            }
+            else if(assembly_struct->toks[i].type == val)
+            {
+                fprintf(assembly_struct->translated_file, "%f\n", atof(assembly_struct->toks[i].text));
             }
             else 
             {
@@ -508,30 +437,3 @@ void write_asm(asm_struct* assembly_struct)
         printf("ERROR: asm.txt cannot be translated into binary file. Check LOG_FILE.txt and asm_listing.txt\n");
     }
 }
-
-// /**
-//  * @brief                  | (OK) Counts the number of lines in the buffer
-//  * 
-//  * @param assembly_struct  | The struct containing all information about the asm struct
-//  */
-// void count_num_of_lines_in_buf(asm_struct* assembly_struct) 
-// {
-//     size_t number_of_lines = 0;
-
-//     for(size_t i = 0; i < assembly_struct->size; i++)
-//     {       
-//         if(assembly_struct->asm_buf[i] == '\n')
-//         {  
-//             number_of_lines++;
-//         }
-//         if((assembly_struct->asm_buf[i] != '\n') && (i == (assembly_struct->size - 1))) // If it is the last line without '\n'
-//         {
-//             assembly_struct->asm_buf[assembly_struct->size] = '\n';
-//             assembly_struct->size++;
-//             number_of_lines++;
-//             break;
-//         }
-//     }
-
-//     assembly_struct->num_lines = number_of_lines;
-// }

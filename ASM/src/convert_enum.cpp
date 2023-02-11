@@ -1,11 +1,5 @@
 #include "assembler.h"
 
-/**
- * @brief               | (OK) Сonverts an enum's int value to the enum's string value
- * 
- * @param code          | The enum code of the command
- * @return const char*  | Returns the string value of the tokens's error code 
- */
 const char* enum_token_err_to_string(size_t code) 
 {
     switch(code)
@@ -51,13 +45,6 @@ const char* enum_token_err_to_string(size_t code)
             break;        
     }
 }
-
-/**
- * @brief               | (OK) Сonverts an enum's int value to the enum's string value
- * 
- * @param code          | The enum code of the command
- * @return const char*  | Returns the string value of the asm struct's error code  
- */
 const char* enum_struct_err_to_string(size_t code) 
 {
     switch(code)
@@ -77,9 +64,6 @@ const char* enum_struct_err_to_string(size_t code)
         case ERR_EMPTY_ASM_FILE:
             return "ERR_EMPTY_ASM_FILE";
             break;
-        case ERR_NO_HLT:
-            return "ERR_NO_HLT";
-            break;
         case ERR_OPEN_ASM_FILE:
             return "ERR_OPEN_ASM_FILE";
             break;
@@ -94,13 +78,6 @@ const char* enum_struct_err_to_string(size_t code)
             break;
     }
 }
-
-/**
- * @brief              | (OK) Сonverts an enum's int value to the enum's string value
- * 
- * @param code         | The enum code of the command
- * @return const char* | Returns the string value of the token's type code 
- */
 const char* enum_type_to_string(size_t code) 
 {
     switch(code)
@@ -119,6 +96,9 @@ const char* enum_type_to_string(size_t code)
             break;
         case fnc:
             return "fnc";
+            break;
+        case ret:
+            return "ret";
             break;
         default:
             return "---";

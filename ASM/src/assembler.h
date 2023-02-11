@@ -40,9 +40,8 @@ enum asm_errors
     ERR_CLOSE_ASM_FILE        = 4,
     ERR_CLOSE_TRANSLATED_FILE = 5,
     ERR_EMPTY_ASM_FILE        = 6, 
-    ERR_NO_HLT                = 7,
-    ERR_OPEN_LOG_FILE         = 8,
-    ERR_CLOSE_LOG_FILE        = 9
+    ERR_OPEN_LOG_FILE         = 7,
+    ERR_CLOSE_LOG_FILE        = 8
 };
 
 /**
@@ -55,7 +54,8 @@ enum type
     reg   = 2, // 'register'
     val   = 3, // 'value' 
     flg   = 4, // 'flag'
-    fnc   = 5  // 'function'
+    fnc   = 5, // 'function'
+    ret   = 6  // 'return' 
 };
 
 /**
@@ -67,8 +67,8 @@ enum token_error_code
     ERR_INVALID_TOKEN            = 1,  // Example: 'asdfadfas'
     ERR_TOKEN_WITHOUT_VALUE      = 2,  // Example: 'POP 10'
     ERR_TOKEN_WITH_VALUE         = 3,  // Example: 'PUSH ______'
-    ERR_NO_FLAG                  = 4,  // Example: ''
-    ERR_INVALID_FLAG             = 5,  // Example: ''
+    ERR_NO_FLAG                  = 4,  // Example: 'JMP _____'
+    ERR_INVALID_FLAG             = 5,  // Example: ':abc'
     ERR_NO_FLAG_TO_JMP           = 6,  // Example: ''
     ERR_INVALID_REG              = 7,  // Example: '' 
     ERR_CALLS_NON_EXISTEN_FNC    = 8,  // Example: ''
@@ -103,8 +103,7 @@ typedef struct asm_struct
     tokens* toks          = nullptr;   // The pointer to the array with tokens
     size_t err_code       = STRUCT_OK; // The error code of program
     size_t size           = 0;         // The size of the assembly file
-    size_t num_toks       = 1;         // The total number of tokens
-    //size_t num_lines      = 0;       // The total number of lines in the asm file
+    size_t num_toks       = 1;         // The total number of tokens (1 for initializing, then will be realloced)
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -300,5 +299,7 @@ size_t check_func(asm_struct* assembly_struct);
  * @return size_t          | Returns '1' if all declarations of functions are uniqe and '0' if double declarations are exist in the code
  */
 size_t check_fnc_declaration(asm_struct* assembly_struct); 
+
+size_t check_next_reg(asm_struct* assembly_struct, size_t i);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

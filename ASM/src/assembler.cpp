@@ -3,7 +3,7 @@
 void file_openning_check(asm_struct* assembly_struct) 
 {   
     FILE* test_asm = fopen("test.asm", "rb"); // Opens the file with text
-    FILE* test_code = fopen("test_code.txt", "wb"); // Opens an empty file
+    FILE* test_code = fopen("test_code.bin", "wb"); // Opens an empty file
 
     if(test_asm == nullptr)
     {

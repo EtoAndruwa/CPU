@@ -23,7 +23,7 @@ STK_OBJ = $(patsubst $(PREF_STK)%.cpp, $(PREF_OBJ)%.o, $(STK_SRC))
 
 OBJ = $(CPU_OBJ) $(STK_OBJ)
 
-all : $(TARGET) run_program open_files
+all : $(TARGET) run_program 
 
 $(TARGET) : $(OBJ) 	
 	$(CC) $(OBJ) -o $(TARGET).exe

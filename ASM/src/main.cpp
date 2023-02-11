@@ -15,7 +15,7 @@
 10  HLT         0       00000000
 
 11  :FLAG       -       --------
-12  JMP: FLAG   11      00001011
+12  JMP:        11      00001011
 
 15  ax          21      00010101
 16  bx          22      00010110
@@ -27,9 +27,9 @@
 21  rcx         27      00011011
 
 22  CALL        30      00011110
-23  FUNCT:      31      00011111
+23  FUNCT:      -       --------
 24  JMPR        32      00100000
-25  RET         33      10
+25  RET         10      00001010
 */
 
 int main()
@@ -42,6 +42,7 @@ int main()
     //count_num_of_lines_in_buf(&asm_struct);
     get_tokens(&asm_struct);
     translate_to_asm(&asm_struct);
+    get_arr_asm_codes(&asm_struct);
     //print_all_toks(&asm_struct);
     write_asm(&asm_struct);
     listing(&asm_struct);

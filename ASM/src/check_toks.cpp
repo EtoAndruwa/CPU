@@ -9,7 +9,7 @@ size_t check_num(char* num_text)
     {
         char check_char = num_text[i];
 
-        if((isdigit(check_char) == 0) && (check_char != '.')) // Check does the text contain digits and/or '.'
+        if(isdigit(check_char) == 0) // Check does the text contain digits
         {
             flag = 0;
         }
@@ -92,6 +92,7 @@ size_t check_flags(asm_struct* assembly_struct)
                 {   
                     if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "JMP") != 0)) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
                     {   
+                        assembly_struct->toks[i+1].value = j; 
                         flags_ok = 1; // Flag exists
                         break;
                     }
@@ -179,6 +180,7 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
                             }
                             else 
                             {
+                                assembly_struct->toks[j].value = positon_of_first_decl;
                                 declaration_ok = 1; // The declaration is an uniqe one
                             }
                         }

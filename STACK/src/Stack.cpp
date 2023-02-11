@@ -1,8 +1,8 @@
 #include  "stack.h"
 
-void StackCtor(Stack * st) // (OK) Creates and initializes stack
+void StackCtor(Stack * st, size_t stack_size) // (OK) Creates and initializes stack
 {   
-    st->capacity = 5;
+    st->capacity = stack_size;
     st->stack_pointer = calloc(1, 2 * sizeof(size_t) + st->capacity * sizeof(stack_type)); 
 
     st->left_canary_position = (size_t*)st->stack_pointer;
@@ -19,7 +19,7 @@ void StackCtor(Stack * st) // (OK) Creates and initializes stack
     {
         st->data[i] = POISON_VALUE;
     }
-    StackPrint(st);
+    //StackPrint(st);
 
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 }
@@ -281,25 +281,19 @@ void StackCheck(Stack * st, const char * FUNCT_NAME, int FUNCT_LINE) // (OK) Che
 
 void StackDtor(Stack * st) // (OK) Deletes the stack and spoils all stack's data with the poison value
 {
-    for(int  i = 0; i < st->capacity; i++)
-    {
-        st->data[i] = POISON_VALUE;
-    }
-
-    StackPrint(st);
+    //StackPrint(st);
     st->capacity = 0;
     st->next_empty_cell = 0;
     st->hash = 0;
     st->left_canary_position[0] = 0;
     st->right_canary_position[0] = 0;
 
-    StackPrint(st);
+    //StackPrint(st);
 
     st->left_canary_position = nullptr;
     st->right_canary_position = nullptr;
     st->data = nullptr;
 
-    
 
     free(st->stack_pointer);
     st->stack_pointer = nullptr;

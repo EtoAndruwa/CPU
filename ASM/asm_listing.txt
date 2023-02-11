@@ -1,5 +1,6 @@
 |NUMB|		COMMAND		|    TYPE    |ASM|    STATUS    |
-|0000|		funcL:		|    fnc     |000|      OK      |
-|0001|		CALL		|    cmd     |030|      OK      |
-|0002|		funcL:		|    fnc     |000|      OK      |
-|0003|		func1:		|    fnc     |000|      OK      |
+|0000|		:2  		|    flg     |000|      OK      |
+|0001|		PUSH		|    cmd     |033|      OK      |
+|0002|		10  		|    val     |009|      OK      |
+|0003|		JMP 		|    cmd     |011|      OK      |
+|0004|		:2  		|    flg     |000|      OK      |

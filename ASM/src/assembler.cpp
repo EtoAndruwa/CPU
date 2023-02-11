@@ -234,20 +234,6 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
             assembly_struct->toks[i].error_code = ERR_INVALID_FLAG;;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "JMPR") == 0)
-    {
-        if(((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && (strcmp(assembly_struct->toks[i+1].text, "rax") == 0 || strcmp(assembly_struct->toks[i+1].text, "rbx") == 0 || strcmp(assembly_struct->toks[i+1].text, "rcx") == 0))
-            {
-                assembly_struct->toks[i].value = 32;
-                assembly_struct->toks[i].type = cmd;
-                strcpy((char*)assembly_struct->toks[i].status, "OK");
-            }
-            else
-            {
-                strcpy((char*)assembly_struct->toks[i].status, "--");
-                assembly_struct->toks[i].error_code = ERR_INVALID_REG;
-            }
-    }
     else if((strcmp(assembly_struct->toks[i].text, "rax") == 0) || (strcmp(assembly_struct->toks[i].text, "rbx") == 0) || (strcmp(assembly_struct->toks[i].text, "rcx") == 0))
     {
         if((((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
@@ -343,6 +329,7 @@ void dtor_asm(asm_struct* assembly_struct)
 {
     dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
 
+    free(assembly_struct->asm_codes);
     free(assembly_struct->asm_buf);
     free(assembly_struct->toks);
 
@@ -361,6 +348,7 @@ void dtor_asm(asm_struct* assembly_struct)
         exit(-1);
     }
 
+    assembly_struct->asm_codes = nullptr;
     assembly_struct->toks = nullptr;
     assembly_struct->asm_file = nullptr;
     assembly_struct->translated_file = nullptr;
@@ -404,26 +392,36 @@ void write_asm(asm_struct* assembly_struct)
     if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
     {
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
-        {
+        {   
             char* ptr_end_strtod = nullptr;
-            if(assembly_struct->toks[i].value == 33)    
+            if((assembly_struct->toks[i].type == flg))
             {
-                fprintf(assembly_struct->translated_file, "%d %lf\n", assembly_struct->toks[i].value, strtod(assembly_struct->toks[i+1].text, &ptr_end_strtod));
-                i++;
-            }
-            else if(assembly_struct->toks[i].type == flg)
-            {
-                fputs(assembly_struct->toks[i].text, assembly_struct->translated_file);
-                fputc('\n', assembly_struct->translated_file);
+                if((i > 0) && (assembly_struct->toks[i-1].value == 11))
+                {
+                    fprintf(assembly_struct->translated_file, "%d\n", assembly_struct->toks[i].value);
+                }
+                else
+                {   
+                    i++;
+                }
             }
             else if(assembly_struct->toks[i].type == fnc)
             {
-                fputs(assembly_struct->toks[i].text, assembly_struct->translated_file);
-                fputc('\n', assembly_struct->translated_file);
+                if((i > 0) && (assembly_struct->toks[i-1].value == 30))
+                {
+                    fprintf(assembly_struct->translated_file, "%d\n", assembly_struct->toks[i].value);
+                }
+                else
+                {   
+                    fputc('\n', assembly_struct->translated_file);
+                    i++;
+                }
             }
             else if(assembly_struct->toks[i].type == val)
             {
-                fprintf(assembly_struct->translated_file, "%f\n", atof(assembly_struct->toks[i].text));
+                float code = atof(assembly_struct->toks[i].text);
+                fwrite(&code, sizeof(code), 1, assembly_struct->translated_file);
+                fputc('\n', assembly_struct->translated_file);
             }
             else 
             {
@@ -436,4 +434,21 @@ void write_asm(asm_struct* assembly_struct)
     {
         printf("ERROR: asm.txt cannot be translated into binary file. Check LOG_FILE.txt and asm_listing.txt\n");
     }
+}
+
+void get_arr_asm_codes(asm_struct* assembly_struct)
+{
+    assembly_struct->asm_codes = (int*)calloc(assembly_struct->num_toks, sizeof(int));
+
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    {
+        assembly_struct->asm_codes[i] = assembly_struct->toks[i].value;
+    }
+
+    printf("ASM_ARR");
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    {   
+        printf("%d ", assembly_struct->asm_codes[i]);
+    }
+    printf("\n");
 }

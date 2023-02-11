@@ -15,7 +15,7 @@
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-typedef double stack_type;
+typedef int stack_type;
 
 typedef struct
 {   
@@ -29,7 +29,7 @@ typedef struct
     stack_type hash               = 0;       // The value used in oreder to validate actions with the stack
 }Stack;
 
-const double POISON_VALUE     = NAN;    // The poison value 
+const int POISON_VALUE     = NAN;    // The poison value 
 const size_t MAX_LINE_COMMAND = 5;      // The maximum length of the command string
 const size_t CANARY           = 0xDEAD; // The canary value
 
@@ -49,7 +49,7 @@ enum error_list_codes
 const char* Enum_to_string(size_t code);                              // (OK) Converts an enum's int value to the enum's string value
 stack_type StackPop(Stack* st);                                       // (OK) Deletes the value from the stack
 stack_type Get_cur_value_of_hash(Stack* st);                          // (OK) Calculates the current value of the hash 
-void StackCtor(Stack* st);                                            // (OK) Creates and initializes stack
+void StackCtor(Stack * st, size_t stack_size);                        // (OK) Creates and initializes stack
 void StackPush(Stack* st, stack_type push_value);                     // (OK) Gets the value and pushes in to the stack
 void StackCheck(Stack* st,  const char * FUNCT_NAME, int FUNCT_LINE); // (OK) Checks the stack for the possible errors
 void StackDtor(Stack* st);                                            // (OK) Deletes the stack and spoils all stack's data with the poison value

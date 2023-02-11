@@ -75,6 +75,35 @@ enum token_error_code
     ERR_NO_FNC_NAME              = 9,  // Example: ''
     ERR_DOUBLE_DECL_OF_FNC       = 10, // Example: ''
     ERR_FIRST_DECL_OF_FNC        = 11  // Example: ''
+};  
+
+enum cmd
+{
+    HLT      = 0,
+    PUSH_ST  = 33,
+    PUSH_REG = 65,
+    PUSH_RAM = 129,
+    POP_REG  = 66,
+    POP_ST   = 34,
+    POP_RAM  = 130, 
+
+    ADD  = 3,
+    SUB  = 4,
+    MUL  = 5,
+    DIV  = 6,
+    SQRT = 7,
+    OUT  = 8,
+    INT  = 9,
+    RET  = 10,
+    JMP  = 11,
+    ax   = 21,
+    bx   = 22,
+    cx   = 23,
+    dx   = 24, 
+    rax  = 25, 
+    rbx  = 26,
+    rcx  = 27,
+    CALL = 30
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -104,6 +133,7 @@ typedef struct asm_struct
     size_t err_code       = STRUCT_OK; // The error code of program
     size_t size           = 0;         // The size of the assembly file
     size_t num_toks       = 1;         // The total number of tokens (1 for initializing, then will be realloced)
+    int* asm_codes        = nullptr;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -308,5 +338,7 @@ size_t check_fnc_declaration(asm_struct* assembly_struct);
  * @return size_t          | Returns '1' if the next token has type 'reg' and '0' if another type
  */
 size_t check_next_reg(asm_struct* assembly_struct, size_t i);
+
+void get_arr_asm_codes(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

@@ -9,7 +9,7 @@
 #include <string.h>
 #include "../../STACK/src/stack.h"
 
-#define RAM_SIZE 200
+#define RAM_SIZE 10
 #define REG_NUM 4
 #define CALL_QUEUE_SIZE 5
 #define JMP_MAP_SIZE 5
@@ -99,6 +99,8 @@ void print_ram(CPU* CPU);
 void cpu_dtor(CPU* CPU);
 
 void get_cmd_in_buf(CPU* CPU);
+
+void cpu_work(CPU* CPU);
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #endif // CPU_H

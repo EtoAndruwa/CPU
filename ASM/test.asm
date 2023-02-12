@@ -1,2 +1,3 @@
 PUSH 10
-PUSH ax
+PUSH 20
+HLT

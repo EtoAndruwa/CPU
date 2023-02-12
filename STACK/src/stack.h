@@ -29,7 +29,7 @@ typedef struct
     stack_type hash               = 0;       // The value used in oreder to validate actions with the stack
 }Stack;
 
-const int POISON_VALUE     = NAN;    // The poison value 
+const int POISON_VALUE     = 0xEDA;    // The poison value 
 const size_t MAX_LINE_COMMAND = 5;      // The maximum length of the command string
 const size_t CANARY           = 0xDEAD; // The canary value
 

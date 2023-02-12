@@ -35,4 +35,7 @@ delete_old_files :
 	rm test_code.txt LOG_FILE.txt asm_listing.txt valgrind_log.txt
 
 clean : 
-	rm $(TARGET).exe $(PREF_OBJ)*.o valgrind_log.txt test_code.txt
+	rm $(TARGET).exe $(PREF_OBJ)*.o 
+
+clean_file: 
+	rm valgrind_log.txt test_code.txt

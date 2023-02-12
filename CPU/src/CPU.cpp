@@ -103,14 +103,20 @@ void cpu_logic(size_t cmd_code, CPU* CPU)
     switch (cmd_code)
     {
     case PUSH_ST:
-        StackPush(CPU->stack, );
+        printf("1\n");
+        StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1]);
+        StackOut(CPU->stack);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("%d\n", CPU->curr_cmd);
         break;
     case PUSH_REG:
-        push_reg(CPU, );
+        printf("2\n");
+        push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
-    case PUSH_RAM:
-        push_ram(CPU, );
-        break;
+    // case PUSH_RAM:
+    //     push_ram(CPU, );
+    //     break;
     default:
         break;
     }
@@ -186,11 +192,13 @@ void call_queue_realloc(CPU* CPU)
 
 }
 
-void cpu_work()
+void cpu_work(CPU* CPU)
 {
-    while()
+    while(CPU->bin_code[CPU->curr_cmd] != HLT)
     {
-
-
+        cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU);
+        cpu_data_print(CPU);
+        print_ram(CPU);
     }
+    cpu_dtor(CPU);
 }

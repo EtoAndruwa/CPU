@@ -41,6 +41,8 @@ run_program :
 open_files: 
 	code ./valgrind_log.txt
 
+clean: 
+	rm $(TARGET).exe $(PREF_OBJ)*.o
 
-clean : 
-	rm $(TARGET).exe $(PREF_OBJ)*.o valgrind_log.txt
+clean_file:
+	rm valgrind_log.txt LOG.txt Action_log_stack.txt 

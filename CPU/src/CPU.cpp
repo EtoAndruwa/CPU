@@ -103,20 +103,41 @@ void cpu_logic(size_t cmd_code, CPU* CPU)
     switch (cmd_code)
     {
     case PUSH_ST:
-        printf("1\n");
         StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1]);
-        StackOut(CPU->stack);
         CPU->curr_cmd = CPU->curr_cmd + 2;
-        printf("%d\n", CPU->curr_cmd);
         break;
     case PUSH_REG:
-        printf("2\n");
         push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
-    // case PUSH_RAM:
-    //     push_ram(CPU, );
-    //     break;
+    case POP_REG:
+        pop_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
+        break;
+    case ADD:
+        StackAdd(CPU->stack);
+        CPU->curr_cmd = CPU->curr_cmd + 1;
+        break;
+    case MUL:
+        StackMul(CPU->stack);
+        CPU->curr_cmd = CPU->curr_cmd + 1;
+        break;
+    case OUT:
+        StackOut(CPU->stack);
+        CPU->curr_cmd = CPU->curr_cmd + 1;
+        break;
+    case DIV:
+        StackMul(CPU->stack);
+        CPU->curr_cmd = CPU->curr_cmd + 1;
+        break;
+    case SQRT:
+        StackSqrt(CPU->stack);
+        CPU->curr_cmd = CPU->curr_cmd + 1;
+        break;
+    case SUB:
+        StackSub(CPU->stack);
+        CPU->curr_cmd = CPU->curr_cmd + 1;
+        break;
     default:
         break;
     }
@@ -153,10 +174,10 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
 
     StackOut(CPU->stack);
 
-    memset(CPU->reg, POISON, REG_NUM);
-    memset(CPU->r_reg, POISON, R_REG_NUM);
-    memset(CPU->call_queue, POISON, CALL_QUEUE_SIZE);
-    memset(CPU->jmp_map, POISON, JMP_MAP_SIZE);
+    memset(CPU->reg, 0, REG_NUM);
+    memset(CPU->r_reg, 0, R_REG_NUM);
+    memset(CPU->call_queue, 0, CALL_QUEUE_SIZE);
+    memset(CPU->jmp_map, 0, JMP_MAP_SIZE);
     CPU->error_code = CPU_OK;
     get_ram_mem(CPU);
 }
@@ -165,15 +186,15 @@ void cpu_dtor(CPU* CPU)
 {
     StackDtor(CPU->stack);
 
-    memset(CPU->reg, POISON, REG_NUM);
-    memset(CPU->r_reg, POISON, R_REG_NUM);
-    memset(CPU->call_queue, POISON, CALL_QUEUE_SIZE);
-    memset(CPU->jmp_map, POISON, JMP_MAP_SIZE);
-    CPU->error_code = POISON;
+    memset(CPU->reg, 0, REG_NUM);
+    memset(CPU->r_reg, 0, R_REG_NUM);
+    // memset(CPU->call_queue, 0, CALL_QUEUE_SIZE);
+    // memset(CPU->jmp_map, 0, JMP_MAP_SIZE);
+    CPU->error_code = 0;
 
     for(size_t i = 0; i < RAM_SIZE; i++)
     {
-        CPU->memmory[i] = POISON;
+        CPU->memmory[i] = 0;
     }
 
     free(CPU->memmory);
@@ -198,7 +219,7 @@ void cpu_work(CPU* CPU)
     {
         cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU);
         cpu_data_print(CPU);
-        print_ram(CPU);
+        //print_ram(CPU);
     }
     cpu_dtor(CPU);
 }

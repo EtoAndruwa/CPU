@@ -3,4 +3,11 @@
 |0001|		10  		|    val     |010|      OK      |
 |0002|		PUSH		|    cmd     |033|      OK      |
 |0003|		20  		|    val     |020|      OK      |
-|0004|		HLT 		|    cmd     |000|      OK      |
+|0004|		PUSH		|    cmd     |033|      OK      |
+|0005|		30  		|    val     |030|      OK      |
+|0006|		OUT 		|    cmd     |008|      OK      |
+|0007|		ADD 		|    cmd     |003|      OK      |
+|0008|		OUT 		|    cmd     |008|      OK      |
+|0009|		SUB 		|    cmd     |004|      OK      |
+|0010|		OUT 		|    cmd     |008|      OK      |
+|0011|		HLT 		|    cmd     |000|      OK      |

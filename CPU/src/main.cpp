@@ -9,7 +9,7 @@ int main()
     //push_reg(&CPU, 21, 8);
     //printf("\nPopped value from reg: %f\n", pop_reg(&CPU, 21));
     cpu_data_print(&CPU);
-    print_ram(&CPU);
+    //print_ram(&CPU);
     get_cmd_in_buf(&CPU);
     cpu_work(&CPU);
     // cpu_data_print(&CPU);

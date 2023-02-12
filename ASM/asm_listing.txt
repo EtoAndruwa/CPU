@@ -1,6 +1,5 @@
 |NUMB|		COMMAND		|    TYPE    |ASM|    STATUS    |
-|0000|		:2  		|    flg     |000|      OK      |
-|0001|		PUSH		|    cmd     |033|      OK      |
-|0002|		10  		|    val     |009|      OK      |
-|0003|		JMP 		|    cmd     |011|      OK      |
-|0004|		:2  		|    flg     |000|      OK      |
+|0000|		PUSH		|    cmd     |033|      OK      |
+|0001|		10  		|    val     |010|      OK      |
+|0002|		PUSH		|    cmd     |065|      OK      |
+|0003|		ax  		|    reg     |021|      OK      |

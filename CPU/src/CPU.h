@@ -28,8 +28,9 @@ typedef struct
 {
     stack_type* memmory = nullptr;  //  pointer to the RAM
     Stack* stack = nullptr;
-    
-
+    char* bin_code = {};
+    char num_bin_cmd[1] = {};
+    size_t curr_cmd = 0;
     size_t call_queue[CALL_QUEUE_SIZE] = {}; 
     size_t jmp_map[JMP_MAP_SIZE] = {};
     stack_type  reg [REG_NUM] = {};       //  registets for values
@@ -77,9 +78,9 @@ enum error_code
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-stack_type pop_reg(CPU* CPU, size_t reg_code);
+void pop_reg(CPU* CPU, size_t reg_code);
 
-void push_reg(CPU* CPU, size_t reg_code, stack_type push_value);
+void push_reg(CPU* CPU, size_t reg_code);
 
 void push_ram(CPU* CPU, size_t ram_index, size_t ram_value);
 
@@ -97,6 +98,7 @@ void print_ram(CPU* CPU);
 
 void cpu_dtor(CPU* CPU);
 
+void get_cmd_in_buf(CPU* CPU);
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #endif // CPU_H

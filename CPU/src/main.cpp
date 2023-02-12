@@ -6,14 +6,15 @@ int main()
     Stack Stack = {};
     cpu_ctor(&CPU, &Stack);
 
-    push_reg(&CPU, 21, 8);
+    //push_reg(&CPU, 21, 8);
     cpu_data_print(&CPU);
-    printf("\nPopped value from reg: %f\n", pop_reg(&CPU, 21));
+    //printf("\nPopped value from reg: %f\n", pop_reg(&CPU, 21));
     cpu_data_print(&CPU);
     push_ram(&CPU, 10, 3);
     print_ram(&CPU);
+    get_cmd_in_buf(&CPU);
     cpu_dtor(&CPU);
-    cpu_data_print(&CPU);
+    // cpu_data_print(&CPU);
     // push_reg(&CPU, 22, 9);
     // push_reg(&CPU, 23, 10);
     // push_reg(&CPU, 24, 11);

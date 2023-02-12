@@ -2,7 +2,7 @@
 
 FILE* check_code_file(CPU* CPU)
 {
-    FILE* code_file = fopen("code_file.bin", "rb"); // Opens an empty file
+    FILE* code_file = fopen("../ASM/test_code.bin", "rb"); // Opens an empty file
 
     if(code_file == nullptr)
     {
@@ -16,80 +16,69 @@ FILE* check_code_file(CPU* CPU)
     }
     else
     {   
-        printf("COde file was openned\n");
+        printf("Code file was openned\n");
         return code_file;
     }
 }
 
-void get_commands_in_buf(CPU* CPU)
-{
-    CPU->
-}
-
-
-
-void push_reg(CPU* CPU, size_t reg_code, stack_type push_value)
+void push_reg(CPU* CPU, size_t reg_code) // From reg to stack
 {
     switch (reg_code)
     {
     case ax:
-        CPU->reg[0] = push_value;
+        StackPush(CPU->stack, CPU->reg[0]);
         break;
     case bx:
-        CPU->reg[1] = push_value;
+        StackPush(CPU->stack, CPU->reg[1]);
         break;
     case cx:
-        CPU->reg[2] = push_value;
+        StackPush(CPU->stack, CPU->reg[2]);
         break;
     case dx:
-        CPU->reg[3] = push_value;
+        StackPush(CPU->stack, CPU->reg[3]);
         break;
     case rax:
-        CPU->r_reg[0] = push_value;
+        StackPush(CPU->stack, CPU->r_reg[0]);
         break;
     case rbx:
-        CPU->r_reg[1] = push_value;
+        StackPush(CPU->stack, CPU->r_reg[1]);
         break;
     case rcx:
-        CPU->r_reg[2] = push_value;
+        StackPush(CPU->stack, CPU->r_reg[2]);
         break;
     default:
         break;
     }
 }
 
-stack_type pop_reg(CPU* CPU, size_t reg_code)
+void pop_reg(CPU* CPU, size_t reg_code) // From Stack to reg
 {
-    stack_type popped_value_reg = 0;
-
     switch (reg_code)
     {
     case ax:
-        popped_value_reg = CPU->reg[0];
+        CPU->reg[0] = StackPop(CPU->stack);
         break;
     case bx:
-        popped_value_reg = CPU->reg[1];
+        CPU->reg[1] = StackPop(CPU->stack);
         break;
     case cx:
-        popped_value_reg = CPU->reg[2];
+        CPU->reg[2] = StackPop(CPU->stack);
         break;
     case dx:
-        popped_value_reg = CPU->reg[3];
+        CPU->reg[3] = StackPop(CPU->stack);
         break;
     case rax:
-        popped_value_reg = CPU->r_reg[0];
+        CPU->r_reg[0] = StackPop(CPU->stack);
         break;
     case rbx:
-        popped_value_reg = CPU->r_reg[1];
+        CPU->r_reg[1] = StackPop(CPU->stack);
         break;
     case rcx:
-        popped_value_reg = CPU->r_reg[2];
+        CPU->r_reg[2] = StackPop(CPU->stack);
         break;
     default:
         break;
     }
-
-    return popped_value_reg;
 }
 
 void push_ram(CPU* CPU, size_t ram_index, size_t ram_value)
@@ -113,7 +102,7 @@ void cpu_logic(size_t cmd_code, CPU* CPU)
 {
     switch (cmd_code)
     {
-    case PUSH_VAL:
+    case PUSH_ST:
         StackPush(CPU->stack, );
         break;
     case PUSH_REG:
@@ -125,6 +114,21 @@ void cpu_logic(size_t cmd_code, CPU* CPU)
     default:
         break;
     }
+}
+
+void get_cmd_in_buf(CPU* CPU)
+{
+    FILE* bin_code = check_code_file(CPU);
+    fread(CPU->num_bin_cmd, sizeof(char), 1, bin_code);
+    CPU->bin_code = (char*)calloc(*CPU->num_bin_cmd, sizeof(char));
+    fread(CPU->bin_code, sizeof(char), *CPU->num_bin_cmd, bin_code);
+
+    printf("\nBIN_ARR");
+    for(size_t i = 0; i < *CPU->num_bin_cmd; i++)
+    {   
+        printf(" %d ", CPU->bin_code[i]);
+    }
+    printf("\n");
 }
 
 void get_ram_mem(CPU* CPU)
@@ -182,9 +186,11 @@ void call_queue_realloc(CPU* CPU)
 
 }
 
+void cpu_work()
+{
+    while()
+    {
 
 
-
-
-
-
+    }
+}

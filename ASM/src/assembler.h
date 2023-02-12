@@ -133,7 +133,7 @@ typedef struct asm_struct
     size_t err_code       = STRUCT_OK; // The error code of program
     size_t size           = 0;         // The size of the assembly file
     size_t num_toks       = 1;         // The total number of tokens (1 for initializing, then will be realloced)
-    int* asm_codes        = nullptr;
+    char* asm_codes        = nullptr;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

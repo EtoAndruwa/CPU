@@ -81,11 +81,11 @@ void pop_reg(CPU* CPU, size_t reg_code) // From Stack to reg
     }
 }
 
-void push_ram(CPU* CPU, size_t ram_index, size_t ram_value)
+void push_ram_val(CPU* CPU, size_t ram_index)
 {
     if((ram_index < RAM_SIZE) && (ram_index >= 0))
     {
-        CPU->ram[ram_index] = ram_value;
+        StackPush(CPU->stack, CPU->ram[ram_index]);
     }
     else
     {
@@ -93,9 +93,125 @@ void push_ram(CPU* CPU, size_t ram_index, size_t ram_value)
     }
 }
 
-stack_type pop_ram(CPU* CPU, size_t ram_index)
+void pop_ram_val(CPU* CPU, size_t ram_index)
 {
-    stack_type ram_popped_val = CPU->ram[ram_index];
+    if((ram_index < RAM_SIZE) && (ram_index >= 0))
+    {
+        CPU->ram[ram_index] = StackPop(CPU->stack);
+    }
+    else
+    {
+        CPU->error_code = ERR_RAM_ADDRESSING;
+    }
+}
+
+void push_ram_reg(CPU* CPU, size_t reg_id)
+{
+    switch (reg_id)
+    {
+    case ax:
+        StackPush(CPU->stack, CPU->ram[CPU->reg[0] / 100]);
+        break;
+    case bx:
+        StackPush(CPU->stack, CPU->ram[CPU->reg[1] / 100]);
+        break;
+    case cx:
+        StackPush(CPU->stack, CPU->ram[CPU->reg[2] / 100]);
+        break;
+    case dx:
+        StackPush(CPU->stack, CPU->ram[CPU->reg[3] / 100]);
+        break; 
+    case rax:
+        StackPush(CPU->stack, CPU->ram[CPU->r_reg[0] / 100]);
+        break;
+    case rbx:
+        StackPush(CPU->stack, CPU->ram[CPU->r_reg[1] / 100]);
+        break;
+    case rcx:
+        StackPush(CPU->stack, CPU->ram[CPU->r_reg[2] / 100]);
+        break;
+    default:
+        break;
+    }
+}
+
+void pop_ram_reg(CPU* CPU, size_t reg_id)
+{
+    switch (reg_id)
+    {
+    case ax:
+        if((CPU->reg[0] / 100) >= RAM_SIZE)
+        {
+            CPU->error_code = ERR_RAM_ADDRESSING;
+        }
+        else
+        {
+            CPU->ram[CPU->reg[0] / 100] = StackPop(CPU->stack);;
+        }
+        break;
+    case bx:
+        if((CPU->reg[1] / 100) >= RAM_SIZE)
+        {
+            CPU->error_code = ERR_RAM_ADDRESSING;
+        }
+        else
+        {
+            CPU->ram[CPU->reg[1] / 100] = StackPop(CPU->stack);;
+        }
+        break;
+    case cx:
+        if((CPU->reg[2] / 100) >= RAM_SIZE)
+        {
+            CPU->error_code = ERR_RAM_ADDRESSING;
+        }
+        else
+        {
+            CPU->ram[CPU->reg[2] / 100] = StackPop(CPU->stack);;
+        }
+        break;
+    case dx:
+        if((CPU->reg[3] / 100) >= RAM_SIZE)
+        {
+            CPU->error_code = ERR_RAM_ADDRESSING;
+        }
+        else
+        {
+            CPU->ram[CPU->reg[3] / 100] = StackPop(CPU->stack);;
+        }
+        break;
+    case rax:
+        if((CPU->r_reg[0] / 100) >= RAM_SIZE)
+        {
+            CPU->error_code = ERR_RAM_ADDRESSING;
+        }
+        else
+        {
+            CPU->ram[CPU->r_reg[0] / 100] = StackPop(CPU->stack);;
+        }
+        break;
+    case rbx:
+        if((CPU->r_reg[1] / 100) >= RAM_SIZE)
+        {
+            CPU->error_code = ERR_RAM_ADDRESSING;
+        }
+        else
+        {
+            CPU->ram[CPU->r_reg[1] / 100] = StackPop(CPU->stack);;
+        }
+        break;
+    case rcx:
+        if((CPU->r_reg[2] / 100) >= RAM_SIZE)
+        {
+            CPU->error_code = ERR_RAM_ADDRESSING;
+        }
+        else
+        {
+            CPU->ram[CPU->r_reg[2] / 100] = StackPop(CPU->stack);;
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
@@ -148,6 +264,22 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
     case JMP:
         jmp_flag(CPU, CPU->curr_cmd + 1);
         break;
+    case PUSH_RAM_REG:
+        push_ram_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
+        break;
+    case PUSH_RAM_VAL:
+        push_ram_val(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
+        break;
+    case POP_RAM_REG:
+        pop_ram_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
+        break;
+    case POP_RAM_VAL:
+        pop_ram_val(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
+        break;
     default:
         break;
     }
@@ -177,7 +309,7 @@ void get_cmd_in_buf(CPU* CPU)
 {
     FILE* bin_code = check_code_file(CPU);
     fread(CPU->num_bin_cmd, sizeof(char), 1, bin_code);
-    CPU->bin_code = (char*)calloc(*CPU->num_bin_cmd, sizeof(char));
+    CPU->bin_code = (unsigned char*)calloc(*CPU->num_bin_cmd, sizeof(char));
     fread(CPU->bin_code, sizeof(char), *CPU->num_bin_cmd, bin_code);
 
     printf("\nBIN_ARR");

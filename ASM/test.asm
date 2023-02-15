@@ -1,7 +1,0 @@
-JMP :1
-PUSH 15
-PUSH 12
-PUSH 10
-OUT
-:1
-PUSH [rax]

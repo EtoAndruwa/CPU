@@ -71,8 +71,6 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             strncpy(str_check, (token_text + 1), strlen_token_check - 2);
             str_check[strlen_token_check - 1] = '\0';
 
-            printf("%s\n", str_check);
-
             if(check_reg_inner(assembly_struct, str_check))
             {
                 if(strcmp(str_check, "ax") == 0)
@@ -106,9 +104,8 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                 assembly_struct->toks[index].type = reg;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
 
-                printf("index: %ld\n", index);
-                printf("[reg]\n");
-
+                free(str_check);
+                str_check = nullptr;
                 return 2; // If ram addressing [reg]
             }
             else if(check_num(str_check))
@@ -116,13 +113,11 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                 assembly_struct->toks[index].value = atoi(str_check);
                 assembly_struct->toks[index].type = val;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
-                printf("[val]\n");
 
+                free(str_check);
+                str_check = nullptr;
                 return 1; // if memmory addressing [val] 
             }
-
-            free(str_check);
-            str_check = nullptr;
         }
         else
         {

@@ -35,7 +35,7 @@ typedef struct
 {
     Stack* stack = nullptr;
     stack_type ram[RAM_SIZE] = {};  //  pointer to the RAM
-    char* bin_code = {};
+    unsigned char* bin_code = {};
     char num_bin_cmd[1] = {};
     size_t curr_cmd = 0;
     stack_type  reg [REG_NUM] = {};       //  registets for values
@@ -54,10 +54,13 @@ enum cmd
     HLT      = 0,  //ok
     PUSH_ST  = 33, //ok
     PUSH_REG = 65, //ok
-    PUSH_RAM = 129, //ok
+    PUSH_RAM_VAL = 161, //ok
+    PUSH_RAM_REG = 193, 
+    
     POP_REG  = 66,
     POP_ST   = 34,
-    POP_RAM  = 130, 
+    POP_RAM_VAL = 162,
+    POP_RAM_REG = 194,
 
     ADD  = 3, //ok 
     SUB  = 4, //ok
@@ -94,11 +97,13 @@ void pop_reg(CPU* CPU, size_t reg_code);
 
 void push_reg(CPU* CPU, size_t reg_code);
 
-void push_ram(CPU* CPU, size_t ram_index, size_t ram_value);
 
-stack_type pop_ram(CPU* CPU, size_t ram_index);
+void push_ram_val(CPU* CPU, size_t ram_index); // from ram to stack
+void push_ram_reg(CPU* CPU, size_t reg_id); // from ram to stack
+void pop_ram_reg(CPU* CPU, size_t reg_id); // from stack to ram
+void pop_ram_val(CPU* CPU, size_t ram_index); // from stack to ram
 
-void get_ram_mem(CPU* CPU);
+
 
 void cpu_ctor(CPU* CPU, Stack* Stack);
 

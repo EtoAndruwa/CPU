@@ -27,6 +27,7 @@ void file_openning_check(asm_struct* assembly_struct)
         assembly_struct->translated_file = test_code;
     }
 }
+
 void get_token_value(asm_struct* assembly_struct, size_t i) 
 {
     if((strcmp(assembly_struct->toks[i].text, "ax") == 0) || (strcmp(assembly_struct->toks[i].text, "bx") == 0) || (strcmp(assembly_struct->toks[i].text, "cx") == 0) || (strcmp(assembly_struct->toks[i].text, "dx") == 0))
@@ -74,6 +75,12 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
                 assembly_struct->toks[i].type = cmd;
                 strcpy((char*)assembly_struct->toks[i].status, "OK");
             }
+            // else if(((assembly_struct->num_toks - 1) > i) && (check_ram(assembly_struct, assembly_struct->toks[i+1].text, i) == 1))
+            // {
+            // assembly_struct->toks[i].value = 1 | (1 << 7);
+            // assembly_struct->toks[i].type = cmd;
+            // strcpy((char*)assembly_struct->toks[i].status, "OK");
+            // }
             else
             {
                 strcpy((char*)assembly_struct->toks[i].status, "--");
@@ -299,6 +306,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i)
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
     }
 }
+
 void get_commands_into_buf(asm_struct* assembly_struct) 
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
@@ -309,6 +317,7 @@ void get_commands_into_buf(asm_struct* assembly_struct)
 
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file
 }
+
 void get_size_asm(asm_struct* assembly_struct) 
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
@@ -325,6 +334,7 @@ void get_size_asm(asm_struct* assembly_struct)
 
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
 }
+
 void dtor_asm(asm_struct* assembly_struct) 
 {
     dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
@@ -357,6 +367,7 @@ void dtor_asm(asm_struct* assembly_struct)
     assembly_struct->size = 0;
     assembly_struct->num_toks = 0;
 }
+
 void get_tokens(asm_struct* assembly_struct) 
 {
     char* token = strtok(assembly_struct->asm_buf," \n\r");
@@ -370,8 +381,8 @@ void get_tokens(asm_struct* assembly_struct)
         token = strtok(NULL, " \n\r");
         toks_num++;
     }
-
 }
+
 void realloc_toks(asm_struct* assembly_struct, size_t i) 
 {
     if(assembly_struct->num_toks == i)
@@ -380,6 +391,7 @@ void realloc_toks(asm_struct* assembly_struct, size_t i)
         assembly_struct->toks = (tokens*)realloc(assembly_struct->toks, assembly_struct->num_toks * sizeof(tokens)); // The pointer to the array of structs
     }
 }
+
 void translate_to_asm(asm_struct* assembly_struct)  
 {
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -387,6 +399,7 @@ void translate_to_asm(asm_struct* assembly_struct)
         get_token_value(assembly_struct, i);
     }
 }
+
 void write_asm(asm_struct* assembly_struct) 
 {   
     if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
@@ -414,11 +427,11 @@ void get_arr_asm_codes(asm_struct* assembly_struct)
         j++;
     }
 
-    printf("\nASM_ARR");
-    for(size_t i = 0; i < assembly_struct->num_toks; i++)
-    {   
-        printf(" %d ", assembly_struct->asm_codes[i]);
-    }
-    printf("\n");
+    // printf("\nASM_ARR");
+    // for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    // {   
+    //     printf(" %d ", assembly_struct->asm_codes[i]);
+    // }
+    // printf("\n");
 }
 

@@ -30,7 +30,7 @@ void StackPush(Stack * st, stack_type push_value) // (OK) Gets the value and pus
 
     st->data[st->next_empty_cell++] = push_value; 
     st->hash = st->hash + push_value; // Сalculating new hash value
-    printf("Hash value: %d", st->hash);
+    //printf("Hash value: %d", st->hash);
     StackPrint(st);
 
     StackCheck(st, FUNC_NAME, FUNC_LINE);
@@ -44,7 +44,7 @@ stack_type StackPop(Stack * st) // (OK) Deletes the value from the stack
     st->data[st->next_empty_cell - 1] = POISON_VALUE;
     st->next_empty_cell--;
     st->hash = st->hash - poped_value; // Calculating new hash value
-    printf("Hash value: %d", st->hash);
+    //printf("Hash value: %d", st->hash);
     StackPrint(st);
 
     StackCheck(st, FUNC_NAME, FUNC_LINE);
@@ -94,7 +94,7 @@ void StackMul(Stack * st) // (OK) Multiplies two values of the stack
 {   
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 
-    st->data[st->next_empty_cell - 2] = st->data[st->next_empty_cell - 1] * st->data[st->next_empty_cell - 2];
+    st->data[st->next_empty_cell - 2] = st->data[st->next_empty_cell - 1] * st->data[st->next_empty_cell - 2] / 100;
     st->data[st->next_empty_cell - 1] = POISON_VALUE;
     st->next_empty_cell--;
     Calculate_hash(st);
@@ -120,7 +120,7 @@ void StackDiv(Stack * st) // (OK) Divides the preceding element by the last elem
 {   
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 
-    st->data[st->next_empty_cell - 2] = (st->data[st->next_empty_cell - 2]) / (st->data[st->next_empty_cell - 1]);
+    st->data[st->next_empty_cell - 2] = ((float)(st->data[st->next_empty_cell - 2]) / (float)(st->data[st->next_empty_cell - 1]) ) * 100;
     st->data[st->next_empty_cell - 1] = POISON_VALUE;
     st->next_empty_cell--;
     Calculate_hash(st);
@@ -146,8 +146,7 @@ void StackPrint(Stack * st) // (OK) (DEBUG ONLY) Prints the stack's current stru
 
 void StackOut(Stack * st) // (OK) Prints the stack's current structure in the console
 {   
-    printf("\n");
-    printf("LEFT_CANARY: = %ld\n", *(st->left_canary_position));
+    printf("\nLEFT_CANARY: = %ld\n", *(st->left_canary_position));
     for(size_t i = 0; i < st->capacity; i++) 
     {
         printf("data[%ld] = %d\n", i, st->data[i]);
@@ -362,7 +361,7 @@ void Calculate_hash(Stack * st) // (OK) Recalculates the value of hash everytime
             st->hash = st->hash + st->data[i];
         }
     }
-    printf("Hash value: %d\n", st->hash);
+    //printf("Hash value: %d\n", st->hash);
 }
 
 stack_type Get_cur_value_of_hash(Stack * st) // (OK) Calculates the current value of the hash
@@ -408,9 +407,9 @@ void StackSqrt(Stack * st) // (OK) Gets the root of the value
 {
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 
-    st->data[st->next_empty_cell - 1] = sqrt(st->data[st->next_empty_cell - 1]);
+    st->data[st->next_empty_cell - 1] = sqrt(st->data[st->next_empty_cell - 1]) * 10;
     Calculate_hash(st);
-    printf("Hash value: %d", st->hash);
+    //printf("Hash value: %d", st->hash);
     StackPrint(st); 
 
     StackCheck(st, FUNC_NAME, FUNC_LINE);

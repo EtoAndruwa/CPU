@@ -341,4 +341,6 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i);
 
 void get_arr_asm_codes(asm_struct* assembly_struct);
 
+size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index);
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

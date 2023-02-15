@@ -85,7 +85,7 @@ void push_ram(CPU* CPU, size_t ram_index, size_t ram_value)
 {
     if((ram_index < RAM_SIZE) && (ram_index >= 0))
     {
-        CPU->memmory[ram_index] = ram_value;
+        CPU->ram[ram_index] = ram_value;
     }
     else
     {
@@ -95,51 +95,65 @@ void push_ram(CPU* CPU, size_t ram_index, size_t ram_value)
 
 stack_type pop_ram(CPU* CPU, size_t ram_index)
 {
-    stack_type ram_popped_val = CPU->memmory[ram_index];
+    stack_type ram_popped_val = CPU->ram[ram_index];
 }
 
-void cpu_logic(size_t cmd_code, CPU* CPU)
+void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
 {
     switch (cmd_code)
     {
-    case PUSH_ST:
-        StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1]);
+    case PUSH_ST: // ok
+        StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
         CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
-    case PUSH_REG:
-        push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+    case PUSH_REG: // ok
+        push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
         CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
-    case POP_REG:
+    case POP_REG: // ok
         pop_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
-    case ADD:
+    case ADD: // ok
         StackAdd(CPU->stack);
-        CPU->curr_cmd = CPU->curr_cmd + 1;
+        CPU->curr_cmd++;
         break;
-    case MUL:
+    case MUL: // ok
         StackMul(CPU->stack);
-        CPU->curr_cmd = CPU->curr_cmd + 1;
+        CPU->curr_cmd++;
         break;
-    case OUT:
+    case OUT: //ok
         StackOut(CPU->stack);
-        CPU->curr_cmd = CPU->curr_cmd + 1;
+        CPU->curr_cmd++;
         break;
-    case DIV:
-        StackMul(CPU->stack);
-        CPU->curr_cmd = CPU->curr_cmd + 1;
+    case DIV: //ok
+        StackDiv(CPU->stack);
+        CPU->curr_cmd++;
         break;
-    case SQRT:
+    case SQRT: //ok
         StackSqrt(CPU->stack);
-        CPU->curr_cmd = CPU->curr_cmd + 1;
+        CPU->curr_cmd++;
         break;
-    case SUB:
+    case SUB: //ok
         StackSub(CPU->stack);
-        CPU->curr_cmd = CPU->curr_cmd + 1;
+        CPU->curr_cmd++;
+        break;
+    case CALL:
+        push_ret(CPU, Call_stack, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
     default:
         break;
+    }
+}
+
+void jmp_ret(CPU* CPU, Call_stack* Call_stack)
+{
+    if((Call_stack->cur_index >= 0) && (Call_stack->call_stack[Call_stack->cur_index] != POISON_VALUE))
+    {   
+        CPU->curr_cmd = Call_stack->call_stack[Call_stack->cur_index];
+        Call_stack->call_stack[Call_stack->cur_index] = POISON_VALUE;
+        Call_stack->cur_index--;
     }
 }
 
@@ -155,71 +169,28 @@ void get_cmd_in_buf(CPU* CPU)
     {   
         printf(" %d ", CPU->bin_code[i]);
     }
-    printf("\n");
+    printf("\n\n");
 }
 
-void get_ram_mem(CPU* CPU)
-{
-    CPU->memmory = (stack_type*)calloc(RAM_SIZE, sizeof(stack_type));
-    if(CPU->memmory == nullptr)
-    {
-        CPU->error_code = ERR_NULLPTR_RAM;
-    }
-}
-
-void cpu_ctor(CPU* CPU, Stack* Stack)
-{
-    StackCtor(Stack, STACK_SIZE);
-    CPU->stack = Stack;
-
-    StackOut(CPU->stack);
-
-    memset(CPU->reg, 0, REG_NUM);
-    memset(CPU->r_reg, 0, R_REG_NUM);
-    memset(CPU->call_queue, 0, CALL_QUEUE_SIZE);
-    memset(CPU->jmp_map, 0, JMP_MAP_SIZE);
-    CPU->error_code = CPU_OK;
-    get_ram_mem(CPU);
-}
-
-void cpu_dtor(CPU* CPU)
-{
-    StackDtor(CPU->stack);
-
-    memset(CPU->reg, 0, REG_NUM);
-    memset(CPU->r_reg, 0, R_REG_NUM);
-    // memset(CPU->call_queue, 0, CALL_QUEUE_SIZE);
-    // memset(CPU->jmp_map, 0, JMP_MAP_SIZE);
-    CPU->error_code = 0;
-
-    for(size_t i = 0; i < RAM_SIZE; i++)
-    {
-        CPU->memmory[i] = 0;
-    }
-
-    free(CPU->memmory);
-    CPU->memmory = nullptr;
-}
-
-void jmp_map_realloc(CPU* CPU)
-{
-
-
-}
-
-void call_queue_realloc(CPU* CPU)
-{
-
-
-}
-
-void cpu_work(CPU* CPU)
+void cpu_work(CPU* CPU, Call_stack* Call_stack)
 {
     while(CPU->bin_code[CPU->curr_cmd] != HLT)
     {
-        cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU);
-        cpu_data_print(CPU);
-        //print_ram(CPU);
+        cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU, Call_stack);
+        // print_cpu_data(CPU);
     }
-    cpu_dtor(CPU);
 }
+
+void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp)
+{
+    if((Call_stack->cur_index >= 0) && (Call_stack->cur_index < CALL_STACK_SIZE))
+    {
+        Call_stack->call_stack[Call_stack->cur_index] = CPU->bin_code[index_to_jmp];
+        Call_stack->cur_index++;
+    }
+    else
+    {
+        CPU->error_code = ERR_CALL_STACK_FULL;
+    }
+}
+

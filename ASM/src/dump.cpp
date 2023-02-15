@@ -17,6 +17,7 @@ void listing(asm_struct* assembly_struct)
 
     fclose(listing_file);
 }
+
 void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LINE) 
 {
     FILE* logfile = fopen("LOG_FILE.txt", "wb");
@@ -54,6 +55,7 @@ void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LI
         exit(-1);
     }
 }
+
 void print_all_toks(asm_struct* assembly_struct)
 {
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -65,6 +67,7 @@ void print_all_toks(asm_struct* assembly_struct)
         printf("TOKEN_ERROR_CODE: %ld (%s)\n", assembly_struct->toks[i].error_code, enum_token_err_to_string(assembly_struct->toks[i].error_code));
     }
 }
+
 void print_struct(asm_struct* assembly_struct) 
 {
     printf("\nassembly_struct->asm_buf: %p\n", assembly_struct->asm_buf);

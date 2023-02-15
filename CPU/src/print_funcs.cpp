@@ -1,8 +1,8 @@
 #include "CPU.h"
 
-void cpu_data_print(CPU* CPU)
+void print_cpu_data(CPU* CPU)
 {
-    printf("stack_type* memmory: %p\n", CPU->memmory);
+    printf("stack_type* memmory: %p\n", CPU->ram);
     printf("error_code: %ld (%s)\n", CPU->error_code, convert_enum_cpu(CPU->error_code));
     printf("\nREGS:\n");
     for(size_t i = 0; i < REG_NUM; i++)
@@ -21,7 +21,17 @@ void print_ram(CPU* CPU)
     printf("\n-----RAM_START-----\n");
     for(size_t i = 0; i < RAM_SIZE; i++)
     {
-        printf("RAM[%ld]: %d\n", i, CPU->memmory[i]);
+        printf("RAM[%ld]: %d\n", i, CPU->ram[i]);
     }
     printf("-----RAM_END-----\n");
+}
+
+void print_call_stack(Call_stack* Call_stack)
+{
+    printf("\n---CALL_STACK---\n");
+    for(size_t i = 0; i < CALL_STACK_SIZE; i++)
+    {
+        printf("Call_stack[%ld]: %ld\n", i, Call_stack->call_stack[i]);
+    }
+    printf("---CALL_STACK---\n");
 }

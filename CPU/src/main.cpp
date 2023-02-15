@@ -4,21 +4,18 @@ int main()
 {
     CPU CPU = {};
     Stack Stack = {};
+    Call_stack Call_stack = {};
+
     cpu_ctor(&CPU, &Stack);
+    call_stack_ctor_dtor(&Call_stack);
 
-    //push_reg(&CPU, 21, 8);
-    //printf("\nPopped value from reg: %f\n", pop_reg(&CPU, 21));
-    cpu_data_print(&CPU);
-    //print_ram(&CPU);
     get_cmd_in_buf(&CPU);
-    cpu_work(&CPU);
-    // cpu_data_print(&CPU);
-    // push_reg(&CPU, 22, 9);
-    // push_reg(&CPU, 23, 10);
-    // push_reg(&CPU, 24, 11);
-    // push_reg(&CPU, 25, 12);
-    // push_reg(&CPU, 26, 13);
-    // push_reg(&CPU, 27, 14);
+    cpu_work(&CPU, &Call_stack);
+    print_call_stack(&Call_stack);
+    print_ram(&CPU);
+    print_cpu_data(&CPU);
 
+    call_stack_ctor_dtor(&Call_stack);
+    cpu_dtor(&CPU);
     return 0;
 }

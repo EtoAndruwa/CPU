@@ -10,6 +10,7 @@ int main()
     call_stack_ctor_dtor(&Call_stack);
 
     get_cmd_in_buf(&CPU);
+    push_ret(&CPU, &Call_stack, 11);
     cpu_work(&CPU, &Call_stack);
     print_call_stack(&Call_stack);
     print_ram(&CPU);

@@ -19,6 +19,9 @@ char* convert_enum_cpu(size_t error_code)
         case ERR_CALL_STACK_FULL:
             return "ERR_CALL_STACK_FULL";
             break;
+        case ERR_CALL_STACK_EMPT:
+            return "ERR_CALL_STACK_EMPT";
+            break;
         default:
             return "NEW_ERROR_CODE";
             break;

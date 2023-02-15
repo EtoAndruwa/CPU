@@ -31,7 +31,7 @@ void print_call_stack(Call_stack* Call_stack)
     printf("\n---CALL_STACK---\n");
     for(size_t i = 0; i < CALL_STACK_SIZE; i++)
     {
-        printf("Call_stack[%ld]: %ld\n", i, Call_stack->call_stack[i]);
+        printf("Call_stack[%ld]: %d\n", i, Call_stack->call_stack[i]);
     }
     printf("---CALL_STACK---\n");
 }

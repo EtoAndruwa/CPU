@@ -6,4 +6,8 @@
 |0004|		OUT 		|    cmd     |008|      OK      |
 |0005|		MUL 		|    cmd     |005|      OK      |
 |0006|		OUT 		|    cmd     |008|      OK      |
-|0007|		HLT 		|    cmd     |000|      OK      |
+|0007|		RET 		|    ret     |010|      OK      |
+|0008|		PUSH		|    cmd     |033|      OK      |
+|0009|		10  		|    val     |010|      OK      |
+|0010|		OUT 		|    cmd     |008|      OK      |
+|0011|		HLT 		|    cmd     |000|      OK      |

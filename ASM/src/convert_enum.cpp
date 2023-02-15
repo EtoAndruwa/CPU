@@ -45,6 +45,7 @@ const char* enum_token_err_to_string(size_t code)
             break;        
     }
 }
+
 const char* enum_struct_err_to_string(size_t code) 
 {
     switch(code)
@@ -78,6 +79,7 @@ const char* enum_struct_err_to_string(size_t code)
             break;
     }
 }
+
 const char* enum_type_to_string(size_t code) 
 {
     switch(code)

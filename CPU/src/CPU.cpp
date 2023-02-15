@@ -145,6 +145,9 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
     case RET:
         jmp_ret(CPU, Call_stack);
         break;
+    case JMP:
+        jmp_flag(CPU, CPU->curr_cmd + 1);
+        break;
     default:
         break;
     }
@@ -207,3 +210,7 @@ void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) //ok
     }
 }
 
+void jmp_flag(CPU* CPU, size_t index_to_jmp)
+{
+    CPU->curr_cmd = CPU->bin_code[index_to_jmp];
+}   

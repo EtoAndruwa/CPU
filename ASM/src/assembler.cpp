@@ -28,282 +28,324 @@ void file_openning_check(asm_struct* assembly_struct)
     }
 }
 
-void get_token_value(asm_struct* assembly_struct, size_t i) 
+void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk) 
 {
-    if((strcmp(assembly_struct->toks[i].text, "ax") == 0) || (strcmp(assembly_struct->toks[i].text, "bx") == 0) || (strcmp(assembly_struct->toks[i].text, "cx") == 0) || (strcmp(assembly_struct->toks[i].text, "dx") == 0))
+    if((strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0))
     {  
-        if((((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == 0) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            if(strcmp(assembly_struct->toks[i].text, "ax") == 0)
+            if(strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0)
             {
-                assembly_struct->toks[i].value = 21; 
+                assembly_struct->toks[cur_tok_chk].value = 21; 
             }
-            else if(strcmp(assembly_struct->toks[i].text, "bx") == 0)
+            else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0)
             {
-                assembly_struct->toks[i].value = 22;
+                assembly_struct->toks[cur_tok_chk].value = 22;
             }
-            else if(strcmp(assembly_struct->toks[i].text, "cx") == 0)
+            else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0)
             {
-                assembly_struct->toks[i].value = 23;
+                assembly_struct->toks[cur_tok_chk].value = 23;
             }
             else
             {   
-                assembly_struct->toks[i].value = 24;
+                assembly_struct->toks[cur_tok_chk].value = 24;
             }
-            assembly_struct->toks[i].type = reg;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].type = reg;  
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
         }
+        assembly_struct->cur_tok_chk++;
     }
-    else if(strcmp(assembly_struct->toks[i].text, "PUSH") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "PUSH") == 0)
     {  
-        if(((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i)))
+        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk)))
         {   
-            assembly_struct->toks[i].value = 1 | (1 << 5);
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 1 | (1 << 5);
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {   
-            if(((assembly_struct->num_toks - 1) > i) && check_next_reg(assembly_struct, i))
+            if(((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_reg(assembly_struct, cur_tok_chk))
             {
-                assembly_struct->toks[i].value = 1 | (1 << 6);
-                assembly_struct->toks[i].type = cmd;
-                strcpy((char*)assembly_struct->toks[i].status, "OK");
+                assembly_struct->toks[cur_tok_chk].value = 1 | (1 << 6);
+                assembly_struct->toks[cur_tok_chk].type = cmd;
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+                assembly_struct->cur_tok_chk++;
             }
-            // else if(((assembly_struct->num_toks - 1) > i) && (check_ram(assembly_struct, assembly_struct->toks[i+1].text, i) == 1))
-            // {
-            // assembly_struct->toks[i].value = 1 | (1 << 7);
-            // assembly_struct->toks[i].type = cmd;
-            // strcpy((char*)assembly_struct->toks[i].status, "OK");
-            // }
+            else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == 1))
+            {
+                assembly_struct->toks[cur_tok_chk].value = 1 | (5 << 5);
+                assembly_struct->toks[cur_tok_chk].type = cmd;
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+                assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2; // Skips [val] token
+            }
+            else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == 2))
+            {
+                assembly_struct->toks[cur_tok_chk].value = 1 | (3 << 6);
+                assembly_struct->toks[cur_tok_chk].type = cmd;
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+                assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2; // Skips [reg] token
+            }
             else
             {
-                strcpy((char*)assembly_struct->toks[i].status, "--");
-                assembly_struct->toks[i].error_code = ERR_TOKEN_WITH_VALUE;
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+                assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITH_VALUE;
+                assembly_struct->cur_tok_chk++;
             }
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "POP") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "POP") == 0)
     {     
-        if(((assembly_struct->num_toks - 1) > i) && check_next_reg(assembly_struct, i))
+        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_reg(assembly_struct, cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 2 | (1 << 6);
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 2 | (1 << 6);
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITH_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITH_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "ADD") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "ADD") == 0)
     {   
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 3;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 3;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "SUB") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "SUB") == 0)
     {   
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 4;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 4;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "MUL") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "MUL") == 0)
     {   
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 5;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 5;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "DIV") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "DIV") == 0)
     {   
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 6;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 6;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "SQRT") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "SQRT") == 0)
     {   
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 7;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 7;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "HLT") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "HLT") == 0)
     {   
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 0;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 0;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "OUT") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "OUT") == 0)
     {   
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {   
-            assembly_struct->toks[i].value = 8;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 8;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "JMP") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "JMP") == 0)
     {
-        if(((assembly_struct->num_toks - 1) > i) && (strlen(assembly_struct->toks[i+1].text) > 1) && (check_num_int(assembly_struct->toks[i+1].text + 1) == 1))
+        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (strlen(assembly_struct->toks[cur_tok_chk + 1].text) > 1) && (check_num_int(assembly_struct->toks[cur_tok_chk + 1].text + 1) == 1))
         {
-            assembly_struct->toks[i].value = 11;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 11;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_NO_FLAG;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_NO_FLAG;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(check_num(assembly_struct->toks[i].text) == 1)
+    else if(check_num(assembly_struct->toks[cur_tok_chk].text) == 1)
     {
-        if((((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == 0) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = atoi(assembly_struct->toks[i].text);
-            assembly_struct->toks[i].type = val;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = atoi(assembly_struct->toks[cur_tok_chk].text);
+            assembly_struct->toks[cur_tok_chk].type = val;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if((assembly_struct->toks[i].text[0] == ':') && (strlen(assembly_struct->toks[i].text) > 1))
+    else if((assembly_struct->toks[cur_tok_chk].text[0] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))
     {
-        if(check_num_int(assembly_struct->toks[i].text + 1) == 1)
+        if(check_num_int(assembly_struct->toks[cur_tok_chk].text + 1) == 1)
         {   
-            assembly_struct->toks[i].type = flg;
-            strcpy((char*)assembly_struct->toks[i].status, "OK"); 
+            assembly_struct->toks[cur_tok_chk].type = flg;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK"); 
+            assembly_struct->cur_tok_chk++;
         }
         else
         {   
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_INVALID_FLAG;;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_INVALID_FLAG;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if((strcmp(assembly_struct->toks[i].text, "rax") == 0) || (strcmp(assembly_struct->toks[i].text, "rbx") == 0) || (strcmp(assembly_struct->toks[i].text, "rcx") == 0))
+    else if((strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "rcx") == 0))
     {
-        if((((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == 0) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {   
-            if(strcmp(assembly_struct->toks[i].text, "rax") == 0)
+            if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0)
             {
-                assembly_struct->toks[i].value = 25; 
+                assembly_struct->toks[cur_tok_chk].value = 25; 
             }
-            else if(strcmp(assembly_struct->toks[i].text, "rbx") == 0)
+            else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0)
             {
-                assembly_struct->toks[i].value = 26;
+                assembly_struct->toks[cur_tok_chk].value = 26;
             }
-            else if(strcmp(assembly_struct->toks[i].text, "rcx") == 0)
+            else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rcx") == 0)
             {
-                assembly_struct->toks[i].value = 27;
+                assembly_struct->toks[cur_tok_chk].value = 27;
             }
-            assembly_struct->toks[i].type = reg;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].type = reg;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else    
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if(strcmp(assembly_struct->toks[i].text, "CALL") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "CALL") == 0)
     {
-        if(((assembly_struct->num_toks - 1) > i) && (check_next_token(assembly_struct, i) == 0) && (assembly_struct->toks[i+1].text[(strlen(assembly_struct->toks[i+1].text) - 1)] == ':'))
+        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == 0) && (assembly_struct->toks[cur_tok_chk+1].text[(strlen(assembly_struct->toks[cur_tok_chk+1].text) - 1)] == ':'))
         {
-            assembly_struct->toks[i].value = 30;
-            assembly_struct->toks[i].type = cmd;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 30;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_NO_FNC_NAME;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_NO_FNC_NAME;
+            assembly_struct->cur_tok_chk++;
         }
     }
-    else if((assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':'))
+    else if((assembly_struct->toks[cur_tok_chk].text[(strlen(assembly_struct->toks[cur_tok_chk].text) - 1)] == ':'))
     {
-        assembly_struct->toks[i].type = fnc;
-        strcpy((char*)assembly_struct->toks[i].status, "OK");
+        assembly_struct->toks[cur_tok_chk].type = fnc;
+        strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+        assembly_struct->cur_tok_chk++;
     }
-    else if(strcmp(assembly_struct->toks[i].text, "RET") == 0)
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "RET") == 0)
     {
-        if((((assembly_struct->num_toks - 1) > i) && !check_next_token(assembly_struct, i) && !(check_next_reg(assembly_struct, i))) || ((assembly_struct->num_toks - 1) == i))
+        if((((assembly_struct->num_toks - 1) > cur_tok_chk) && !check_next_token(assembly_struct, cur_tok_chk) && !(check_next_reg(assembly_struct, cur_tok_chk))) || ((assembly_struct->num_toks - 1) == cur_tok_chk))
         {
-            assembly_struct->toks[i].value = 10;
-            assembly_struct->toks[i].type = ret;
-            strcpy((char*)assembly_struct->toks[i].status, "OK");
+            assembly_struct->toks[cur_tok_chk].value = 10;
+            assembly_struct->toks[cur_tok_chk].type = ret;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
         }
         else
         {
-            strcpy((char*)assembly_struct->toks[i].status, "--");
-            assembly_struct->toks[i].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;
+            assembly_struct->cur_tok_chk++;
         }
     }
     else
     {
-        strcpy((char*)assembly_struct->toks[i].status, "--");
-        assembly_struct->toks[i].error_code = ERR_INVALID_TOKEN;
+        strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+        assembly_struct->toks[cur_tok_chk].error_code = ERR_INVALID_TOKEN;
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+        assembly_struct->cur_tok_chk++;
     }
 }
 
@@ -366,6 +408,7 @@ void dtor_asm(asm_struct* assembly_struct)
     assembly_struct->err_code = 0;
     assembly_struct->size = 0;
     assembly_struct->num_toks = 0;
+    assembly_struct->cur_tok_chk = 0;
 }
 
 void get_tokens(asm_struct* assembly_struct) 
@@ -394,9 +437,9 @@ void realloc_toks(asm_struct* assembly_struct, size_t i)
 
 void translate_to_asm(asm_struct* assembly_struct)  
 {
-    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    while(assembly_struct->cur_tok_chk < assembly_struct->num_toks)
     {
-        get_token_value(assembly_struct, i);
+        get_token_value(assembly_struct, assembly_struct->cur_tok_chk);
     }
 }
 

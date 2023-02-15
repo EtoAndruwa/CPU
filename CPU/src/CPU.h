@@ -3,6 +3,12 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+// RAM << 7
+// REG << 6
+// VAL << 5
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -60,8 +66,8 @@ enum cmd
     SQRT = 7, //ok
     OUT  = 8, //ok
     INT  = 9,
-    RET  = 10,
-    JMP  = 11,
+    RET  = 10, //ok
+    JMP  = 11, //ok
     ax   = 21, //ok
     bx   = 22, //ok
     cx   = 23, //ok
@@ -69,7 +75,7 @@ enum cmd
     rax  = 25, //ok
     rbx  = 26, //ok
     rcx  = 27, //ok
-    CALL = 30
+    CALL = 30  //ok
 };
 
 enum error_code
@@ -117,6 +123,8 @@ void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
 void jmp_ret(CPU* CPU, Call_stack* Call_stack);
 
 void fill_with_posion(stack_type* arr_ptr, size_t size_arr);
+
+void jmp_flag(CPU* CPU, size_t index_to_jmp);
 
 
 

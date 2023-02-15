@@ -51,7 +51,7 @@ size_t check_brackets(char* token_text)
 {
     size_t closed = 0;  
 
-    if((token_text[0] == '[') && (token_text[strlen(token_text - 1)] == ']'))
+    if((token_text[0] == '[') && (token_text[strlen(token_text) - 1] == ']'))
     {
         closed = 1;
     }
@@ -59,70 +59,81 @@ size_t check_brackets(char* token_text)
     return closed;  // Returns 1 if brackets are closed
 }
 
-// size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
-// {
-//     if(check_brackets(token_text))
-//     {
-//         size_t strlen_token_check = strlen(token_text);
-//         if(strlen_token_check > 4)
-//         {
-//             char* str_check =(char*)calloc(strlen_token_check + 1 - 2, sizeof(char));
-//             strncpy(str_check, token_text, strlen_token_check + 1 - 2);
-//             str_check[strlen_token_check - 1] = '\0';
-//             if(check_num(str_check))
-//             {   
-//                 assembly_struct->toks[index].value = atoi(str_check);
-//                 assembly_struct->toks[index].type = val;
-//                 strcpy((char*)assembly_struct->toks[index].status, "OK");
-//                 return 1;
-//             }
-//             else if()
-//             {
-//                 if(strcmp(str_check, "ax") == 0)
-//                 {
-//                     assembly_struct->toks[index].value = 21; 
-//                 }
-//                 else if(strcmp(str_check, "bx") == 0)
-//                 {
-//                     assembly_struct->toks[index].value = 22;
-//                 }
-//                 else if(strcmp(str_check, "cx") == 0)
-//                 {
-//                     assembly_struct->toks[index].value = 23;
-//                 }
-//                 else if(strcmp(str_check, "dx") == 0)
-//                 {   
-//                     assembly_struct->toks[index].value = 24;
-//                 }
-//                 if(strcmp(str_check, "rax") == 0)
-//                 {
-//                     assembly_struct->toks[index].value = 25; 
-//                 }
-//                 else if(strcmp(str_check, "rbx") == 0)
-//                 {
-//                     assembly_struct->toks[index].value = 26;
-//                 }
-//                 else if(strcmp(str_check, "rcx") == 0)
-//                 {
-//                     assembly_struct->toks[index].value = 27;
-//                 }
-//                 assembly_struct->toks[index].value = atoi(str_check);
-//                 assembly_struct->toks[index].type = val;
-//                 strcpy((char*)assembly_struct->toks[index].status, "OK");
+size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
+{
+    if(check_brackets(token_text))
+    {
+        size_t strlen_token_check = strlen(token_text);
+        if(strlen_token_check >= 3)
+        {
+            size_t length_of_inner = strlen_token_check -1 ;
+            char* str_check =(char*)calloc(length_of_inner, sizeof(char));
+            strncpy(str_check, (token_text + 1), strlen_token_check - 2);
+            str_check[strlen_token_check - 1] = '\0';
 
-//                 return 2; // If ram addressing
-//             }
-//         }
-//         else
-//         {
-//             return 0;
-//         }
-//     }
-//     else
-//     {
-//         return 0;
-//     }
-// }
+            printf("%s\n", str_check);
+
+            if(check_reg_inner(assembly_struct, str_check))
+            {
+                if(strcmp(str_check, "ax") == 0)
+                {
+                    assembly_struct->toks[index].value = 21; 
+                }
+                else if(strcmp(str_check, "bx") == 0)
+                {
+                    assembly_struct->toks[index].value = 22;
+                }
+                else if(strcmp(str_check, "cx") == 0)
+                {
+                    assembly_struct->toks[index].value = 23;
+                }
+                else if(strcmp(str_check, "dx") == 0)
+                {   
+                    assembly_struct->toks[index].value = 24;
+                }
+                if(strcmp(str_check, "rax") == 0)
+                {
+                    assembly_struct->toks[index].value = 25; 
+                }
+                else if(strcmp(str_check, "rbx") == 0)
+                {
+                    assembly_struct->toks[index].value = 26;
+                }
+                else if(strcmp(str_check, "rcx") == 0)
+                {
+                    assembly_struct->toks[index].value = 27;
+                }
+                assembly_struct->toks[index].type = reg;
+                strcpy((char*)assembly_struct->toks[index].status, "OK");
+
+                printf("index: %ld\n", index);
+                printf("[reg]\n");
+
+                return 2; // If ram addressing [reg]
+            }
+            else if(check_num(str_check))
+            {   
+                assembly_struct->toks[index].value = atoi(str_check);
+                assembly_struct->toks[index].type = val;
+                strcpy((char*)assembly_struct->toks[index].status, "OK");
+                printf("[val]\n");
+
+                return 1; // if memmory addressing [val] 
+            }
+
+            free(str_check);
+            str_check = nullptr;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 size_t check_num_int(char* num_text) 
 {
@@ -131,9 +142,7 @@ size_t check_num_int(char* num_text)
     size_t length_text = strlen(num_text);
     for(size_t i  = 0; i < length_text; i++)
     {
-        char check_char = num_text[i];
-
-        if(isdigit(check_char) == 0) // If the character is not a digit
+        if(isdigit(num_text[i]) == 0) // If the character is not a digit
         {
             flag = 0;
         }
@@ -271,6 +280,18 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i)
 {
     //printf("%s", assembly_struct->toks[i+1].text);
     if((strcmp(assembly_struct->toks[i+1].text, "ax") == 0) || (strcmp(assembly_struct->toks[i+1].text, "bx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "cx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "dx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rcx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rax") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rbx") == 0))
+    {
+        return 1; // Returns 1 if the next token is reg 
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
+{
+    if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0) || (strcmp(inner_text, "rcx") == 0) || (strcmp(inner_text, "rax") == 0) || (strcmp(inner_text, "rbx") == 0))
     {
         return 1; // Returns 1 if the next token is reg 
     }

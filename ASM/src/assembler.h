@@ -114,7 +114,7 @@ enum cmd
 typedef struct tokens
 {
     char* text           = nullptr;   // The pointer to the string containing text of the token
-    char value           = 0;         // The value reponsible for asm code of the token
+    unsigned char value  = 0;         // The value reponsible for asm code of the token
     size_t type          = 0;         // The value responsible for type of token ('cmd','reg', 'val', 'flg')
     const char status[3] = {};        // The value responsible for status (valid/invalid) of token ('OK', '---')
     size_t error_code    = TOKEN_OK;  // The value responsible for error code of the token
@@ -134,6 +134,7 @@ typedef struct asm_struct
     size_t size           = 0;         // The size of the assembly file
     size_t num_toks       = 1;         // The total number of tokens (1 for initializing, then will be realloced)
     char* asm_codes        = nullptr;
+    size_t cur_tok_chk   = 0;;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -342,5 +343,7 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i);
 void get_arr_asm_codes(asm_struct* assembly_struct);
 
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index);
+
+size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

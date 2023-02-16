@@ -21,7 +21,7 @@
 #define SCREEN_SIZE 20
 #define REG_NUM 4
 #define R_REG_NUM 3
-#define STACK_SIZE 100
+#define STACK_SIZE 10   
 #define CALL_STACK_SIZE 20
 #define FILE_NAME "code_file.bin"
 #define MUL_CONST 100
@@ -132,7 +132,6 @@ void fill_with_posion(stack_type* arr_ptr, size_t size_arr);
 void jmp_flag(CPU* CPU, size_t index_to_jmp);
 
 void print_ram_screen(CPU* CPU);
-
 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

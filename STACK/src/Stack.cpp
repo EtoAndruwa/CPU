@@ -94,11 +94,11 @@ void StackMul(Stack * st) // (OK) Multiplies two values of the stack
 {   
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 
-    st->data[st->next_empty_cell - 2] = st->data[st->next_empty_cell - 1] * st->data[st->next_empty_cell - 2] / 100;
+    st->data[st->next_empty_cell - 2] = (st->data[st->next_empty_cell - 1] * st->data[st->next_empty_cell - 2]) / 100;
     st->data[st->next_empty_cell - 1] = POISON_VALUE;
     st->next_empty_cell--;
+    printf("hash: %d\n", st->hash);
     Calculate_hash(st);
-    StackPrint(st);
 
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 }
@@ -359,9 +359,9 @@ void Calculate_hash(Stack * st) // (OK) Recalculates the value of hash everytime
         if(st->data[i] != POISON_VALUE)
         {
             st->hash = st->hash + st->data[i];
+            //printf("Hash value: %d\n", st->hash);
         }
     }
-    //printf("Hash value: %d\n", st->hash);
 }
 
 stack_type Get_cur_value_of_hash(Stack * st) // (OK) Calculates the current value of the hash

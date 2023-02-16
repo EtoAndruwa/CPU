@@ -22,7 +22,8 @@ FILE* check_code_file(CPU* CPU)
 }
 
 void push_reg(CPU* CPU, size_t reg_code) // From reg to stack
-{
+{   
+    print_cpu_data(CPU);
     switch (reg_code)
     {
     case ax:
@@ -224,7 +225,7 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
         printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case PUSH_REG: // ok
-        push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
+        push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
         printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;

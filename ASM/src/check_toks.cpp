@@ -2,16 +2,21 @@
 
 size_t check_num(char* num_text) 
 {
-    size_t flag = 1; // Returns 1 if all characters are digit or contain '.'
+    size_t flag = 0; // Returns 1 if all characters are digit or contain '.'
 
     size_t length_text = strlen(num_text);
     for(size_t i  = 0; i < length_text; i++)
     {
         char check_char = num_text[i];
 
-        if(isdigit(check_char) == 0) // Check does the text contain digits
+        if(isdigit(check_char) != 0 || ((check_char == '-') && (i == 0))) // Check does the text contain digits
+        {
+            flag = 1;
+        }
+        else
         {
             flag = 0;
+            break;
         }
     }
 

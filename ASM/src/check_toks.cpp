@@ -32,31 +32,33 @@ size_t check_next_token(asm_struct* assembly_struct, size_t i)
 
 size_t check_all_valid(asm_struct* assembly_struct) 
 {
-    size_t flag = 1; // Returns 1 if all valid and code can be converted into assembly code
-
     //printf("assembly_struct->num_toks: %ld\n", assembly_struct->num_toks);
+    if(assembly_struct->err_code != STRUCT_OK)
+    {
+        return 0;
+    }
+
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {
-        if((assembly_struct->err_code != STRUCT_OK) || (assembly_struct->toks[i].error_code != TOKEN_OK))
+        if(assembly_struct->toks[i].error_code != TOKEN_OK)
         {   
-            flag = 0; // Returns 0 if some token is invalid or asm struct has an error 
-            break;  
+            return 0; // Returns 0 if some token is invalid or asm struct has an error 
         }
     }
 
-    return flag; // Returns 1 if all valid and code can be converted into assembly code
+    return 1; // Returns 1 if all valid and code can be converted into assembly code
 }
 
 size_t check_brackets(char* token_text) 
 {
-    size_t closed = 0;  
-
     if((token_text[0] == '[') && (token_text[strlen(token_text) - 1] == ']'))
     {
-        closed = 1;
+        return 1; // Returns 1 if brackets are closed
     }
-
-    return closed;  // Returns 1 if brackets are closed
+    else
+    {
+        return 0; // Returns 1 if brackets are not closed
+    }
 }
 
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
@@ -161,7 +163,14 @@ size_t check_flags(asm_struct* assembly_struct)
                 {   
                     if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "JMP") != 0)) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
                     {   
-                        assembly_struct->toks[i + 1].value = assembly_struct->toks[j + 1].new_index; 
+                        for(size_t q = j + 1; q < assembly_struct->num_toks; q++)
+                        {
+                            if(assembly_struct->toks[q].new_index != -1)
+                            {
+                                assembly_struct->toks[i + 1].value = assembly_struct->toks[q].new_index;
+                                break;
+                            }
+                        }
                         flags_ok = 1; // Flag exists
                         break;
                     }
@@ -201,7 +210,14 @@ size_t check_func(asm_struct* assembly_struct)
                         if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0))) // The token is not a call of the function or is the firts command in the assembly code
                         {   
                             funcs_ok = 1; // Calls declared function
-                            assembly_struct->toks[i + 1].value = assembly_struct->toks[j + 1].new_index;
+                            for(size_t q = j + 1; q < assembly_struct->num_toks; q++)
+                            {
+                                if(assembly_struct->toks[q].new_index != -1)
+                                {
+                                    assembly_struct->toks[i + 1].value = assembly_struct->toks[q].new_index;
+                                    break;
+                                }
+                            }
                             break;
                         }
                         else 
@@ -233,7 +249,7 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
             {   
                 size_t positon_of_first_decl = i; // This value stores the first position of the function declaration
-                if(((assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') &&  (i > 0) && (strcmp(assembly_struct->toks[i-1].text, "CALL") != 0)) || (assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') &&  (i == 0)) // If the token is the fist declaration of the function and is not a call of the function 
+                if((strlen(assembly_struct->toks[i].text) > 1) && ((assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') &&  (i > 0) && (strcmp(assembly_struct->toks[i-1].text, "CALL") != 0)) || (assembly_struct->toks[i].text[(strlen(assembly_struct->toks[i].text) - 1)] == ':') &&  (i == 0)) // If the token is the fist declaration of the function and is not a call of the function 
                 {
                     char* func_name = assembly_struct->toks[i].text; // The function name that is used in order to search another declarations of the function with the same name
                     for(size_t j = i + 1; j < assembly_struct->num_toks ; j++) // Check the tokens after the firts function declaration
@@ -293,34 +309,5 @@ size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
     else
     {
         return 0;
-    }
-}
-
-void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
-{
-    size_t new_index = 0;
-    
-    if((assembly_struct->toks[index_cmd].type != flg) && (assembly_struct->toks[index_cmd].type != fnc))
-    {
-        for(size_t i = 0; i < index_cmd; i++)
-        {
-            if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret)
-            {
-                new_index++;
-            }
-        }
-        assembly_struct->toks[index_cmd].new_index = new_index;
-    }
-    else
-    {
-        assembly_struct->toks[index_cmd].new_index = - 1;
-    }
-}
-
-void put_new_index(asm_struct* assembly_struct)
-{
-    for(size_t i = 0; i < assembly_struct->num_toks; i++)
-    {
-        new_index_tok(assembly_struct, i);
     }
 }

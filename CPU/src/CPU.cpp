@@ -221,64 +221,80 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
     case PUSH_ST: // ok
         StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
         CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case PUSH_REG: // ok
         push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
         CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case POP_REG: // ok
         pop_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case ADD: // ok
         StackAdd(CPU->stack);
         CPU->curr_cmd++;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case MUL: // ok
         StackMul(CPU->stack);
         CPU->curr_cmd++;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case OUT: //ok
         StackOut(CPU->stack);
         CPU->curr_cmd++;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case DIV: //ok
         StackDiv(CPU->stack);
         CPU->curr_cmd++;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case SQRT: //ok
         StackSqrt(CPU->stack);
         CPU->curr_cmd++;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case SUB: //ok
         StackSub(CPU->stack);
         CPU->curr_cmd++;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case CALL: //ok
-        push_ret(CPU, Call_stack, CPU->bin_code[CPU->curr_cmd + 1]);
-        CPU->curr_cmd = CPU->curr_cmd + 2;
+        push_ret(CPU, Call_stack, CPU->curr_cmd + 2);
+        CPU->curr_cmd = CPU->bin_code[CPU->curr_cmd + 1];
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case RET:
         jmp_ret(CPU, Call_stack);
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case JMP:
         jmp_flag(CPU, CPU->curr_cmd + 1);
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case PUSH_RAM_REG:
         push_ram_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case PUSH_RAM_VAL:
         push_ram_val(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case POP_RAM_REG:
         pop_ram_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     case POP_RAM_VAL:
         pop_ram_val(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
+        printf("curr_cmd: %ld\n", CPU->curr_cmd);
         break;
     default:
         break;
@@ -287,7 +303,6 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
 
 void jmp_ret(CPU* CPU, Call_stack* Call_stack)
 {
-    printf("RET");
     if((Call_stack->cur_index == 0) && (Call_stack->call_stack[Call_stack->cur_index] != POISON_VALUE))
     {   
         CPU->curr_cmd = Call_stack->call_stack[Call_stack->cur_index];
@@ -308,16 +323,17 @@ void jmp_ret(CPU* CPU, Call_stack* Call_stack)
 void get_cmd_in_buf(CPU* CPU)
 {
     FILE* bin_code = check_code_file(CPU);
-    fread(CPU->num_bin_cmd, sizeof(char), 1, bin_code);
-    CPU->bin_code = (unsigned char*)calloc(*CPU->num_bin_cmd, sizeof(char));
-    fread(CPU->bin_code, sizeof(char), *CPU->num_bin_cmd, bin_code);
+    fread(CPU->num_bin_cmd, sizeof(int), 1, bin_code);
+    CPU->bin_code = (int*)calloc(*CPU->num_bin_cmd, sizeof(int));
+    fread(CPU->bin_code, sizeof(int), *CPU->num_bin_cmd, bin_code);
+    fclose(bin_code);
 
-    printf("\nBIN_ARR");
-    for(size_t i = 0; i < *CPU->num_bin_cmd; i++)
-    {   
-        printf(" %d ", CPU->bin_code[i]);
-    }
-    printf("\n\n");
+    // printf("\nBIN_ARR");
+    // for(size_t i = 0; i < *CPU->num_bin_cmd; i++)
+    // {   
+    //     printf(" %d ", CPU->bin_code[i]);
+    // }
+    // printf("\n\n");
 }
 
 void cpu_work(CPU* CPU, Call_stack* Call_stack)
@@ -333,8 +349,7 @@ void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) //ok
     if((Call_stack->cur_index >= 0) && (Call_stack->cur_index < CALL_STACK_SIZE))
     {
         Call_stack->call_stack[Call_stack->cur_index] = index_to_jmp;
-        Call_stack->cur_index++;
-        print_call_stack(Call_stack);
+        //print_call_stack(Call_stack);
     }
     else
     {

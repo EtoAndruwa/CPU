@@ -5,7 +5,7 @@ const char* enum_token_err_to_string(size_t code)
     switch(code)
     {
         case TOKEN_OK:
-            return "OK";
+            return "TOKEN_OK";
             break;
         case ERR_TOKEN_WITH_VALUE:
             return "ERR_TOKEN_WITH_VALUE";

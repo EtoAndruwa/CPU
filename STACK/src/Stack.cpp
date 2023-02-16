@@ -19,7 +19,7 @@ void StackCtor(Stack * st, size_t stack_size) // (OK) Creates and initializes st
     {
         st->data[i] = POISON_VALUE;
     }
-    StackOut(st);
+    //StackOut(st);
 
     StackCheck(st, FUNC_NAME, FUNC_LINE);
 }

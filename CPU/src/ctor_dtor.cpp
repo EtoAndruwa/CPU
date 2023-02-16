@@ -7,7 +7,8 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
 
     memset(CPU->reg, 0, REG_NUM);
     memset(CPU->r_reg, 0, R_REG_NUM);
-    memset(CPU->ram, 0, RAM_SIZE);
+    for(size_t i = 0; i < RAM_SIZE; i++)
+        CPU->ram[i] = 0;
 
     CPU->error_code = CPU_OK;
 }
@@ -21,6 +22,8 @@ void cpu_dtor(CPU* CPU)
     fill_with_posion(CPU->r_reg, R_REG_NUM);
     fill_with_posion(CPU->ram, RAM_SIZE);
 
+    free(CPU->bin_code);
+    CPU->bin_code = nullptr;
     CPU->error_code = 0;
 }
 

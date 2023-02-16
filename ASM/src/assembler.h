@@ -79,31 +79,34 @@ enum token_error_code
 
 enum cmd
 {
-    HLT      = 0,
-    PUSH_ST  = 33,
-    PUSH_REG = 65,
-    PUSH_RAM = 129,
-    POP_REG  = 66,
+    HLT      = 0,  //ok
+    PUSH_ST  = 33, //ok
+    PUSH_REG = 65, //ok
+    PUSH_RAM_VAL = 161, //ok
+    PUSH_RAM_REG = 193, // ok
+    
+    POP_REG  = 66, // ok
     POP_ST   = 34,
-    POP_RAM  = 130, 
+    POP_RAM_VAL = 162,
+    POP_RAM_REG = 194,
 
-    ADD  = 3,
-    SUB  = 4,
-    MUL  = 5,
-    DIV  = 6,
-    SQRT = 7,
-    OUT  = 8,
+    ADD  = 3, //ok 
+    SUB  = 4, //ok
+    MUL  = 5, //ok
+    DIV  = 6, //ok
+    SQRT = 7, //ok
+    OUT  = 8, //ok
     INT  = 9,
-    RET  = 10,
-    JMP  = 11,
-    ax   = 21,
-    bx   = 22,
-    cx   = 23,
-    dx   = 24, 
-    rax  = 25, 
-    rbx  = 26,
-    rcx  = 27,
-    CALL = 30
+    RET  = 10, //ok
+    JMP  = 11, //ok
+    ax   = 21, //ok
+    bx   = 22, //ok
+    cx   = 23, //ok
+    dx   = 24, //ok
+    rax  = 25, //ok
+    rbx  = 26, //ok
+    rcx  = 27, //ok
+    CALL = 30  //ok
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -114,7 +117,7 @@ enum cmd
 typedef struct tokens
 {
     char* text           = nullptr;   // The pointer to the string containing text of the token
-    unsigned char value  = 0;         // The value reponsible for asm code of the token
+    int value  = 0;         // The value reponsible for asm code of the token
     size_t type          = 0;         // The value responsible for type of token ('cmd','reg', 'val', 'flg')
     const char status[3] = {};        // The value responsible for status (valid/invalid) of token ('OK', '---')
     size_t error_code    = TOKEN_OK;  // The value responsible for error code of the token
@@ -133,8 +136,8 @@ typedef struct asm_struct
     size_t err_code       = STRUCT_OK; // The error code of program
     size_t size           = 0;         // The size of the assembly file
     size_t num_toks       = 1;         // The total number of tokens (1 for initializing, then will be realloced)
-    char* asm_codes        = nullptr;
-    size_t cur_tok_chk   = 0;;
+    int* asm_codes = nullptr;
+    size_t cur_tok_chk    = 0;;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -349,5 +352,7 @@ size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text);
 void new_index_tok(asm_struct* assembly_struct, size_t index_cmd);
 
 void put_new_index(asm_struct* assembly_struct);
+
+size_t get_new_num_toks(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

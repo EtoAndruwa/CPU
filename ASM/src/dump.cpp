@@ -37,13 +37,12 @@ void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LI
         fprintf(logfile, "assembly_struct->err_code: %ld (%s)\n", assembly_struct->err_code, enum_struct_err_to_string(assembly_struct->err_code));
         fprintf(logfile, "FUNC_NAME: %s\n", FUNCT_NAME);
         fprintf(logfile, "FUNC_LINE: %d\n", FUNCT_LINE);  
-        fprintf(logfile, "assembly_struct->num_toks:: %ld\n", assembly_struct->num_toks);
+        fprintf(logfile, "assembly_struct->num_toks: %ld\n", assembly_struct->num_toks);
         fprintf(logfile, "assembly_struct->size: %ld\n", assembly_struct->size);
         fprintf(logfile, "assembly_struct->toks: %p\n", assembly_struct->toks);
         fprintf(logfile, "assembly_struct->translated_file: %p\n", assembly_struct->translated_file);
         fprintf(logfile, "TIME: %s\n", __TIME__);
         fprintf(logfile, "DATE: %s\n", __DATE__);
-        fprintf(logfile, "FILE: %s\n", __FILE__);
         fprintf(logfile, "-------------------------------------------------\n\n");
     }
 

@@ -17,10 +17,11 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-#define RAM_SIZE 10
+#define RAM_SIZE 400
+#define SCREEN_SIZE 20
 #define REG_NUM 4
 #define R_REG_NUM 3
-#define STACK_SIZE 5
+#define STACK_SIZE 100
 #define CALL_STACK_SIZE 20
 #define FILE_NAME "code_file.bin"
 #define MUL_CONST 100
@@ -35,8 +36,8 @@ typedef struct
 {
     Stack* stack = nullptr;
     stack_type ram[RAM_SIZE] = {};  //  pointer to the RAM
-    unsigned char* bin_code = {};
-    char num_bin_cmd[1] = {};
+    int* bin_code = {};
+    int num_bin_cmd[1] = {};
     size_t curr_cmd = 0;
     stack_type  reg [REG_NUM] = {};       //  registets for values
     stack_type r_reg[R_REG_NUM] = {};       //  registers for adresses
@@ -58,7 +59,6 @@ enum cmd
     PUSH_RAM_REG = 193, 
     
     POP_REG  = 66,
-    POP_ST   = 34,
     POP_RAM_VAL = 162,
     POP_RAM_REG = 194,
 
@@ -97,12 +97,13 @@ void pop_reg(CPU* CPU, size_t reg_code);
 
 void push_reg(CPU* CPU, size_t reg_code);
 
-
 void push_ram_val(CPU* CPU, size_t ram_index); // from ram to stack
-void push_ram_reg(CPU* CPU, size_t reg_id); // from ram to stack
-void pop_ram_reg(CPU* CPU, size_t reg_id); // from stack to ram
-void pop_ram_val(CPU* CPU, size_t ram_index); // from stack to ram
 
+void push_ram_reg(CPU* CPU, size_t reg_id); // from ram to stack
+
+void pop_ram_reg(CPU* CPU, size_t reg_id); // from stack to ram
+
+void pop_ram_val(CPU* CPU, size_t ram_index); // from stack to ram
 
 void cpu_ctor(CPU* CPU, Stack* Stack);
 
@@ -129,6 +130,8 @@ void jmp_ret(CPU* CPU, Call_stack* Call_stack);
 void fill_with_posion(stack_type* arr_ptr, size_t size_arr);
 
 void jmp_flag(CPU* CPU, size_t index_to_jmp);
+
+void print_ram_screen(CPU* CPU);
 
 
 

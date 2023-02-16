@@ -42,8 +42,6 @@ int main()
     //count_num_of_lines_in_buf(&asm_struct);
     get_tokens(&asm_struct);
     translate_to_asm(&asm_struct);
-    get_arr_asm_codes(&asm_struct);
-    //print_all_toks(&asm_struct);
     write_asm(&asm_struct);
     listing(&asm_struct);
     dtor_asm(&asm_struct);

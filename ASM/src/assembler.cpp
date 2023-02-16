@@ -333,7 +333,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
             assembly_struct->cur_tok_chk++;
         }
     }
-    else if((assembly_struct->toks[cur_tok_chk].text[(strlen(assembly_struct->toks[cur_tok_chk].text) - 1)] == ':'))
+    else if((assembly_struct->toks[cur_tok_chk].text[(strlen(assembly_struct->toks[cur_tok_chk].text) - 1)] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))
     {
         assembly_struct->toks[cur_tok_chk].type = fnc;
         assembly_struct->toks[cur_tok_chk].value = 0;
@@ -464,9 +464,10 @@ void write_asm(asm_struct* assembly_struct)
     put_new_index(assembly_struct); // Gets new indexes of all tokens
 
     if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
-    {
-        fwrite(assembly_struct->asm_codes, sizeof(char), assembly_struct->num_toks + 1, assembly_struct->translated_file);
-        
+    {   
+        get_arr_asm_codes(assembly_struct);
+        size_t new_num_cmd = get_new_num_toks(assembly_struct);
+        fwrite(assembly_struct->asm_codes, sizeof(int), new_num_cmd + 1, assembly_struct->translated_file);        
         printf("Success\n");
     }
     else
@@ -477,22 +478,69 @@ void write_asm(asm_struct* assembly_struct)
 
 void get_arr_asm_codes(asm_struct* assembly_struct)
 {
-    assembly_struct->asm_codes = (char*)calloc(assembly_struct->num_toks + 1, sizeof(int));
-    assembly_struct->asm_codes[0] = (char)assembly_struct->num_toks;
+    size_t new_num_cmd = get_new_num_toks(assembly_struct);
+    assembly_struct->asm_codes = (int*)calloc(new_num_cmd + 1, sizeof(int)); // Creates buffer for number of commands without jmp and func
+    assembly_struct->asm_codes[0] = (int)(new_num_cmd); // New number of toks
     
     size_t j = 1;
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
-    {
-        assembly_struct->asm_codes[j] = (char)assembly_struct->toks[i].value;
-        j++;
+    {   
+        if(assembly_struct->toks[i].new_index != -1)
+        {
+            assembly_struct->asm_codes[j] = (int)assembly_struct->toks[i].value;
+            j++;
+        }
     }
 
-    // printf("\nASM_ARR");
-    // for(size_t i = 0; i < assembly_struct->num_toks; i++)
-    // {   
-    //     printf(" %d ", assembly_struct->asm_codes[i]);
-    // }
-    // printf("\n");
+
+    printf("\nASM_ARR");
+    for(size_t i = 0; i < new_num_cmd + 1; i++)
+    {   
+        printf(" %d ", assembly_struct->asm_codes[i]);
+    }
+    printf("\n");
+}
+
+void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
+{
+    size_t new_index = 0;
+    
+    if(assembly_struct->toks[index_cmd].type == cmd || assembly_struct->toks[index_cmd].type == val || assembly_struct->toks[index_cmd].type == reg || assembly_struct->toks[index_cmd].type == ret || ((assembly_struct->toks[index_cmd].type == fnc) && (strcmp(assembly_struct->toks[index_cmd-1].text, "CALL") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JMP") == 0)))
+    {
+        for(size_t i = 0; i < index_cmd; i++)
+        {
+            if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret || ((assembly_struct->toks[i].type == fnc) && (strcmp(assembly_struct->toks[i-1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JMP") == 0)))
+            {
+                new_index++;
+            }
+        }
+        assembly_struct->toks[index_cmd].new_index = new_index;
+    }
+    else
+    {
+        assembly_struct->toks[index_cmd].new_index = - 1;
+    }
+}
+
+void put_new_index(asm_struct* assembly_struct)
+{
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    {
+        new_index_tok(assembly_struct, i);
+    }
+}
+
+size_t get_new_num_toks(asm_struct* assembly_struct)
+{
+    int max = 0;
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)   
+    {
+        if(max <= assembly_struct->toks[i].new_index)
+        {
+            max = assembly_struct->toks[i].new_index;
+        }
+    }
+    return (max + 1);
 }
 

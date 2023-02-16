@@ -15,6 +15,7 @@ int main()
     //print_ram(&CPU);
     //print_ram_screen(&CPU);
     print_cpu_data(&CPU);
+    print_ram_screen(&CPU);
 
     call_stack_ctor_dtor(&Call_stack);
     cpu_dtor(&CPU);

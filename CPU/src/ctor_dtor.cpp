@@ -8,7 +8,9 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
     memset(CPU->reg, 0, REG_NUM);
     memset(CPU->r_reg, 0, R_REG_NUM);
     for(size_t i = 0; i < RAM_SIZE; i++)
-        CPU->ram[i] = 0;
+    {
+        CPU->ram[i] = 'O' * 100;
+    }
 
     CPU->error_code = CPU_OK;
 }

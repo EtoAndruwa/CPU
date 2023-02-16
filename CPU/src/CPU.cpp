@@ -350,6 +350,7 @@ void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) //ok
     if((Call_stack->cur_index >= 0) && (Call_stack->cur_index < CALL_STACK_SIZE))
     {
         Call_stack->call_stack[Call_stack->cur_index] = index_to_jmp;
+        Call_stack->cur_index++;
         //print_call_stack(Call_stack);
     }
     else

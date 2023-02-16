@@ -38,14 +38,14 @@ void print_call_stack(Call_stack* Call_stack)
 
 void print_ram_screen(CPU* CPU)
 {
-    printf("\n------------------SCREEN------------------\n");
+    printf("\n----------------SCREEN-----------------\n");
     for(size_t i = 0; i < RAM_SIZE; i++)
     {
         if((i % SCREEN_SIZE) == 0)
         {
             printf("\n");
         }
-        printf("%d ", CPU->ram[i]);
+        printf("%c ", (CPU->ram[i] / 100));
     }
-    printf("\n\n------------------SCREEN------------------\n\n");
+    printf("\n\n----------------SCREEN-----------------\n\n");
 }

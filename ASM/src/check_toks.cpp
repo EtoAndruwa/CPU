@@ -161,7 +161,7 @@ size_t check_flags(asm_struct* assembly_struct)
                 {   
                     if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "JMP") != 0)) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
                     {   
-                        assembly_struct->toks[i+1].value = j; 
+                        assembly_struct->toks[i + 1].value = assembly_struct->toks[j + 1].new_index; 
                         flags_ok = 1; // Flag exists
                         break;
                     }
@@ -201,6 +201,7 @@ size_t check_func(asm_struct* assembly_struct)
                         if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0))) // The token is not a call of the function or is the firts command in the assembly code
                         {   
                             funcs_ok = 1; // Calls declared function
+                            assembly_struct->toks[i + 1].value = assembly_struct->toks[j + 1].new_index;
                             break;
                         }
                         else 
@@ -249,7 +250,6 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
                             }
                             else 
                             {
-                                assembly_struct->toks[j].value = positon_of_first_decl;
                                 declaration_ok = 1; // The declaration is an uniqe one
                             }
                         }
@@ -293,5 +293,34 @@ size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
     else
     {
         return 0;
+    }
+}
+
+void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
+{
+    size_t new_index = 0;
+    
+    if((assembly_struct->toks[index_cmd].type != flg) && (assembly_struct->toks[index_cmd].type != fnc))
+    {
+        for(size_t i = 0; i < index_cmd; i++)
+        {
+            if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret)
+            {
+                new_index++;
+            }
+        }
+        assembly_struct->toks[index_cmd].new_index = new_index;
+    }
+    else
+    {
+        assembly_struct->toks[index_cmd].new_index = - 1;
+    }
+}
+
+void put_new_index(asm_struct* assembly_struct)
+{
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    {
+        new_index_tok(assembly_struct, i);
     }
 }

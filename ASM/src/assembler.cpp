@@ -279,6 +279,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
         if(check_num_int(assembly_struct->toks[cur_tok_chk].text + 1) == 1)
         {   
             assembly_struct->toks[cur_tok_chk].type = flg;
+            assembly_struct->toks[cur_tok_chk].value = 0;
             strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK"); 
             assembly_struct->cur_tok_chk++;
         }
@@ -335,6 +336,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
     else if((assembly_struct->toks[cur_tok_chk].text[(strlen(assembly_struct->toks[cur_tok_chk].text) - 1)] == ':'))
     {
         assembly_struct->toks[cur_tok_chk].type = fnc;
+        assembly_struct->toks[cur_tok_chk].value = 0;
         strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
         assembly_struct->cur_tok_chk++;
     }
@@ -459,6 +461,8 @@ void translate_to_asm(asm_struct* assembly_struct)
 
 void write_asm(asm_struct* assembly_struct) 
 {   
+    put_new_index(assembly_struct); // Gets new indexes of all tokens
+
     if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
     {
         fwrite(assembly_struct->asm_codes, sizeof(char), assembly_struct->num_toks + 1, assembly_struct->translated_file);

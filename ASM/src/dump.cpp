@@ -7,7 +7,7 @@ void listing(asm_struct* assembly_struct)
     fprintf(listing_file,"|NUMB|\t\tCOMMAND\t\t|    TYPE    |ASM|    STATUS    |\n");
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
-        fprintf(listing_file,"|%04ld|		%-4s		|    %s     |%03d|      %s      |", i, assembly_struct->toks[i].text, enum_type_to_string(assembly_struct->toks[i].type), assembly_struct->toks[i].value, assembly_struct->toks[i].status);
+        fprintf(listing_file,"|%04d|		%-4s		|    %s     |%03d|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->toks[i].text, enum_type_to_string(assembly_struct->toks[i].type), assembly_struct->toks[i].value, assembly_struct->toks[i].status);
         if(strcmp(assembly_struct->toks[i].status, "--") == 0)
         {
             fprintf(listing_file, " <----- %s", enum_token_err_to_string(assembly_struct->toks[i].error_code)); 
@@ -64,6 +64,7 @@ void print_all_toks(asm_struct* assembly_struct)
         printf("TOKEN_VALUE: %d\n", assembly_struct->toks[i].value);
         printf("TOKEN_TYPE: %ld\n", assembly_struct->toks[i].type);
         printf("TOKEN_STATUS: %s\n", assembly_struct->toks[i].status);
+        printf("TOKEN_NEW_INDEX: %d\n", assembly_struct->toks[i].new_index);
         printf("TOKEN_ERROR_CODE: %ld (%s)\n", assembly_struct->toks[i].error_code, enum_token_err_to_string(assembly_struct->toks[i].error_code));
     }
 }

@@ -118,7 +118,7 @@ typedef struct tokens
     size_t type          = 0;         // The value responsible for type of token ('cmd','reg', 'val', 'flg')
     const char status[3] = {};        // The value responsible for status (valid/invalid) of token ('OK', '---')
     size_t error_code    = TOKEN_OK;  // The value responsible for error code of the token
-    size_t line_number   = 0;         // The value responsible for the number of the command's line 
+    int new_index        = 0;
 }tokens;
 
 /**
@@ -345,5 +345,9 @@ void get_arr_asm_codes(asm_struct* assembly_struct);
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index);
 
 size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text);
+
+void new_index_tok(asm_struct* assembly_struct, size_t index_cmd);
+
+void put_new_index(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

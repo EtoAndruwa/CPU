@@ -104,7 +104,6 @@ void pop_ram_reg(CPU* CPU, size_t reg_id); // from stack to ram
 void pop_ram_val(CPU* CPU, size_t ram_index); // from stack to ram
 
 
-
 void cpu_ctor(CPU* CPU, Stack* Stack);
 
 char* convert_enum_cpu(size_t error_code);

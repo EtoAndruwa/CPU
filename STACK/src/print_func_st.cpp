@@ -25,14 +25,14 @@ void StackDump(Stack* st, const char* FUNCT_NAME, int FUNCT_LINE, const char* FU
         fprintf(dump_log, "Called from dump_log: %s\n", __FILE__);
         fprintf(dump_log, "Called error function name: %s\n", FUNCT_NAME);
         fprintf(dump_log, "Called from line: %d\n", FUNCT_LINE);    
-        fprintf(dump_log, "Called from dump_log: %d\n", FUNCT_FILE);  
+        fprintf(dump_log, "Called from dump_log: %s\n", FUNCT_FILE);  
         fprintf(dump_log, "Date when was called: %s\n", __DATE__);
         fprintf(dump_log, "Time when was called: %s\n\n", __TIME__);
 
         fprintf(dump_log, "LEFT CANARY = %ld\n", st->left_canary_position[0]);
-        for(int i = 0; i < st->capacity; i++)
+        for(size_t i = 0; i < st->capacity; i++)
         {
-                fprintf(dump_log, "data[%d] = %d", i, st->data[i]);
+                fprintf(dump_log, "data[%ld] = %d", i, st->data[i]);
                 fprintf(dump_log, "\t address %p\n", st->data + i);
         }
         fprintf(dump_log, "RIGHT CANARY = %ld\n", st->right_canary_position[0]);

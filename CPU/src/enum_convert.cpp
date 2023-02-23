@@ -18,12 +18,22 @@ char* convert_enum_cpu(size_t error_code)
             return "ERR_CALL_STACK_EMPT";
         case ERR_OPEN_DUMP_FILE:
             return "ERR_OPEN_DUMP_FILE";
-        case ERR_CLODE_DUMP_FILE:
-            return "ERR_CLODE_DUMP_FILE";
+        case ERR_CLOSE_DUMP_FILE:
+            return "ERR_CLOSE_DUMP_FILE";
         case ERR_INVALID_REG:
             return "ERR_INVALID_REG";
         case ERR_UNKNOWN_CMD:
             return "ERR_UNKNOWN_CMD";
+        case ERR_INV_READ_NUM_CMD:
+            return "ERR_INV_READ_NUM_CMD";
+        case ERR_CANNOT_READ_CMD:
+            return "ERR_CANNOT_READ_CMD";
+        case ERR_CALLOC_BIN_CODE:
+            return "ERR_CALLOC_BIN_CODE";
+        case ERR_CLOSE_BIN_FILE:
+            return "ERR_CLOSE_BIN_FILE";
+        case ERR_BIN_NULL_BEF_DTOR:
+            return "ERR_BIN_NULL_BEF_DTOR";
         default:
             return "NEW_ERROR_CODE";
     }

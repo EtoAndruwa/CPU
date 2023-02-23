@@ -6,10 +6,7 @@ FILE* check_code_file(CPU* CPU)
 
     if(bin_file_ptr == nullptr)
     {
-        CPU->error_code = ERR_OPEN_BIN_FILE;
-        printf("ERROR: unable to open file %s.\n", FILE_BIN_NAME);
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        exit(ERR_OPEN_BIN_FILE);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_OPEN_BIN_FILE);
     }
     else
     {   
@@ -84,23 +81,35 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
         CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
     default:
-        CPU->error_code = ERR_UNKNOWN_CMD;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_UNKNOWN_CMD);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_UNKNOWN_CMD);
     }
 }
 
 void get_cmd_in_buf(CPU* CPU)
 {
     FILE* bin_file_ptr = check_code_file(CPU);
-    fread(CPU->num_bin_cmd, sizeof(int), 1, bin_file_ptr);
+
+    if(fread(CPU->num_bin_cmd, sizeof(int), 1, bin_file_ptr) != 1)
+    {
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INV_READ_NUM_CMD);
+    }
 
     CPU->bin_code = (int*)calloc(*CPU->num_bin_cmd, sizeof(int));
 
-    fread(CPU->bin_code, sizeof(int), *CPU->num_bin_cmd, bin_file_ptr);
-    fclose(bin_file_ptr);
+    if(CPU->bin_code == nullptr)    
+    {
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALLOC_BIN_CODE);
+    }
 
+    if(fread(CPU->bin_code, sizeof(int), *CPU->num_bin_cmd, bin_file_ptr) != *CPU->num_bin_cmd)
+    {
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CANNOT_READ_CMD);
+    }
+
+    if(fclose(bin_file_ptr) == EOF)
+    {
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CLOSE_BIN_FILE);
+    }
 }
 
 void cpu_work(CPU* CPU, Call_stack* Call_stack)
@@ -118,4 +127,3 @@ void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUN
     cpu_dtor(CPU);
     exit(error_code);
 }
-

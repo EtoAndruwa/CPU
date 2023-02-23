@@ -4,6 +4,8 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
 {
     StackCtor(Stack, STACK_SIZE);
     CPU->stack = Stack;
+    CPU->error_code = CPU_OK;
+
     fill_with_posion(CPU->reg, REG_NUM);
     fill_with_posion(CPU->r_reg, R_REG_NUM);
 
@@ -11,8 +13,6 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
     {
         CPU->ram[i] = 'O' * 100;
     }
-
-    CPU->error_code = CPU_OK;
 }
 
 void cpu_dtor(CPU* CPU)
@@ -24,8 +24,17 @@ void cpu_dtor(CPU* CPU)
     fill_with_posion(CPU->r_reg, R_REG_NUM);
     fill_with_posion(CPU->ram, RAM_SIZE);
 
-    free(CPU->bin_code);
-    CPU->bin_code = nullptr;
+    if(CPU->bin_code != nullptr)
+    {
+        free(CPU->bin_code);
+        CPU->bin_code = nullptr;
+    }
+    else
+    {
+        CPU->error_code = ERR_BIN_NULL_BEF_DTOR;
+        printf("Error code: %ld (%s)\n", ERR_BIN_NULL_BEF_DTOR, convert_enum_cpu(ERR_BIN_NULL_BEF_DTOR));
+        exit(ERR_BIN_NULL_BEF_DTOR);
+    }
     CPU->error_code = 0;
 }
 

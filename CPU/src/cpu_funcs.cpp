@@ -97,7 +97,7 @@ void pop_reg(CPU* CPU, size_t reg_code) // From Stack to reg
     }
 }
 
-void push_ram_val(CPU* CPU, size_t ram_index)
+void push_ram_val(CPU* CPU, size_t ram_index) // From RAM to Stack
 {
     if((ram_index < RAM_SIZE) && (ram_index >= 0))
     {
@@ -109,7 +109,7 @@ void push_ram_val(CPU* CPU, size_t ram_index)
     }
 }
 
-void pop_ram_val(CPU* CPU, size_t ram_index)
+void pop_ram_val(CPU* CPU, size_t ram_index) // From Stack to RAM
 {
     if((ram_index < RAM_SIZE) && (ram_index >= 0))
     {
@@ -121,7 +121,7 @@ void pop_ram_val(CPU* CPU, size_t ram_index)
     }
 }
 
-void push_ram_reg(CPU* CPU, size_t reg_id)
+void push_ram_reg(CPU* CPU, size_t reg_id) // From RAM to stack
 {
     switch (reg_id)
     {
@@ -200,7 +200,7 @@ void push_ram_reg(CPU* CPU, size_t reg_id)
     }
 }
 
-void pop_ram_reg(CPU* CPU, size_t reg_id)
+void pop_ram_reg(CPU* CPU, size_t reg_id) // From Stack to RAM
 {
     switch (reg_id)
     {

@@ -56,7 +56,7 @@ typedef struct
     int* bin_code               = {};  //
     int num_bin_cmd[1]          = {};  //
     size_t curr_cmd             = 0;   //     
-    stack_type  reg [REG_NUM]   = {};  //  registets for values
+    stack_type reg [REG_NUM]    = {};  //  registets for values
     stack_type r_reg[R_REG_NUM] = {};  //  registers for adresses
     size_t error_code           = 0;   //
 }CPU; 
@@ -106,16 +106,21 @@ enum cmd
 
 enum error_code
 {
-    CPU_OK              = 0,
-    ERR_NULLPTR_RAM     = 1,
-    ERR_RAM_ADDRESSING  = 2,
-    ERR_OPEN_BIN_FILE   = 3,
-    ERR_CALL_STACK_FULL = 4,
-    ERR_CALL_STACK_EMPT = 5,
-    ERR_OPEN_DUMP_FILE  = 6,
-    ERR_CLODE_DUMP_FILE = 7,
-    ERR_INVALID_REG     = 8,
-    ERR_UNKNOWN_CMD     = 9,
+    CPU_OK                = 0,
+    ERR_NULLPTR_RAM       = 1,
+    ERR_RAM_ADDRESSING    = 2,
+    ERR_OPEN_BIN_FILE     = 3,
+    ERR_CALL_STACK_FULL   = 4,
+    ERR_CALL_STACK_EMPT   = 5,
+    ERR_OPEN_DUMP_FILE    = 6,
+    ERR_CLOSE_DUMP_FILE   = 7,
+    ERR_INVALID_REG       = 8,
+    ERR_UNKNOWN_CMD       = 9,
+    ERR_INV_READ_NUM_CMD  = 10,
+    ERR_CANNOT_READ_CMD   = 11,
+    ERR_CALLOC_BIN_CODE   = 12,
+    ERR_CLOSE_BIN_FILE    = 13,
+    ERR_BIN_NULL_BEF_DTOR = 14
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -338,5 +343,6 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
 void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #endif 
 

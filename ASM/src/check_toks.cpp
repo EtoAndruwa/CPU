@@ -31,13 +31,12 @@ size_t check_next_token(asm_struct* assembly_struct, size_t i)
     }
     else
     {
-        return 0;
+        return 0; // Returns 0 if the next token is text
     }
 }
 
 size_t check_all_valid(asm_struct* assembly_struct) 
 {
-    //printf("assembly_struct->num_toks: %ld\n", assembly_struct->num_toks);
     if(assembly_struct->err_code != STRUCT_OK)
     {
         return 0;
@@ -75,6 +74,15 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
         {
             size_t length_of_inner = strlen_token_check -1 ;
             char* str_check =(char*)calloc(length_of_inner, sizeof(char));
+
+            if(str_check == nullptr)
+            {
+                assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
+                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+                dtor_asm(assembly_struct);
+                exit(-1);
+            }
+
             strncpy(str_check, (token_text + 1), strlen_token_check - 2);
             str_check[strlen_token_check - 1] = '\0';
 
@@ -313,6 +321,6 @@ size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
     }
     else
     {
-        return 0;
+        return 0; // Returns 0 if the next token is not a reg
     }
 }

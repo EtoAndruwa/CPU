@@ -1,109 +1,94 @@
 #include "assembler.h"
 
-const char* enum_token_err_to_string(size_t code) 
+const char* enum_token_err_to_string(size_t code)  // for token
 {
     switch(code)
     {
         case TOKEN_OK:
             return "TOKEN_OK";
-            break;
         case ERR_TOKEN_WITH_VALUE:
             return "ERR_TOKEN_WITH_VALUE";
-            break;
         case ERR_TOKEN_WITHOUT_VALUE:
             return "ERR_TOKEN_WITHOUT_VALUE";
-            break;
         case ERR_INVALID_TOKEN:
             return "ERR_INVALID_TOKEN";
-            break;
         case ERR_NO_FLAG:
             return "ERR_NO_FLAG";
-            break;
         case ERR_INVALID_FLAG:
             return "ERR_INVALID_FLAG";
-            break;
         case ERR_NO_FLAG_TO_JMP:
             return "ERR_NO_FLAG_TO_JMP";
-            break;
         case ERR_INVALID_REG:
             return "ERR_INVALID_REG";
-            break;
         case ERR_CALLS_NON_EXISTEN_FNC:
             return "ERR_CALLS_NON_EXISTEN_FNC";
-            break;
         case ERR_NO_FNC_NAME:
             return "ERR_NO_FNC_NAME";
-            break;
         case ERR_DOUBLE_DECL_OF_FNC:
             return "ERR_DOUBLE_DECL_OF_FNC";
-            break;
         case ERR_FIRST_DECL_OF_FNC:
             return "ERR_FIRST_DECL_OF_FNC";
-            break;
+        case ERR_TO_CHECK_INNER_RAM:
+            return "ERR_TO_CHECK_INNER_RAM";
         default:
-            return "NEW_ERROR_CODE";
-            break;        
+            return "NEW_ERROR_CODE";       
     }
 }
 
-const char* enum_struct_err_to_string(size_t code) 
+const char* enum_struct_err_to_string(size_t code) // for struct
 {
     switch(code)
     {
         case ERR_ASM_CODE_BUF_NULL:
             return "ERR_ASM_CODE_BUF_NULL";
-            break;
         case ERR_CLOSE_ASM_FILE:
             return "ERR_CLOSE_ASM_FILE";
-            break;
         case ERR_CLOSE_LOG_FILE:
             return "ERR_CLOSE_LOG_FILE";
-            break;
         case ERR_CLOSE_TRANSLATED_FILE:
             return "ERR_CLOSE_TRANSLATED_FILE";
-            break;
         case ERR_EMPTY_ASM_FILE:
             return "ERR_EMPTY_ASM_FILE";
-            break;
         case ERR_OPEN_ASM_FILE:
             return "ERR_OPEN_ASM_FILE";
-            break;
         case ERR_OPEN_LOG_FILE:
             return "ERR_OPEN_LOG_FILE";
-            break;
         case ERR_OPEN_TRANSLATED_FILE:
             return "ERR_OPEN_TRANSLATED_FILE";
-            break;
+        case ERR_TO_WRITE_CODE:
+            return "ERR_TO_WRITE_CODE";
+        case ERR_TO_CALLOC_TOKS:
+            return "ERR_TO_CALLOC_TOKS";
+        case ERR_TO_CALLOC_ASM_BUF:
+            return "ERR_TO_CALLOC_ASM_BUF";
+        case ERR_READ_TO_ASM_BUF:
+            return "ERR_READ_TO_ASM_BUF";
+        case ERR_TO_CALLOC_BIN_CODES:
+            return "ERR_TO_CALLOC_BIN_CODES";
+        case ERR_TO_REALLOC_TOKS:
+            return "ERR_TO_REALLOC_TOKS";
         default:
             return "STRUCT_OK"; 
-            break;
     }
 }
 
-const char* enum_type_to_string(size_t code) 
+const char* enum_type_to_string(size_t code) // for token type
 {
     switch(code)
     {
         case cmd:
             return "cmd";
-            break;
         case reg:
             return "reg";
-            break;
         case val:
             return "val";
-            break;  
         case flg:
             return "flg";
-            break;
         case fnc:
             return "fnc";
-            break;
         case ret:
             return "ret";
-            break;
         default:
             return "---";
-            break;
     }
 }

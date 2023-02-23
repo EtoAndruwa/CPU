@@ -1,6 +1,6 @@
 |NUMB|		COMMAND		|    TYPE    |ASM|    STATUS    |
 |0000|		PUSH		|    cmd     |033|      OK      |
-|0001|		32  		|    val     |032|      OK      |
+|0001|		88  		|    val     |088|      OK      |
 |0002|		POP 		|    cmd     |066|      OK      |
 |0003|		ax  		|    reg     |021|      OK      |
 |0004|		CALL		|    cmd     |030|      OK      |

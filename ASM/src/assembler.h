@@ -1,3 +1,6 @@
+#ifndef ASSEMBLER_H
+#define ASSEMBLER_H
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
@@ -10,6 +13,8 @@
  * @copyright Copyright (c) 2023
  */
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,8 +26,8 @@
 /**
  * @brief | Defines used in the code
  */
-#define FILE_1 "test_asm"   // Defines the name of assembly file
-#define FILE_2 "test_code"  // Defines the name of translated file
+#define FILE_ASM "test_asm"   // Defines the name of assembly file
+#define FILE_CODE "test_code"  // Defines the name of translated file
 #define FUNC_LINE __LINE__  // Defines the line from which the error was called 
 #define FUNC_NAME __func__  // Defines the name of the fucntion which called the line
 
@@ -41,7 +46,13 @@ enum asm_errors
     ERR_CLOSE_TRANSLATED_FILE = 5,
     ERR_EMPTY_ASM_FILE        = 6, 
     ERR_OPEN_LOG_FILE         = 7,
-    ERR_CLOSE_LOG_FILE        = 8
+    ERR_CLOSE_LOG_FILE        = 8,
+    ERR_TO_WRITE_CODE         = 9,
+    ERR_TO_CALLOC_TOKS        = 10,
+    ERR_TO_CALLOC_ASM_BUF     = 11,
+    ERR_READ_TO_ASM_BUF       = 12,
+    ERR_TO_CALLOC_BIN_CODES   = 13,
+    ERR_TO_REALLOC_TOKS       = 14,
 };
 
 /**
@@ -69,44 +80,45 @@ enum token_error_code
     ERR_TOKEN_WITH_VALUE         = 3,  // Example: 'PUSH ______'
     ERR_NO_FLAG                  = 4,  // Example: 'JMP _____'
     ERR_INVALID_FLAG             = 5,  // Example: ':abc'
-    ERR_NO_FLAG_TO_JMP           = 6,  // Example: ''
-    ERR_INVALID_REG              = 7,  // Example: '' 
-    ERR_CALLS_NON_EXISTEN_FNC    = 8,  // Example: ''
-    ERR_NO_FNC_NAME              = 9,  // Example: ''
-    ERR_DOUBLE_DECL_OF_FNC       = 10, // Example: ''
-    ERR_FIRST_DECL_OF_FNC        = 11  // Example: ''
+    ERR_NO_FLAG_TO_JMP           = 6,  
+    ERR_INVALID_REG              = 7,   
+    ERR_CALLS_NON_EXISTEN_FNC    = 8,  
+    ERR_NO_FNC_NAME              = 9,  
+    ERR_DOUBLE_DECL_OF_FNC       = 10, 
+    ERR_FIRST_DECL_OF_FNC        = 11,
+    ERR_TO_CHECK_INNER_RAM       = 12,
 };  
 
 enum cmd
 {
-    HLT      = 0,  //ok
-    PUSH_ST  = 33, //ok
-    PUSH_REG = 65, //ok
-    PUSH_RAM_VAL = 161, //ok
-    PUSH_RAM_REG = 193, // ok
+    HLT          = 0,  
+    PUSH_ST      = 33, 
+    PUSH_REG     = 65, 
+    PUSH_RAM_VAL = 161, 
+    PUSH_RAM_REG = 193, 
     
-    POP_REG  = 66, // ok
-    POP_ST   = 34,
-    POP_RAM_VAL = 162,
-    POP_RAM_REG = 194,
+    POP_REG      = 66, 
+    POP_ST       = 34,
+    POP_RAM_VAL  = 162,
+    POP_RAM_REG  = 194,
 
-    ADD  = 3, //ok 
-    SUB  = 4, //ok
-    MUL  = 5, //ok
-    DIV  = 6, //ok
-    SQRT = 7, //ok
-    OUT  = 8, //ok
+    ADD  = 3, 
+    SUB  = 4, 
+    MUL  = 5, 
+    DIV  = 6, 
+    SQRT = 7, 
+    OUT  = 8, 
     INT  = 9,
-    RET  = 10, //ok
-    JMP  = 11, //ok
-    ax   = 21, //ok
-    bx   = 22, //ok
-    cx   = 23, //ok
-    dx   = 24, //ok
-    rax  = 25, //ok
-    rbx  = 26, //ok
-    rcx  = 27, //ok
-    CALL = 30  //ok
+    RET  = 10, 
+    JMP  = 11, 
+    ax   = 21, 
+    bx   = 22, 
+    cx   = 23, 
+    dx   = 24, 
+    rax  = 25, 
+    rbx  = 26, 
+    rcx  = 27, 
+    CALL = 30  
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -117,11 +129,11 @@ enum cmd
 typedef struct tokens
 {
     char* text           = nullptr;   // The pointer to the string containing text of the token
-    int value  = 0;         // The value reponsible for asm code of the token
+    int value            = 0;         // The value reponsible for asm code of the token
     size_t type          = 0;         // The value responsible for type of token ('cmd','reg', 'val', 'flg')
     const char status[3] = {};        // The value responsible for status (valid/invalid) of token ('OK', '---')
     size_t error_code    = TOKEN_OK;  // The value responsible for error code of the token
-    int new_index        = 0;
+    int new_index        = 0;         // The new index of the token without flags and function declarations
 }tokens;
 
 /**
@@ -136,8 +148,8 @@ typedef struct asm_struct
     size_t err_code       = STRUCT_OK; // The error code of program
     size_t size           = 0;         // The size of the assembly file
     size_t num_toks       = 1;         // The total number of tokens (1 for initializing, then will be realloced)
-    int* asm_codes = nullptr;
-    size_t cur_tok_chk    = 0;;
+    int* bin_codes        = nullptr;   // Contains ready to be written binary codes of the tokens
+    size_t cur_tok_chk    = 0;         // The index of the current token
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -149,12 +161,16 @@ typedef struct asm_struct
  */
 void file_openning_check(asm_struct* assembly_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Closes all file, frees all pointers, deletes all data of struct
  * 
  * @param assembly_struct  | The struct containing all information about the asm struct
  */
 void dtor_asm(asm_struct* assembly_struct); 
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Gets the size of asm code file 
@@ -163,12 +179,16 @@ void dtor_asm(asm_struct* assembly_struct);
  */
 void get_size_asm(asm_struct* assembly_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Creates buffer for commands and copies all commands into it
  * 
  * @param assembly_struct  | The struct containing all information about the asm struct
  */
 void get_commands_into_buf(asm_struct* assembly_struct); 
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Prints information about the struct 
@@ -177,12 +197,16 @@ void get_commands_into_buf(asm_struct* assembly_struct);
  */
 void print_struct(asm_struct* assembly_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Gets all tokens from the buffer
  * 
  * @param assembly_struct  | The struct containing all information about the asm struct
  */
 void get_tokens(asm_struct* assembly_struct);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Reallocs the array with tokens
@@ -192,6 +216,8 @@ void get_tokens(asm_struct* assembly_struct);
  */
 void realloc_toks(asm_struct* assembly_struct, size_t i);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Prints all information about all tokens
  * 
@@ -199,12 +225,16 @@ void realloc_toks(asm_struct* assembly_struct, size_t i);
  */
 void print_all_toks(asm_struct* assembly_struct); 
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Gets asm codes for all tokens 
  * 
  * @param assembly_struct  | The struct containing all information about the asm struct
  */
 void translate_to_asm(asm_struct* assembly_struct);  
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Puts an appropriate asm code to the each token
@@ -214,6 +244,8 @@ void translate_to_asm(asm_struct* assembly_struct);
  */
 void get_token_value(asm_struct* assembly_struct, size_t i);     
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief           | (OK) Checks does the number contain only digits and .
  * 
@@ -221,6 +253,8 @@ void get_token_value(asm_struct* assembly_struct, size_t i);
  * @return size_t   | Returns '1' if all characters are digit or contain '.'
  */
 size_t check_num(char* num_text);     
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Creates LOG_FILE.txt with all information about asm_struct
@@ -231,6 +265,8 @@ size_t check_num(char* num_text);
  */
 void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LINE);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief               | (OK) Сonverts an enum's int value to the enum's string value
  * 
@@ -239,12 +275,16 @@ void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LI
  */
 const char* enum_struct_err_to_string(size_t code);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Makes listing of the assembled code
  * 
  * @param assembly_struct  | The struct containing all information about the asm struct
  */
 void listing(asm_struct* assembly_struct);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief              | (OK) Сonverts an enum's int value to the enum's string value
@@ -253,6 +293,8 @@ void listing(asm_struct* assembly_struct);
  * @return const char* | Returns the string value of the token's type code 
  */
 const char* enum_type_to_string(size_t code);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Checks is the next token is a number
@@ -263,6 +305,8 @@ const char* enum_type_to_string(size_t code);
  */
 size_t check_next_token(asm_struct* assembly_struct, size_t i);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief               | (OK) Сonverts an enum's int value to the enum's string value
  * 
@@ -271,12 +315,16 @@ size_t check_next_token(asm_struct* assembly_struct, size_t i);
  */
 const char* enum_token_err_to_string(size_t code);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Writes all asm code into the translated file
  * 
  * @param assembly_struct  | The struct containing all information about the asm struct
  */
 void write_asm(asm_struct* assembly_struct);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Checks all token for being valid
@@ -287,12 +335,7 @@ void write_asm(asm_struct* assembly_struct);
  */
 size_t check_all_valid(asm_struct* assembly_struct);     
 
-// /**
-//  * @brief                  | (OK) Counts the number of lines in the buffer
-//  * 
-//  * @param assembly_struct  | The struct containing all information about the asm struct
-//  */
-//void count_num_of_lines_in_buf(asm_struct* assembly_struct); 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief             | (FOR_FUTURE) Checks the valid memmory addressing in the command
@@ -302,6 +345,8 @@ size_t check_all_valid(asm_struct* assembly_struct);
  */
 size_t check_brackets(char* token_text);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief           | (OK) Checks does the number contain only digits (is an integer)
  * 
@@ -309,6 +354,8 @@ size_t check_brackets(char* token_text);
  * @return size_t   | Returns '1' if all characters are digits (word is an integer)
  */
 size_t check_num_int(char* num_text); 
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK) Checks all flags for existence 
@@ -318,6 +365,8 @@ size_t check_num_int(char* num_text);
  */
 size_t check_flags(asm_struct* assembly_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Checks all function calls 
  * 
@@ -326,6 +375,8 @@ size_t check_flags(asm_struct* assembly_struct);
  */
 size_t check_func(asm_struct* assembly_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /**
  * @brief                  | (OK) Checks all function declarations for double declaration
  * 
@@ -333,6 +384,8 @@ size_t check_func(asm_struct* assembly_struct);
  * @return size_t          | Returns '1' if all declarations of functions are uniqe and '0' if double declarations are exist in the code
  */
 size_t check_fnc_declaration(asm_struct* assembly_struct); 
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief                  | (OK)
@@ -343,16 +396,67 @@ size_t check_fnc_declaration(asm_struct* assembly_struct);
  */
 size_t check_next_reg(asm_struct* assembly_struct, size_t i);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Get the arr asm codes object
+ * 
+ * @param assembly_struct 
+ */
 void get_arr_asm_codes(asm_struct* assembly_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ * @param token_text 
+ * @param index 
+ * @return size_t 
+ */
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ * @param inner_text 
+ * @return size_t 
+ */
 size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ * @param index_cmd 
+ */
 void new_index_tok(asm_struct* assembly_struct, size_t index_cmd);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ */
 void put_new_index(asm_struct* assembly_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Get the new num toks object
+ * 
+ * @param assembly_struct 
+ * @return size_t 
+ */
 size_t get_new_num_toks(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+#endif

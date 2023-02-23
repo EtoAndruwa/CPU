@@ -1,6 +1,6 @@
 #include "CPU.h"
 
-void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) //ok
+void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) 
 {
     if((Call_stack->cur_index >= 0) && (Call_stack->cur_index < CALL_STACK_SIZE))
     {
@@ -9,10 +9,7 @@ void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) //ok
     }
     else
     {
-        CPU->error_code = ERR_CALL_STACK_FULL;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_CALL_STACK_FULL);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALL_STACK_FULL);
     }
 }
 
@@ -36,10 +33,7 @@ void jmp_ret(CPU* CPU, Call_stack* Call_stack)
     }
     else
     {
-        CPU->error_code = ERR_CALL_STACK_EMPT;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_CALL_STACK_EMPT);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALL_STACK_EMPT);
     }
 }
 
@@ -69,10 +63,7 @@ void push_reg(CPU* CPU, size_t reg_code) // From reg to stack
         StackPush(CPU->stack, CPU->r_reg[2]);
         break;
     default:
-        CPU->error_code = ERR_INVALID_REG;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_INVALID_REG);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
     }
 }
 
@@ -102,10 +93,7 @@ void pop_reg(CPU* CPU, size_t reg_code) // From Stack to reg
         CPU->r_reg[2] = StackPop(CPU->stack);
         break;
     default:
-        CPU->error_code = ERR_INVALID_REG;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_INVALID_REG);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
     }
 }
 
@@ -117,10 +105,7 @@ void push_ram_val(CPU* CPU, size_t ram_index)
     }
     else
     {
-        CPU->error_code = ERR_RAM_ADDRESSING;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_RAM_ADDRESSING);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
     }
 }
 
@@ -132,10 +117,7 @@ void pop_ram_val(CPU* CPU, size_t ram_index)
     }
     else
     {
-        CPU->error_code = ERR_RAM_ADDRESSING;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_RAM_ADDRESSING);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
     }
 }
 
@@ -144,31 +126,77 @@ void push_ram_reg(CPU* CPU, size_t reg_id)
     switch (reg_id)
     {
     case ax:
-        StackPush(CPU->stack, CPU->ram[CPU->reg[0] / 100]);
+        if((CPU->reg[0] / 100) >= RAM_SIZE)
+        {
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
+        }
+        else
+        {
+            StackPush(CPU->stack, CPU->ram[CPU->reg[0] / 100]);
+        }
         break;
     case bx:
-        StackPush(CPU->stack, CPU->ram[CPU->reg[1] / 100]);
+        if((CPU->reg[1] / 100) >= RAM_SIZE)
+        {
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
+        }
+        else
+        {
+            StackPush(CPU->stack, CPU->ram[CPU->reg[1] / 100]);
+        }
         break;
     case cx:
-        StackPush(CPU->stack, CPU->ram[CPU->reg[2] / 100]);
+        if((CPU->reg[2] / 100) >= RAM_SIZE)
+        {
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
+        }
+        else
+        {
+            StackPush(CPU->stack, CPU->ram[CPU->reg[2] / 100]);
+        }
         break;
     case dx:
-        StackPush(CPU->stack, CPU->ram[CPU->reg[3] / 100]);
-        break; 
+        if((CPU->reg[3] / 100) >= RAM_SIZE)
+        {
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
+        }
+        else
+        {
+            StackPush(CPU->stack, CPU->ram[CPU->reg[3] / 100]);
+        }
+        break;
     case rax:
-        StackPush(CPU->stack, CPU->ram[CPU->r_reg[0] / 100]);
+        if((CPU->r_reg[0] / 100) >= RAM_SIZE)
+        {
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
+        }
+        else
+        {
+            StackPush(CPU->stack, CPU->ram[CPU->r_reg[0] / 100]);
+        }
         break;
     case rbx:
-        StackPush(CPU->stack, CPU->ram[CPU->r_reg[1] / 100]);
+        if((CPU->r_reg[1] / 100) >= RAM_SIZE)
+        {
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
+        }
+        else
+        {
+            StackPush(CPU->stack, CPU->ram[CPU->r_reg[1] / 100]);
+        }
         break;
     case rcx:
-        StackPush(CPU->stack, CPU->ram[CPU->r_reg[2] / 100]);
+        if((CPU->r_reg[2] / 100) >= RAM_SIZE)
+        {
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
+        }
+        else
+        {
+            StackPush(CPU->stack, CPU->ram[CPU->r_reg[2] / 100]);
+        }
         break;
     default:
-        CPU->error_code = ERR_INVALID_REG;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_INVALID_REG);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
     }
 }
 
@@ -179,10 +207,7 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
     case ax:
         if((CPU->reg[0] / 100) >= RAM_SIZE)
         {
-            CPU->error_code = ERR_RAM_ADDRESSING;
-            dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            cpu_dtor(CPU);
-            exit(ERR_RAM_ADDRESSING);
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
@@ -191,11 +216,8 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
         break;
     case bx:
         if((CPU->reg[1] / 100) >= RAM_SIZE)
-        {
-            CPU->error_code = ERR_RAM_ADDRESSING;
-            dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            cpu_dtor(CPU);
-            exit(ERR_RAM_ADDRESSING);
+        {   
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
@@ -205,10 +227,7 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
     case cx:
         if((CPU->reg[2] / 100) >= RAM_SIZE)
         {
-            CPU->error_code = ERR_RAM_ADDRESSING;
-            dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            cpu_dtor(CPU);
-            exit(ERR_RAM_ADDRESSING);
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
@@ -218,10 +237,7 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
     case dx:
         if((CPU->reg[3] / 100) >= RAM_SIZE)
         {
-            CPU->error_code = ERR_RAM_ADDRESSING;
-            dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            cpu_dtor(CPU);
-            exit(ERR_RAM_ADDRESSING);
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
@@ -231,10 +247,7 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
     case rax:
         if((CPU->r_reg[0] / 100) >= RAM_SIZE)
         {
-            CPU->error_code = ERR_RAM_ADDRESSING;
-            dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            cpu_dtor(CPU);
-            exit(ERR_RAM_ADDRESSING);
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
@@ -244,10 +257,7 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
     case rbx:
         if((CPU->r_reg[1] / 100) >= RAM_SIZE)
         {
-            CPU->error_code = ERR_RAM_ADDRESSING;
-            dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            cpu_dtor(CPU);
-            exit(ERR_RAM_ADDRESSING);
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
@@ -257,10 +267,7 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
     case rcx:
         if((CPU->r_reg[2] / 100) >= RAM_SIZE)
         {
-            CPU->error_code = ERR_RAM_ADDRESSING;
-            dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            cpu_dtor(CPU);
-            exit(ERR_RAM_ADDRESSING);
+            safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
@@ -268,9 +275,6 @@ void pop_ram_reg(CPU* CPU, size_t reg_id)
         }
         break;
     default:
-        CPU->error_code = ERR_INVALID_REG;
-        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        cpu_dtor(CPU);
-        exit(ERR_INVALID_REG);
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
     }
 }

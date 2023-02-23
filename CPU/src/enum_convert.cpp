@@ -22,6 +22,8 @@ char* convert_enum_cpu(size_t error_code)
             return "ERR_CLODE_DUMP_FILE";
         case ERR_INVALID_REG:
             return "ERR_INVALID_REG";
+        case ERR_UNKNOWN_CMD:
+            return "ERR_UNKNOWN_CMD";
         default:
             return "NEW_ERROR_CODE";
     }

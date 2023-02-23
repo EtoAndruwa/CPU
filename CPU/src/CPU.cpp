@@ -2,9 +2,9 @@
 
 FILE* check_code_file(CPU* CPU)
 {
-    FILE* code_file = fopen("../ASM/bin_code.bin", "rb"); // Opens an empty file
+    FILE* bin_file_ptr = fopen("../ASM/bin_code.bin", "rb"); // Opens an empty file
 
-    if(code_file == nullptr)
+    if(bin_file_ptr == nullptr)
     {
         CPU->error_code = ERR_OPEN_BIN_FILE;
         printf("ERROR: unable to open file %s.\n", FILE_BIN_NAME);
@@ -13,8 +13,7 @@ FILE* check_code_file(CPU* CPU)
     }
     else
     {   
-        printf("Code file was openned\n");
-        return code_file;
+        return bin_file_ptr;
     }
 }
 
@@ -85,17 +84,22 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
         CPU->curr_cmd = CPU->curr_cmd + 2;
         break;
     default:
-        break;
+        CPU->error_code = ERR_UNKNOWN_CMD;
+        dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        cpu_dtor(CPU);
+        exit(ERR_UNKNOWN_CMD);
     }
 }
 
 void get_cmd_in_buf(CPU* CPU)
 {
-    FILE* bin_code = check_code_file(CPU);
-    fread(CPU->num_bin_cmd, sizeof(int), 1, bin_code);
+    FILE* bin_file_ptr = check_code_file(CPU);
+    fread(CPU->num_bin_cmd, sizeof(int), 1, bin_file_ptr);
+
     CPU->bin_code = (int*)calloc(*CPU->num_bin_cmd, sizeof(int));
-    fread(CPU->bin_code, sizeof(int), *CPU->num_bin_cmd, bin_code);
-    fclose(bin_code);
+
+    fread(CPU->bin_code, sizeof(int), *CPU->num_bin_cmd, bin_file_ptr);
+    fclose(bin_file_ptr);
 
 }
 
@@ -105,5 +109,13 @@ void cpu_work(CPU* CPU, Call_stack* Call_stack)
     {
         cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU, Call_stack);
     }
+}
+
+void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code)
+{
+    CPU->error_code = error_code;
+    dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    cpu_dtor(CPU);
+    exit(error_code);
 }
 

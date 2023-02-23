@@ -11,10 +11,6 @@ int main()
 
     get_cmd_in_buf(&CPU);
     cpu_work(&CPU, &Call_stack);
-    //print_call_stack(&Call_stack);
-    //print_ram(&CPU);
-    //print_ram_screen(&CPU);
-    print_cpu_data(&CPU);
     print_ram_screen(&CPU);
 
     call_stack_ctor_dtor(&Call_stack);

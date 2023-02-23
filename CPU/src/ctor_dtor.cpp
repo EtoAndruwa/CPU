@@ -4,9 +4,9 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
 {
     StackCtor(Stack, STACK_SIZE);
     CPU->stack = Stack;
+    fill_with_posion(CPU->reg, REG_NUM);
+    fill_with_posion(CPU->r_reg, R_REG_NUM);
 
-    memset(CPU->reg, 0, REG_NUM);
-    memset(CPU->r_reg, 0, R_REG_NUM);
     for(size_t i = 0; i < RAM_SIZE; i++)
     {
         CPU->ram[i] = 'O' * 100;

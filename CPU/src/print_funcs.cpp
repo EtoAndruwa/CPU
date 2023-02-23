@@ -4,11 +4,13 @@ void print_cpu_data(CPU* CPU)
 {
     printf("stack_type* memmory: %p\n", CPU->ram);
     printf("error_code: %ld (%s)\n", CPU->error_code, convert_enum_cpu(CPU->error_code));
+
     printf("\nREGS:\n");
     for(size_t i = 0; i < REG_NUM; i++)
     {
         printf("reg[%ld] = %d\n", ax + i, CPU->reg[i]);
     }
+
     printf("\nR_REGS:\n");
     for(size_t i = 0; i < R_REG_NUM; i++)
     {
@@ -48,4 +50,44 @@ void print_ram_screen(CPU* CPU)
         printf("%c ", (CPU->ram[i] / 100));
     }
     printf("\n\n----------------SCREEN-----------------\n\n");
+}
+
+void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE)
+{
+    FILE* dump_log = fopen(FILE_DUMP_NAME, "w");
+
+    if (dump_log == nullptr)
+    {
+        printf("ERROR: %s cannot be openned", FILE_DUMP_NAME);
+        CPU->error_code = ERR_OPEN_DUMP_FILE;
+        cpu_dtor(CPU);
+        exit(ERR_OPEN_DUMP_FILE);
+    }
+    else
+    {   
+        fprintf(dump_log, "\n------------STRUCT_DATA------------\n");
+        fprintf(dump_log, "CPU", CPU->error_code, convert_enum_cpu(CPU->error_code));
+        fprintf(dump_log, "CPU", CPU->ram);
+        fprintf(dump_log, "CPU", CPU->stack);
+        fprintf(dump_log, "CPU", CPU->r_reg);
+        fprintf(dump_log, "CPU", CPU->reg);
+        fprintf(dump_log, "CPU", CPU->reg);
+        fprintf(dump_log, "------------STRUCT_DATA------------\n");
+
+        fprintf(dump_log, "\n------------DUMP_DATA------------\n");
+        fprintf(dump_log, "File name: %s\n", FUNCT_FILE);
+        fprintf(dump_log, "Function name: %s\n", FUNCT_NAME);
+        fprintf(dump_log, "Line: %d\n", FUNCT_LINE);
+        fprintf(dump_log, "Time: %s\n", __TIME__);
+        fprintf(dump_log, "Date: %s\n", __DATE__);
+        fprintf(dump_log, "-------------DUMP_DATA-------------\n");
+    }
+
+    if(fclose(dump_log) == EOF)
+    {
+        printf("ERROR: %s cannot be closed", FILE_DUMP_NAME);
+        CPU->error_code = ERR_CLOSE_DUMP_FILE;
+        cpu_dtor(CPU);
+        exit(ERR_CLOSE_DUMP_FILE);
+    }
 }

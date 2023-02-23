@@ -1,70 +1,68 @@
 #include "stack.h"
 
-void StackRealocUp(Stack* st) // (OK) Increases the capacity of the stack, reallocs data
+void StackRealocUp(Stack* stack_struct) // (OK) Increases the capacity of the stack, reallocs data
 {   
-    StackCheck(st, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 
-    if(st->next_empty_cell == st->capacity)
+    if(stack_struct->next_empty_cell == stack_struct->capacity)
     {   
-        st->capacity *= 2;
+        stack_struct->capacity *= 2;
 
-        st->stack_pointer = realloc(st->stack_pointer, st->capacity * sizeof(stack_type) + 2 * sizeof(size_t)); 
+        stack_struct->stack_pointer = realloc(stack_struct->stack_pointer, stack_struct->capacity * sizeof(stack_type) + 2 * sizeof(size_t)); 
 
-        if(st->stack_pointer == nullptr)
+        if(stack_struct->stack_pointer == nullptr)
         {
-            st->error_code = ERR_TO_REALLOC_UP;
-            StackDump(st, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            StackDtor(st);
+            stack_struct->error_code = ERR_TO_REALLOC_UP;
+            StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+            StackDtor(stack_struct);
             exit(ERR_TO_REALLOC_UP);
         }
 
-        st->left_canary_position = (size_t*)st->stack_pointer;
-        st->data = (stack_type*)(st->left_canary_position + 1);
-        st->right_canary_position = (size_t*)(st->data + st->capacity);
+        stack_struct->left_canary_position = (size_t*)stack_struct->stack_pointer;
+        stack_struct->data = (stack_type*)(stack_struct->left_canary_position + 1);
+        stack_struct->right_canary_position = (size_t*)(stack_struct->data + stack_struct->capacity);
 
-        for(size_t i = st->next_empty_cell; i < st->capacity ; i++)
+        for(size_t i = stack_struct->next_empty_cell; i < stack_struct->capacity ; i++)
         {
-            st->data[i] = POISON_VALUE;
+            stack_struct->data[i] = POISON_VALUE;
         }
 
-        st->left_canary_position[0] = CANARY;
-        st->right_canary_position[0] = CANARY;
-        //StackPrint(st);
+        stack_struct->left_canary_position[0] = CANARY;
+        stack_struct->right_canary_position[0] = CANARY;
     }
 
-    StackCheck(st, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 }
 
-void StackRealocDown(Stack* st) // (OK) Decreases the capacity of the stack, reallocs data
+void StackRealocDown(Stack* stack_struct) // (OK) Decreases the capacity of the stack, reallocs data
 {   
-    StackCheck(st, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 
-    if((st->next_empty_cell <= (st->capacity - 2) / 2) && (st->capacity > 3))
+    if((stack_struct->next_empty_cell <= (stack_struct->capacity - 2) / 2) && (stack_struct->capacity > 3))
     {   
-        st->capacity = st->capacity - ((st->capacity - 1)/2); // Decreases the capacity of the array
+        stack_struct->capacity = stack_struct->capacity - ((stack_struct->capacity - 1)/2); // Decreases the capacity of the array
 
-        st->stack_pointer = realloc(st->stack_pointer, st->capacity * sizeof(stack_type) + 2 * sizeof(size_t)); // Realocs the memory 
+        stack_struct->stack_pointer = realloc(stack_struct->stack_pointer, stack_struct->capacity * sizeof(stack_type) + 2 * sizeof(size_t)); // Realocs the memory 
 
-        if(st->stack_pointer == nullptr)
+        if(stack_struct->stack_pointer == nullptr)
         {
-            st->error_code = ERR_TO_REALLOC_DOWN;
-            StackDump(st, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-            StackDtor(st);
+            stack_struct->error_code = ERR_TO_REALLOC_DOWN;
+            StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+            StackDtor(stack_struct);
             exit(ERR_TO_REALLOC_DOWN);
         }
 
-        st->left_canary_position = (size_t*)st->stack_pointer;  
-        st->data = (stack_type*)(st->left_canary_position + 1);
-        st->right_canary_position = (size_t*)(st->data + st->capacity);
+        stack_struct->left_canary_position = (size_t*)stack_struct->stack_pointer;  
+        stack_struct->data = (stack_type*)(stack_struct->left_canary_position + 1);
+        stack_struct->right_canary_position = (size_t*)(stack_struct->data + stack_struct->capacity);
 
-        for(size_t i = st->next_empty_cell; i < st->capacity ; i++)
+        for(size_t i = stack_struct->next_empty_cell; i < stack_struct->capacity ; i++)
         {
-            st->data[i] = POISON_VALUE;
+            stack_struct->data[i] = POISON_VALUE;
         }
 
-        st->left_canary_position[0] = CANARY;
-        st->right_canary_position[0] = CANARY;
-        //StackPrint(st);
+        stack_struct->left_canary_position[0] = CANARY;
+        stack_struct->right_canary_position[0] = CANARY;
     }
-    StackCheck(st, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 }

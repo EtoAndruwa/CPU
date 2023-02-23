@@ -1,14 +1,18 @@
--------------------------------------------------
+
+-------------------STRUCT_DATA-------------------
+assembly_struct->err_code: 0 (STRUCT_OK)
 assembly_struct->asm_buf: 0x4a8c900
 assembly_struct->asm_file: 0x4a8c040
-assembly_struct->err_code: 0 (STRUCT_OK)
-FUNC_NAME: dtor_asm
-FUNC_LINE: 416
 assembly_struct->num_toks: 406
 assembly_struct->size: 3596
 assembly_struct->toks: 0x4e573e0
 assembly_struct->translated_file: 0x4a8c260
-TIME: 17:09:23
-DATE: Feb 23 2023
--------------------------------------------------
+-------------------STRUCT_DATA-------------------
 
+-------------------DUMP_DATA-------------------
+File name: src/assembler.cpp
+Function name: dtor_asm
+Line: 414
+Time: 19:10:01
+Date: Feb 23 2023
+-------------------DUMP_DATA-------------------

@@ -45,16 +45,16 @@ const char* enum_struct_err_to_string(size_t code) // for struct
             return "ERR_CLOSE_ASM_FILE";
         case ERR_CLOSE_LOG_FILE:
             return "ERR_CLOSE_LOG_FILE";
-        case ERR_CLOSE_TRANSLATED_FILE:
-            return "ERR_CLOSE_TRANSLATED_FILE";
+        case ERR_CLOSE_BIN_FILE:
+            return "ERR_CLOSE_BIN_FILE";
         case ERR_EMPTY_ASM_FILE:
             return "ERR_EMPTY_ASM_FILE";
         case ERR_OPEN_ASM_FILE:
             return "ERR_OPEN_ASM_FILE";
         case ERR_OPEN_LOG_FILE:
             return "ERR_OPEN_LOG_FILE";
-        case ERR_OPEN_TRANSLATED_FILE:
-            return "ERR_OPEN_TRANSLATED_FILE";
+        case ERR_OPEN_BIN_FILE:
+            return "ERR_OPEN_BIN_FILE";
         case ERR_TO_WRITE_CODE:
             return "ERR_TO_WRITE_CODE";
         case ERR_TO_CALLOC_TOKS:
@@ -67,6 +67,10 @@ const char* enum_struct_err_to_string(size_t code) // for struct
             return "ERR_TO_CALLOC_BIN_CODES";
         case ERR_TO_REALLOC_TOKS:
             return "ERR_TO_REALLOC_TOKS";
+        case ERR_CLOSE_LISTING:
+            return "ERR_CLOSE_LISTING";
+        case ERR_OPEN_LISTING:
+            return "ERR_OPEN_LISTING";
         default:
             return "STRUCT_OK"; 
     }

@@ -2,7 +2,15 @@
 
 void listing(asm_struct* assembly_struct)
 {
-    FILE* listing_file = fopen("asm_listing.txt", "wb");
+    FILE* listing_file = fopen(FILE_LISTING_NAME, "wb");
+
+    if(listing_file == nullptr)
+    {
+        assembly_struct->err_code = ERR_OPEN_LISTING;
+        printf("ERROR: unable to open file %s.\n", FILE_LISTING_NAME);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        exit(ERR_OPEN_LISTING);
+    }
 
     fprintf(listing_file,"|NUMB|\t\tCOMMAND\t\t|    TYPE    |ASM|    STATUS    |\n");
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -15,43 +23,53 @@ void listing(asm_struct* assembly_struct)
         fprintf(listing_file, "\n");
     }
 
-    fclose(listing_file);
+    if(fclose(listing_file) == EOF)
+    {
+        assembly_struct->err_code = ERR_CLOSE_LISTING;
+        printf("ERROR: unable to open file %s.\n", FILE_LISTING_NAME);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        exit(ERR_CLOSE_LISTING);
+    }
 }
 
-void dump_asm(asm_struct* assembly_struct, const char * FUNCT_NAME, int FUNCT_LINE) 
+void dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) 
 {
-    FILE* logfile = fopen("LOG_FILE.txt", "wb");
+    FILE* logfile = fopen(FILE_LOG_NAME, "wb");
 
     if(logfile == nullptr)
     {
-        printf("ERROR: LOG_FILE.txt cannot be openned\n");
+        printf("ERROR: %s cannot be openned\n" , FILE_LOG_NAME);
         assembly_struct->err_code = ERR_OPEN_LOG_FILE;
         dtor_asm(assembly_struct);
-        exit(-1);
+        exit(ERR_OPEN_LOG_FILE);
     }
     else
     {
-        fprintf(logfile, "-------------------------------------------------\n");
+        fprintf(logfile, "\n-------------------STRUCT_DATA-------------------\n");
+        fprintf(logfile, "assembly_struct->err_code: %ld (%s)\n", assembly_struct->err_code, enum_struct_err_to_string(assembly_struct->err_code));
         fprintf(logfile, "assembly_struct->asm_buf: %p\n", assembly_struct->asm_buf);
         fprintf(logfile, "assembly_struct->asm_file: %p\n", assembly_struct->asm_file);
-        fprintf(logfile, "assembly_struct->err_code: %ld (%s)\n", assembly_struct->err_code, enum_struct_err_to_string(assembly_struct->err_code));
-        fprintf(logfile, "FUNC_NAME: %s\n", FUNCT_NAME);
-        fprintf(logfile, "FUNC_LINE: %d\n", FUNCT_LINE);  
         fprintf(logfile, "assembly_struct->num_toks: %ld\n", assembly_struct->num_toks);
         fprintf(logfile, "assembly_struct->size: %ld\n", assembly_struct->size);
         fprintf(logfile, "assembly_struct->toks: %p\n", assembly_struct->toks);
         fprintf(logfile, "assembly_struct->translated_file: %p\n", assembly_struct->translated_file);
-        fprintf(logfile, "TIME: %s\n", __TIME__);
-        fprintf(logfile, "DATE: %s\n", __DATE__);
-        fprintf(logfile, "-------------------------------------------------\n\n");
+        fprintf(logfile, "-------------------STRUCT_DATA-------------------\n");
+
+        fprintf(logfile, "\n-------------------DUMP_DATA-------------------\n");
+        fprintf(logfile, "File name: %s\n", FUNCT_FILE);
+        fprintf(logfile, "Function name: %s\n", FUNCT_NAME);
+        fprintf(logfile, "Line: %d\n", FUNCT_LINE);
+        fprintf(logfile, "Time: %s\n", __TIME__);
+        fprintf(logfile, "Date: %s\n", __DATE__);
+        fprintf(logfile, "-------------------DUMP_DATA-------------------\n");
     }
 
     if(fclose(logfile) == EOF)
     {
-        printf("ERROR: LOG_FILE.txt cannot be closed\n");
+        printf("ERROR: %s cannot be closed\n", FILE_LOG_NAME);
         assembly_struct->err_code = ERR_CLOSE_LOG_FILE;
         dtor_asm(assembly_struct);
-        exit(-1);
+        exit(ERR_CLOSE_LOG_FILE);
     }
 }
 

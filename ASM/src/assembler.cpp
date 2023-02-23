@@ -2,29 +2,28 @@
 
 void file_openning_check(asm_struct* assembly_struct) 
 {   
-    FILE* test_asm = fopen("test.asm", "rb"); // Opens the file with text
-    FILE* test_code = fopen("test_code.bin", "wb"); // Opens an empty file
+    FILE* asm_code = fopen(FILE_ASM_NAME, "rb"); // Opens the file with text
+    FILE* bin_code = fopen(FILE_CODE_NAME, "wb"); // Opens an empty file
 
-    if(test_asm == nullptr)
+    if(asm_code == nullptr)
     {
         assembly_struct->err_code = ERR_OPEN_ASM_FILE;
-        printf("ERROR: unable to open file %s.\n", FILE_ASM);
+        printf("ERROR: unable to open file %s.\n", FILE_ASM_NAME);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        exit(ERR_OPEN_ASM_FILE);
     }
-    if(test_code == nullptr)
+    if(bin_code == nullptr)
     {   
-        assembly_struct->err_code = ERR_OPEN_TRANSLATED_FILE;
-        printf("ERROR: unable to open file %s.\n", FILE_CODE);
-    }
-    if(assembly_struct->err_code != 0)
-    {
-        dtor_asm(assembly_struct);
-        exit(-1);
+        assembly_struct->err_code = ERR_OPEN_BIN_FILE;
+        printf("ERROR: unable to open file %s.\n", FILE_CODE_NAME);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        exit(ERR_OPEN_BIN_FILE);
     }
     else
     {   
         printf("Files are openned\n");
-        assembly_struct->asm_file = test_asm;
-        assembly_struct->translated_file = test_code;
+        assembly_struct->asm_file = asm_code;
+        assembly_struct->translated_file = bin_code;
     }
 }
 
@@ -360,7 +359,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
     {
         strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
         assembly_struct->toks[cur_tok_chk].error_code = ERR_INVALID_TOKEN;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         assembly_struct->cur_tok_chk++;
     }
 }
@@ -368,15 +367,14 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
 void get_commands_into_buf(asm_struct* assembly_struct) 
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
-
     assembly_struct->asm_buf = (char*)calloc(1, sizeof(char) * (assembly_struct->size + 1)); // Allocates enough memmory for the buffer of chars  
 
     if(assembly_struct->asm_buf == nullptr)
     {
         assembly_struct->err_code = ERR_TO_CALLOC_ASM_BUF;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         dtor_asm(assembly_struct);
-        exit(-1);
+        exit(ERR_TO_CALLOC_ASM_BUF);
     }
 
     int num_read = fread(assembly_struct->asm_buf, sizeof(char), assembly_struct->size, assembly_struct->asm_file); // Reads the file into the buffer
@@ -384,9 +382,9 @@ void get_commands_into_buf(asm_struct* assembly_struct)
     if((num_read <= 0) && (num_read > assembly_struct->size))
     {
         assembly_struct->err_code = ERR_TO_CALLOC_ASM_BUF;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         dtor_asm(assembly_struct);
-        exit(-1);       
+        exit(ERR_TO_CALLOC_ASM_BUF);       
     }
 
     assembly_struct->asm_buf[assembly_struct->size] = '\0'; // Makes form the file null-terminated string
@@ -405,7 +403,7 @@ void get_size_asm(asm_struct* assembly_struct)
     {
         assembly_struct->err_code = ERR_EMPTY_ASM_FILE; 
         dtor_asm(assembly_struct);
-        exit(-1);
+        exit(ERR_EMPTY_ASM_FILE);
     } 
 
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
@@ -413,7 +411,7 @@ void get_size_asm(asm_struct* assembly_struct)
 
 void dtor_asm(asm_struct* assembly_struct) 
 {
-    dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+    dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 
     for(size_t i = 0 ; i < assembly_struct->num_toks; i++)
     {
@@ -435,17 +433,17 @@ void dtor_asm(asm_struct* assembly_struct)
 
     if(fclose(assembly_struct->asm_file) == EOF)
     {
-        printf("ERROR: %s.txt cannot be closed\n", FILE_ASM);
+        printf("ERROR: %s cannot be closed\n", FILE_ASM_NAME);
         assembly_struct->err_code = ERR_EMPTY_ASM_FILE;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
-        exit(-1);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        exit(ERR_EMPTY_ASM_FILE);
     }
     if(fclose(assembly_struct->translated_file) == EOF)
     {   
-        printf("ERROR: %s.txt cannot be closed\n", FILE_CODE);
-        assembly_struct->err_code = ERR_CLOSE_TRANSLATED_FILE;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
-        exit(-1);
+        printf("ERROR: %s cannot be closed\n", FILE_CODE_NAME);
+        assembly_struct->err_code = ERR_CLOSE_BIN_FILE;
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        exit(ERR_CLOSE_BIN_FILE);
     }
 
     assembly_struct->toks = nullptr;
@@ -464,9 +462,9 @@ void get_tokens(asm_struct* assembly_struct)
     if(assembly_struct->toks == nullptr)
     {
         assembly_struct->err_code = ERR_TO_CALLOC_TOKS;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         dtor_asm(assembly_struct);
-        exit(-1);
+        exit(ERR_TO_CALLOC_TOKS);
     }
 
     size_t toks_num = 0;
@@ -489,9 +487,9 @@ void realloc_toks(asm_struct* assembly_struct, size_t i)
         if(assembly_struct->toks == nullptr)
         {
             assembly_struct->err_code = ERR_TO_REALLOC_TOKS;
-            dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+            dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
             dtor_asm(assembly_struct);
-            exit(-1);
+            exit(ERR_TO_REALLOC_TOKS);
         }
     }
 }
@@ -510,7 +508,7 @@ void write_asm(asm_struct* assembly_struct)
 
     if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
     {   
-        get_arr_asm_codes(assembly_struct);
+        get_arr_bin_codes(assembly_struct);
         size_t new_num_cmd = get_new_num_toks(assembly_struct);
 
         int tokens_wrote = fwrite(assembly_struct->bin_codes, sizeof(int), new_num_cmd + 1, assembly_struct->translated_file);
@@ -520,20 +518,20 @@ void write_asm(asm_struct* assembly_struct)
         }
         else
         {
-            printf("ERROR: asm.txt cannot be translated into binary file. Check LOG_FILE.txt and asm_listing.txt\n");
+            printf("ERROR: %s cannot be translated into binary file. Check LOG_FILE.txt and asm_listing.txt\n", FILE_ASM_NAME);
             assembly_struct->err_code = ERR_TO_WRITE_CODE;
-            dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+            dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         }
     }
     else
     {
-        printf("ERROR: asm.txt cannot be translated into binary file. Check LOG_FILE.txt and asm_listing.txt\n");
+        printf("ERROR: %s cannot be translated into binary file. Check LOG_FILE.txt and asm_listing.txt\n", FILE_ASM_NAME);
         assembly_struct->err_code = ERR_TO_WRITE_CODE;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     }
 }
 
-void get_arr_asm_codes(asm_struct* assembly_struct)
+void get_arr_bin_codes(asm_struct* assembly_struct)
 {
     size_t new_num_cmd = get_new_num_toks(assembly_struct);
     assembly_struct->bin_codes = (int*)calloc(new_num_cmd + 1, sizeof(int)); // Creates buffer for number of commands without jmp and func
@@ -541,13 +539,12 @@ void get_arr_asm_codes(asm_struct* assembly_struct)
     if(assembly_struct->bin_codes == nullptr)
     {   
         assembly_struct->err_code = ERR_TO_CALLOC_BIN_CODES;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         dtor_asm(assembly_struct);
-        exit(-1);
+        exit(ERR_TO_CALLOC_BIN_CODES);
     }
 
     assembly_struct->bin_codes[0] = (int)(new_num_cmd); // New number of toks
-    
     size_t j = 1;
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -558,13 +555,6 @@ void get_arr_asm_codes(asm_struct* assembly_struct)
             j++;
         }
     }
-
-    // printf("\nASM_ARR");
-    // for(size_t i = 0; i < new_num_cmd + 1; i++)
-    // {   
-    //     printf(" %d ", assembly_struct->bin_codes[i]);
-    // }
-    // printf("\n");
 }
 
 void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
@@ -606,6 +596,6 @@ size_t get_new_num_toks(asm_struct* assembly_struct)
             max = assembly_struct->toks[i].new_index;
         }
     }
-    return (max + 1); // number of commands + all tokens values
+    return (max + 1); // The number of tokens with right indexes
 }
 

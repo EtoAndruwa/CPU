@@ -78,9 +78,9 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             if(str_check == nullptr)
             {
                 assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
-                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE);
+                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
                 dtor_asm(assembly_struct);
-                exit(-1);
+                exit(ERR_TO_CHECK_INNER_RAM);
             }
 
             strncpy(str_check, (token_text + 1), strlen_token_check - 2);

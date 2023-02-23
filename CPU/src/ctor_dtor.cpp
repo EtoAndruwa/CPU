@@ -17,6 +17,8 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
 
 void cpu_dtor(CPU* CPU)
 {
+    dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+
     StackDtor(CPU->stack);
     CPU->stack = nullptr;
 
@@ -32,10 +34,11 @@ void cpu_dtor(CPU* CPU)
     else
     {
         CPU->error_code = ERR_BIN_NULL_BEF_DTOR;
-        printf("Error code: %ld (%s)\n", ERR_BIN_NULL_BEF_DTOR, convert_enum_cpu(ERR_BIN_NULL_BEF_DTOR));
+        printf("Error code: %d (%s)\n", ERR_BIN_NULL_BEF_DTOR, convert_enum_cpu(ERR_BIN_NULL_BEF_DTOR));
         exit(ERR_BIN_NULL_BEF_DTOR);
     }
     CPU->error_code = 0;
+
 }
 
 void call_stack_ctor_dtor(Call_stack* Call_stack)

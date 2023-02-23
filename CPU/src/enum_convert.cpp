@@ -16,10 +16,10 @@ char* convert_enum_cpu(size_t error_code)
             return "ERR_CALL_STACK_FULL";
         case ERR_CALL_STACK_EMPT:
             return "ERR_CALL_STACK_EMPT";
-        case ERR_OPEN_DUMP_FILE:
-            return "ERR_OPEN_DUMP_FILE";
-        case ERR_CLOSE_DUMP_FILE:
-            return "ERR_CLOSE_DUMP_FILE";
+        case ERR_OPEN_DMP_FILE:
+            return "ERR_OPEN_DMP_FILE";
+        case ERR_CLOSE_DMP_FILE:
+            return "ERR_CLOSE_DMP_FILE";
         case ERR_INVALID_REG:
             return "ERR_INVALID_REG";
         case ERR_UNKNOWN_CMD:

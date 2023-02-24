@@ -51,7 +51,11 @@ void safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_L
 
 void get_command_types(disasm_struct* disasm_struct)
 {
-    
-
-
+    for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
+    {
+        if((i < 21) || (i > 27))
+        {
+            disasm_struct->commands[i].type = cmd;
+        }
+    }
 }

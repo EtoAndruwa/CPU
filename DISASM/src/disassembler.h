@@ -15,7 +15,7 @@
 #define FUNC_FILE __FILE__                  /// \brief Defines the name of the file from which dump was called 
 
 static const char* FILE_DUMP_NAME = "dump_log.txt";
-static const char* FILE_ASM_NAME = "asm_code.txt";
+static const char* FILE_ASM_NAME = "asm_code.asm";
 static const size_t POISON = 0xDED;
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -85,7 +85,6 @@ enum cmd
     DIV  = 6, 
     SQRT = 7, 
     OUT  = 8, 
-    INT  = 9,
     RET  = 10, 
     JMP  = 11, 
     ax   = 21, 
@@ -127,6 +126,8 @@ void print_commands(disasm_struct* disasm_struct);
 void get_command_types(disasm_struct* disasm_struct);
 
 const char* get_cmd_string(size_t cmd_code);
+
+void write_asm(disasm_struct* disasm_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

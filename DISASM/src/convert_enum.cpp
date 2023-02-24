@@ -42,7 +42,7 @@ const char* get_cmd_string(size_t cmd_code)
         case PUSH_REG:
             return "PUSH";
         case PUSH_RAM_VAL:
-            return "PUSHL";
+            return "PUSH";
         case PUSH_RAM_REG:
             return "PUSH";
         case POP_REG:

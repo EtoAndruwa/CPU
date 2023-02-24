@@ -35,7 +35,7 @@ void dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT
     }
 }
 
-void print_commands(disasm_struct* disasm_struct)
+void print_commands(disasm_struct* disasm_struct) // DEBUG
 {
     for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
     {
@@ -44,5 +44,47 @@ void print_commands(disasm_struct* disasm_struct)
         printf("Type: %ld\n", disasm_struct->commands[i].type);
         printf("Flag before: %ld\n", disasm_struct->commands[i].flag_before);
         printf("Function before: %ld\n", disasm_struct->commands[i].func_before);
+    }
+}
+
+void write_asm(disasm_struct* disasm_struct)
+{
+    FILE* asm_file = fopen(FILE_ASM_NAME, "wb");
+
+    if(asm_file == nullptr)
+    {
+        printf("ERROR: %s cannot be openned\n", FILE_ASM_NAME);
+        disasm_struct->error_code = ERR_OPEN_ASM_FILE;
+        disasm_dtor(disasm_struct);
+        exit(ERR_OPEN_ASM_FILE);
+    }
+    else
+    {
+        for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
+        {
+            if(disasm_struct->commands[i].flag_before != 0)
+            {
+                fprintf(asm_file, ":%ld\n", disasm_struct->flag_num);
+                disasm_struct->flag_num++;
+            }
+            else if(disasm_struct->commands[i].func_before != 0)
+            {
+                fprintf(asm_file, "FUNCTION%ld:\n", disasm_struct->func_num);
+                disasm_struct->func_num++;
+            }
+            else if(disasm_struct->commands[i].type == cmd)
+            {
+                fprintf(asm_file, "%s", get_cmd_string(disasm_struct->commands[i].value));
+                fprintf(asm_file, "\n");
+            }
+        }
+    }
+
+    if(fclose(asm_file) == EOF)
+    {
+        printf("ERROR: %s cannot be closed\n", FILE_ASM_NAME);
+        disasm_struct->error_code = ERR_CLOSE_ASM_FILE;
+        disasm_dtor(disasm_struct);
+        exit(ERR_CLOSE_ASM_FILE);
     }
 }

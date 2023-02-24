@@ -48,3 +48,10 @@ void safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_L
     disasm_dtor(disasm_struct);
     exit(error_code);
 }
+
+void get_command_types(disasm_struct* disasm_struct)
+{
+    
+
+
+}

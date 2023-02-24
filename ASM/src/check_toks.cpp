@@ -167,14 +167,14 @@ size_t check_flags(asm_struct* assembly_struct)
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
-        if(strcmp(assembly_struct->toks[i].text, "JMP") == 0) // If the function is JMP
+        if(strcmp(assembly_struct->toks[i].text, "JMP") == 0 || strcmp(assembly_struct->toks[i].text, "JZ") == 0) // If the function is JMP
         {
             char* flag_name = assembly_struct->toks[i+1].text;
             for(size_t j = 0; j < assembly_struct->num_toks ; j++) // Checks all tokens
             {   
                 if(assembly_struct->toks[j].type == flg) // If the command is flag
                 {   
-                    if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "JMP") != 0)) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
+                    if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && ((strcmp(assembly_struct->toks[j-1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[j-1].text, "JZ") != 0))) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
                     {   
                         for(size_t q = j + 1; q < assembly_struct->num_toks; q++)
                         {

@@ -355,6 +355,38 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
             assembly_struct->cur_tok_chk++;
         }
     }
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "DEC") == 0)
+    {
+        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_reg(assembly_struct, cur_tok_chk))
+        {
+            assembly_struct->toks[cur_tok_chk].value = 1;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
+        }
+        else
+        {
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITH_VALUE;
+            assembly_struct->cur_tok_chk++;
+        }
+    }
+    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "JZ") == 0)
+    {
+        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (strlen(assembly_struct->toks[cur_tok_chk + 1].text) > 1) && (check_num_int(assembly_struct->toks[cur_tok_chk + 1].text + 1) == 1))
+        {
+            assembly_struct->toks[cur_tok_chk].value = 2;
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk++;
+        }
+        else
+        {
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_NO_FLAG;
+            assembly_struct->cur_tok_chk++;
+        }
+    }
     else
     {
         strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
@@ -561,11 +593,11 @@ void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
 {
     size_t new_index = 0;
     
-    if(assembly_struct->toks[index_cmd].type == cmd || assembly_struct->toks[index_cmd].type == val || assembly_struct->toks[index_cmd].type == reg || assembly_struct->toks[index_cmd].type == ret || ((assembly_struct->toks[index_cmd].type == fnc) && (strcmp(assembly_struct->toks[index_cmd-1].text, "CALL") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JMP") == 0)))
+    if(assembly_struct->toks[index_cmd].type == cmd || assembly_struct->toks[index_cmd].type == val || assembly_struct->toks[index_cmd].type == reg || assembly_struct->toks[index_cmd].type == ret || ((assembly_struct->toks[index_cmd].type == fnc) && (strcmp(assembly_struct->toks[index_cmd-1].text, "CALL") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JMP") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JZ") == 0)))
     {
         for(size_t i = 0; i < index_cmd; i++)
         {
-            if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret || ((assembly_struct->toks[i].type == fnc) && (strcmp(assembly_struct->toks[i-1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JMP") == 0)))
+            if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret || ((assembly_struct->toks[i].type == fnc) && (strcmp(assembly_struct->toks[i-1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JZ") == 0)))
             {
                 new_index++;
             }

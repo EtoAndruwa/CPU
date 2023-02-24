@@ -107,6 +107,8 @@ enum cmd
     POP_RAM_VAL  = 162,
     POP_RAM_REG  = 194,
 
+    DEC  = 1,
+    JZ   = 2,
     ADD  = 3, 
     SUB  = 4, 
     MUL  = 5, 

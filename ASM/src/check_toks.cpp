@@ -300,6 +300,52 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
     }
 }
 
+size_t check_flag_declaration(asm_struct* assembly_struct) 
+{
+    size_t declaration_ok = 1; // Returns 1 if all declarations of flag are uniqe
+    if(assembly_struct->num_toks > 1)
+    {
+        for(size_t i = 0; i < assembly_struct->num_toks; i++)
+            {   
+                size_t positon_of_first_decl = i; // This value stores the first position of the flag declaration
+                if(((strlen(assembly_struct->toks[i].text) > 1) && (assembly_struct->toks[i].text[0] == ':') &&  (i > 0) && (strcmp(assembly_struct->toks[i-1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[i-1].text, "JZ") != 0)) || (assembly_struct->toks[i].text[0] == ':') &&  (i == 0)) // If the token is the fist declaration of the function and is not a call of the function 
+                {
+                    char* flag_name = assembly_struct->toks[i].text; // The flag name that is used in order to search another declarations of the flag with the same name
+                    for(size_t j = i + 1; j < assembly_struct->num_toks ; j++) // Check the tokens after the firts flag declaration
+                    {   
+                        if(assembly_struct->toks[j].type == flg) // If the token is a flag
+                        {   
+                            if((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (strcmp(assembly_struct->toks[j-1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[j-1].text, "JZ") != 0)) // If the token is a function declaration and is not a call of the function
+                            {   
+                                i = j; // Check all tokens after found one (prevents upper search)
+                                declaration_ok = 0;
+                                assembly_struct->toks[j].error_code = ERR_DOUBLE_DECL_OF_FLAG;
+                                strcpy((char*)assembly_struct->toks[i].status, "--");
+                                break;
+                            }
+                            else 
+                            {
+                                declaration_ok = 1; // The declaration is an uniqe one
+                            }
+                        }
+                    }
+                    if(declaration_ok == 0)
+                    {   
+                        assembly_struct->toks[positon_of_first_decl].error_code = ERR_FIRST_DECL_OF_FLAG; 
+                        strcpy((char*)assembly_struct->toks[positon_of_first_decl].status, "--");
+                        break;
+                    }
+                }
+            }    
+
+        return declaration_ok; // Returns 1 if all declarations of function are uniqe
+    }
+    else
+    {
+        return declaration_ok; // Returns 1 if all declarations of function are uniqe
+    }
+}
+
 size_t check_next_reg(asm_struct* assembly_struct, size_t i)
 {
     //printf("%s", assembly_struct->toks[i+1].text);

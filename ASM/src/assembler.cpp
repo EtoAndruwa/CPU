@@ -538,7 +538,7 @@ void write_asm(asm_struct* assembly_struct)
 {   
     put_new_index(assembly_struct); // Gets new indexes of all tokens
 
-    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct)) // Rules
+    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct) && check_flag_declaration(assembly_struct)) // Rules
     {   
         get_arr_bin_codes(assembly_struct);
         size_t new_num_cmd = get_new_num_toks(assembly_struct);

@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <ctype.h>
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -91,7 +90,9 @@ enum token_error_code
     ERR_NO_FNC_NAME              = 9,  
     ERR_DOUBLE_DECL_OF_FNC       = 10, 
     ERR_FIRST_DECL_OF_FNC        = 11,
-    ERR_TO_CHECK_INNER_RAM       = 12
+    ERR_TO_CHECK_INNER_RAM       = 12,
+    ERR_DOUBLE_DECL_OF_FLAG      = 13,
+    ERR_FIRST_DECL_OF_FLAG       = 14
 };  
 
 enum cmd
@@ -462,6 +463,16 @@ void put_new_index(asm_struct* assembly_struct);
  * @return size_t The number of tokens with right indexes
  */
 size_t get_new_num_toks(asm_struct* assembly_struct); 
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Checks all flags declarations for double declaration
+ * 
+ * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t size_t Returns '1' if all declarations of flags are uniqe and '0' if double declarations are exist in the code
+ */
+size_t check_flag_declaration(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

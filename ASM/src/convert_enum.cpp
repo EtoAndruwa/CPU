@@ -30,6 +30,10 @@ const char* enum_token_err_to_string(size_t code)  // for token
             return "ERR_FIRST_DECL_OF_FNC";
         case ERR_TO_CHECK_INNER_RAM:
             return "ERR_TO_CHECK_INNER_RAM";
+        case ERR_DOUBLE_DECL_OF_FLAG:
+            return "ERR_DOUBLE_DECL_OF_FLAG";
+        case ERR_FIRST_DECL_OF_FLAG:
+            return "ERR_FIRST_DECL_OF_FLAG";
         default:
             return "NEW_ERROR_CODE";       
     }

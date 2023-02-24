@@ -49,29 +49,29 @@ static const char* DUMP_NAME        = "dump_log.txt"; /// \brief The name of the
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
 
 /**
- * @brief 
+ * @brief The main struct which is containing all information about CPU struct
  * 
  */
 typedef struct
 {
-    Stack* stack                = nullptr; /// \brief
-    stack_type ram[RAM_SIZE]    = {};      /// \brief  pointer to the RAM
-    int* bin_code               = {};      /// \brief
-    int num_bin_cmd[1]          = {};      /// \brief
-    size_t curr_cmd             = 0;       /// \brief     
-    stack_type reg [REG_NUM]    = {};      /// \brief  registets for values
-    stack_type r_reg[R_REG_NUM] = {};      /// \brief  registers for adresses
-    size_t error_code           = 0;       /// \brief
+    Stack* stack                = nullptr; /// \brief The pointer to the stack
+    stack_type ram[RAM_SIZE]    = {};      /// \brief The array with cells of RAM
+    int* bin_code               = {};      /// \brief The pointer to the array with binary codes 
+    int num_bin_cmd[1]          = {};      /// \brief The number of the commands in the array of the binary codes
+    size_t curr_cmd             = 0;       /// \brief The index of the current command in the array with binary codes  
+    stack_type reg [REG_NUM]    = {};      /// \brief The array registers for values
+    stack_type r_reg[R_REG_NUM] = {};      /// \brief The array with registers for adresses
+    size_t error_code           = 0;       /// \brief The error code of the struct
 }CPU; 
 
 /**
- * @brief 
+ * @brief The struct which is used in order to control returns after call of the functions
  * 
  */
 typedef struct 
 {   
-    stack_type call_stack[CALL_STACK_SIZE] = {}; //
-    size_t cur_index                       = 0;  //         
+    stack_type call_stack[CALL_STACK_SIZE] = {}; /// \brief The array of the call stack
+    size_t cur_index                       = 0;  /// \brief The current index in the call stack         
 }Call_stack;
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -129,219 +129,219 @@ enum error_code
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Pushes the value from the register to the stack
  * 
- * @param CPU 
- * @param reg_code 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param reg_code The code of the register
  */
 void pop_reg(CPU* CPU, size_t reg_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Pushes the value from the register to the stack
  * 
- * @param CPU 
- * @param reg_code 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param reg_code The code of the register
  */
 void push_reg(CPU* CPU, size_t reg_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Pushes the value from the RAM to the stack using val addressing to the RAM
  * 
- * @param CPU 
- * @param ram_index 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param ram_index The index of the RAM cell whose value will be pushed to the stack
  */
-void push_ram_val(CPU* CPU, size_t ram_index); // from ram to stack
+void push_ram_val(CPU* CPU, size_t ram_index); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Pushes the value from the RAM to the stack using reg addressing to the RAM
  * 
- * @param CPU 
- * @param reg_id 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param reg_id The code of the register whose value will be used in order to address to the RAM
  */
-void push_ram_reg(CPU* CPU, size_t reg_id); // from ram to stack
+void push_ram_reg(CPU* CPU, size_t reg_id); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Pushes from the stack to the RAM
  * 
- * @param CPU 
- * @param reg_id 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param reg_id The code of the register whose value will be used in order to address to the RAM
  */
-void pop_ram_reg(CPU* CPU, size_t reg_id); // from stack to ram
+void pop_ram_reg(CPU* CPU, size_t reg_id); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Pushes from the stack to the RAM
  * 
- * @param CPU 
- * @param ram_index 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param ram_index The index of the RAM cell to which will be pushed the value from the stack
  */
-void pop_ram_val(CPU* CPU, size_t ram_index); // from stack to ram
+void pop_ram_val(CPU* CPU, size_t ram_index); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Creates and initializes the CPU struct
  * 
- * @param CPU 
- * @param Stack 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param Stack The pointer to the stack from StackCtor
  */
 void cpu_ctor(CPU* CPU, Stack* Stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Converts the error code to the strings equivalent
  * 
- * @param error_code 
- * @return char* 
+ * @param error_code The error code of the CPU struct
+ * @return char* The enum's error code's text equivalent converted to the string 
  */
 char* convert_enum_cpu(size_t error_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Prints all CPU struct's field's data
  * 
- * @param CPU 
+ * @param CPU The main struct which is containing all information about CPU struct
  */
 void print_cpu_data(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Prints all RAM cells data
  * 
- * @param CPU 
+ * @param CPU The main struct which is containing all information about CPU struct
  */
 void print_ram(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Deletes all data about CPU struct and calls the StackDtor
  * 
- * @param CPU 
+ * @param CPU The main struct which is containing all information about CPU struct
  */
 void cpu_dtor(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief Get the cmd in buf object
+ * @brief Reads all codes from the binary code file
  * 
- * @param CPU 
+ * @param CPU The main struct which is containing all information about CPU struct
  */
 void get_cmd_in_buf(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Continues the work of the program until the 'HLT' command is met
  * 
- * @param CPU 
- * @param Call_stack 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param Call_stack The pointer to the call stack
  */
 void cpu_work(CPU* CPU, Call_stack* Call_stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Creates/deletes the call stack by initializing all values with poison value 
  * 
- * @param Call_stack 
+ * @param Call_stack The pointer to the call stack
  */
 void call_stack_ctor_dtor(Call_stack* Call_stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Prints all cells of the call stack
  * 
- * @param Call_stack 
+ * @param Call_stack The pointer to the call stack
  */
 void print_call_stack(Call_stack* Call_stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Pushes the index of return to the call stack 
  * 
- * @param CPU 
- * @param Call_stack 
- * @param index_to_jmp 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param Call_stack The pointer to the call stack
+ * @param index_to_jmp The index of return that will be pushed to the call stack
  */
 void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Jumps to the return index from the call stack
  * 
- * @param CPU 
- * @param Call_stack 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param Call_stack The pointer to the call stack array
  */
 void jmp_ret(CPU* CPU, Call_stack* Call_stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Sets given array's element's values to the poison value
  * 
- * @param arr_ptr 
- * @param size_arr 
+ * @param arr_ptr The pointer to the array that must be poisoned
+ * @param size_arr The size of the the array that must be poisoned
  */
-void fill_with_posion(stack_type* arr_ptr, size_t size_arr);
+void fill_with_poison(stack_type* arr_ptr, size_t size_arr);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Jumps to the given index by setting curr_cmd to the given index
  * 
- * @param CPU 
- * @param index_to_jmp 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param index_to_jmp The index that must be set as current index
  */
 void jmp_flag(CPU* CPU, size_t index_to_jmp);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Prints all RAM cell's data
  * 
- * @param CPU 
+ * @param CPU The main struct which is containing all information about CPU struct
  */
 void print_ram_screen(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Creates dump file and prints all data about RAM, stack, call stack, all regs 
  * 
- * @param CPU 
- * @param FUNCT_NAME 
- * @param FUNCT_LINE 
- * @param FUNCT_FILE 
+ * @param CPU The main struct which is containing all information about CPU struct 
+ * @param FUNCT_NAME The name of the function which is called the dump
+ * @param FUNCT_LINE The line from which the dump was called
+ * @param FUNCT_FILE The file from which the dump was called
  */
 void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Exits from the programm with given error code, creates dump file and call cpu_dtor
  * 
- * @param CPU 
- * @param FUNCT_NAME 
- * @param FUNCT_LINE 
- * @param FUNCT_FILE 
- * @param error_code 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param FUNCT_NAME The name of the function which is called the dump  
+ * @param FUNCT_LINE The line from which the dump was called
+ * @param FUNCT_FILE The file from which the dump was called
+ * @param error_code The error code of the struct
  */
 void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
 

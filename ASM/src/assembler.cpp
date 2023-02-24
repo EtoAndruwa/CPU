@@ -547,6 +547,9 @@ void write_asm(asm_struct* assembly_struct)
         if(tokens_wrote == (new_num_cmd + 1))
         {
             printf("Success\n");
+            // for(size_t i = 0; i < new_num_cmd + 1; i++)
+            //     printf("%d ", assembly_struct->bin_codes[i]);
+            // printf("\n");
         }
         else
         {

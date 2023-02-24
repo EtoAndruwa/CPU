@@ -54,11 +54,11 @@ void print_ram_screen(CPU* CPU)
 
 void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE)
 {
-    FILE* dump_log = fopen(FILE_DUMP_NAME, "w");
+    FILE* dump_log = fopen(DUMP_NAME, "w");
 
     if (dump_log == nullptr)
     {
-        printf("ERROR: %s cannot be openned", FILE_DUMP_NAME);
+        printf("ERROR: %s cannot be openned", DUMP_NAME);
         CPU->error_code = ERR_OPEN_DUMP_FILE;
         cpu_dtor(CPU);
         exit(ERR_OPEN_DUMP_FILE);
@@ -68,7 +68,7 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
         fprintf(dump_log, "\n------------STRUCT_DATA------------\n");
         fprintf(dump_log, "Error code: %ld (%s)\n", CPU->error_code, convert_enum_cpu(CPU->error_code));
         fprintf(dump_log, "Current command: %ld\n", CPU->curr_cmd);
-        fprintf(dump_log, "Number of commands: %ld\n", *CPU->num_bin_cmd);
+        fprintf(dump_log, "Number of commands: %d\n", *CPU->num_bin_cmd);
         fprintf(dump_log, "Pointer to the bin code: %p\n", CPU->bin_code);
         fprintf(dump_log, "Pointer to the stack: %p\n", CPU->stack);
         fprintf(dump_log, "------------STRUCT_DATA------------\n");
@@ -95,13 +95,6 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
         }
         fprintf(dump_log, "------------R_REGS------------\n");
 
-        fprintf(dump_log, "\n------------RAM------------\n");
-        for(size_t i = 0; i < RAM_SIZE; i++)
-        {
-            fprintf(dump_log, "RAM[%ld] = %d\n", i, CPU->ram[i]);
-        }
-        fprintf(dump_log, "------------RAM------------\n");  
-
         fprintf(dump_log, "\n------------STACK------------\n");
         for(size_t i = 0; i < CPU->stack->capacity; i++)
         {
@@ -119,11 +112,18 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
             fprintf(dump_log, "%c ", (CPU->ram[i] / 100));
         }
         fprintf(dump_log, "\n\n----------------SCREEN-----------------\n\n");
+
+        fprintf(dump_log, "\n------------RAM------------\n");
+        for(size_t i = 0; i < RAM_SIZE; i++)
+        {
+            fprintf(dump_log, "RAM[%ld] = %d\n", i, CPU->ram[i]);
+        }
+        fprintf(dump_log, "------------RAM------------\n");  
     }
 
     if(fclose(dump_log) == EOF)
     {
-        printf("ERROR: %s cannot be closed", FILE_DUMP_NAME);
+        printf("ERROR: %s cannot be closed", DUMP_NAME);
         CPU->error_code = ERR_CLOSE_DUMP_FILE;
         cpu_dtor(CPU);
         exit(ERR_CLOSE_DUMP_FILE);

@@ -16,6 +16,8 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+// Shifts for commands 
+
 // RAM << 7
 // REG << 6
 // VAL << 5
@@ -30,15 +32,16 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-#define RAM_SIZE 400
-#define SCREEN_SIZE 20
-#define REG_NUM 4
-#define R_REG_NUM 3
-#define STACK_SIZE 10   
-#define CALL_STACK_SIZE 20
-#define FILE_BIN_NAME "bin_code.bin"
-#define FILE_DUMP_NAME "dump_log.txt" /// \brief Defines the name of the logfile
-#define MUL_CONST 100
+static const size_t RAM_SIZE        = 400;            /// \brief The size of the RAM
+static const size_t SCREEN_SIZE     = 20;             /// \brief The resolution of the screen   
+static const size_t REG_NUM         = 4;              /// \brief The number of general purpose registers
+static const size_t R_REG_NUM       = 3;              /// \brief The number of additional registers
+static const size_t STACK_SIZE      = 10;             /// \brief The capacity of the stack 
+static const size_t CALL_STACK_SIZE = 20;             /// \brief The capacity of the call stack 
+static const size_t MUL_CONST       = 100;            /// \brief Constant used in order to calculate with precision of 2 digits after the floating point
+static const char* BIN_NAME         = "bin_code.bin"; /// \brief The name of the file with binary code 
+static const char* DUMP_NAME        = "dump_log.txt"; /// \brief The name of the dump log file 
+
 #define FUNC_NAME __func__            /// \brief Used in order to get name of the function which called the error
 #define FUNC_LINE __LINE__            /// \brief Used in order to get the line from which the error was called
 #define FUNC_FILE __FILE__            /// \brief Used in order ot get the file from which the error was called
@@ -51,14 +54,14 @@
  */
 typedef struct
 {
-    Stack* stack = nullptr;
-    stack_type ram[RAM_SIZE]    = {};  //  pointer to the RAM
-    int* bin_code               = {};  //
-    int num_bin_cmd[1]          = {};  //
-    size_t curr_cmd             = 0;   //     
-    stack_type reg [REG_NUM]    = {};  //  registets for values
-    stack_type r_reg[R_REG_NUM] = {};  //  registers for adresses
-    size_t error_code           = 0;   //
+    Stack* stack                = nullptr; /// \brief
+    stack_type ram[RAM_SIZE]    = {};      /// \brief  pointer to the RAM
+    int* bin_code               = {};      /// \brief
+    int num_bin_cmd[1]          = {};      /// \brief
+    size_t curr_cmd             = 0;       /// \brief     
+    stack_type reg [REG_NUM]    = {};      /// \brief  registets for values
+    stack_type r_reg[R_REG_NUM] = {};      /// \brief  registers for adresses
+    size_t error_code           = 0;       /// \brief
 }CPU; 
 
 /**
@@ -344,5 +347,4 @@ void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUN
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-#endif 
-
+#endif

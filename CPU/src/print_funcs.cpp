@@ -125,7 +125,7 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
         {
             fprintf(dump_log, "RAM[%ld] = %d\n", i, CPU->ram[i]);
         }
-        fprintf(dump_log, "------------RAM------------\n");  
+        fprintf(dump_log, "------------RAM------------\n\n");  
     }
 
     if(fclose(dump_log) == EOF)

@@ -12,29 +12,26 @@ CC = g++
 DIR_ASM = ./ASM/
 DIR_CPU = ./CPU/
 DIR_STACK = ./STACK/
-
+DIR_DISASM = ./DISASM/
 
 TARGET = PROCESSOR 
 
-# all : Make_STACK Make_ASM Make_CPU
-all :  Make_ASM Make_CPU
+all :  Make_ASM Make_DISASM Make_CPU
 
 Make_ASM: 
 	cd $(DIR_ASM) && make
 
-clean_obj:
-	Clean_obj_ASM Clean_obj_CPU
-
 Make_CPU:
 	cd $(DIR_CPU) && make
 
+Make_DISASM:
+	cd $(DIR_DISASM) && make
+
 clean_obj:
 	cd $(DIR_ASM) && make clean /
-	cd $(DIR_CPU) && make clean
+	cd $(DIR_CPU) && make clean /
+	cd $(DIR_DISASM) && make clean
 
-
-# Make_STACK:
-# 	cd $(DIR_STACK) && make
 
 
 

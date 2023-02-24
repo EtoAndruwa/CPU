@@ -1,81 +1,50 @@
 #include "disassembler.h"
 
-void file_openning_check()
-{   
-    FILE * test_asm = fopen("test.asm", "wb"); // Opens empty file
-    FILE * test_code = fopen("test_code.txt", "rb"); // Opens file with code 
+FILE* check_code_file(disasm_struct* disasm_struct)
+{
+    FILE* bin_file_ptr = fopen("../ASM/bin_code.bin", "rb"); // Opens an empty file
 
-    if(test_asm == nullptr)
+    if(bin_file_ptr == nullptr)
     {
-        printf("ERROR: unable to open file %s.\n", FILE_1);
-        abort();
-    }
-    if(test_code == nullptr)
-    {
-        printf("ERROR: unable to open file %s.\n", FILE_2);
-        abort();
+        safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_OPEN_BIN_FILE);
     }
     else
     {   
-        printf("OK\n");
-
-        translate_to_code(test_asm, test_code);
+        return bin_file_ptr;
     }
 }
 
-void translate_logic(FILE * test_asm, int command_id, double push_value)
+void get_cmd_in_buf(disasm_struct* disasm_struct)
 {
-    switch (command_id)
+    FILE* bin_file_ptr = check_code_file(disasm_struct);
+
+    if(fread(disasm_struct->num_bin_cmd, sizeof(int), 1, bin_file_ptr) != 1)
     {
-        case 1:
-            write_code_push(test_asm, "PUSH", push_value);
-            break;
-        case 2:
-            write_code_other(test_asm, "POP");
-            break;
-        case 3:
-            write_code_other(test_asm, "ADD");
-            break;
-        case 4:
-            write_code_other(test_asm, "SUB");
-            break;
-        case 5:
-            write_code_other(test_asm, "MUL");
-            break;
-        case 6:
-            write_code_other(test_asm, "DIV");
-            break;
-        default:
-            break;
+        safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INV_READ_NUM_CMD);
+    }
+
+    disasm_struct->bin_codes_buf = (int*)calloc(*disasm_struct->num_bin_cmd, sizeof(int));
+
+    if(disasm_struct->bin_codes_buf == nullptr)    
+    {
+        safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALLOC_BIN_BUF);
+    }
+
+    if(fread(disasm_struct->bin_codes_buf, sizeof(int), *disasm_struct->num_bin_cmd, bin_file_ptr) != *disasm_struct->num_bin_cmd)
+    {
+        safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CANNOT_READ_CMD);
+    }
+
+    if(fclose(bin_file_ptr) == EOF)
+    {
+        safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CLOSE_BIN_FILE);
     }
 }
 
-void translate_to_code(FILE * test_asm, FILE * test_code)
+void safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code)
 {
-    int command = 0;
-    double push_value = 0;
-
-    do
-    {
-        fscanf(test_code, "%d", &command);
-        if(command == 1)
-        {
-            fscanf(test_code, " %lf", &push_value);
-        }
-        translate_logic(test_asm, command, push_value);
-    }
-    while(command != 0)    ;
-    fprintf(test_asm, "%s", "HLT");
-    fclose(test_asm);
-    fclose(test_code);
-}
-
-void write_code_push(FILE * test_asm, const char command_string [5], double push_value)
-{   
-    fprintf(test_asm, "%s %f\n", command_string, push_value);
-}
-
-void write_code_other(FILE * test_asm, const char command_string [5])
-{   
-    fprintf(test_asm, "%s\n", command_string);      
+    disasm_struct->error_code = error_code;
+    dump_disasm(disasm_struct, FUNCT_NAME, FUNCT_LINE, FUNCT_FILE);
+    disasm_dtor(disasm_struct);
+    exit(error_code);
 }

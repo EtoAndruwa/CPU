@@ -64,6 +64,13 @@ void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
     case JMP:
         jmp_flag(CPU, CPU->curr_cmd + 1);
         break;
+    case JZ:
+        jmp_flag_jz(CPU, CPU->curr_cmd + 1);
+        break;
+    case DEC:
+        dec(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
+        CPU->curr_cmd = CPU->curr_cmd + 2;
+        break;
     case PUSH_RAM_REG:
         push_ram_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
         CPU->curr_cmd = CPU->curr_cmd + 2;
@@ -123,7 +130,7 @@ void cpu_work(CPU* CPU, Call_stack* Call_stack)
 void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code)
 {
     CPU->error_code = error_code;
-    dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    dump_cpu(CPU, FUNCT_NAME, FUNCT_LINE, FUNCT_FILE);
     cpu_dtor(CPU);
     exit(error_code);
 }

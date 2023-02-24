@@ -16,7 +16,50 @@ void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp)
 void jmp_flag(CPU* CPU, size_t index_to_jmp)
 {
     CPU->curr_cmd = CPU->bin_code[index_to_jmp];
-}   
+} 
+
+void jmp_flag_jz(CPU* CPU, size_t index_to_jmp)
+{
+    if((CPU->reg[2] / MUL_CONST) == 0)
+    {
+        CPU->curr_cmd = CPU->bin_code[index_to_jmp];
+    }
+    else
+    {
+        CPU->curr_cmd += 2;
+    }
+}
+
+void dec(CPU* CPU, size_t reg_code)
+{
+    switch (reg_code)
+    {
+    case ax:
+        CPU->reg[0] -= MUL_CONST;
+        break;
+    case bx:
+        CPU->reg[1] -= MUL_CONST;
+        break;
+    case cx:
+        CPU->reg[2] -= MUL_CONST;
+        break;
+    case dx:
+        CPU->reg[3] -= MUL_CONST;
+        break;
+    case rax:
+        CPU->r_reg[0] -= MUL_CONST;
+        break;
+    case rbx:
+        CPU->r_reg[1] -= MUL_CONST;
+        break;
+    case rcx:
+        CPU->r_reg[2] -= MUL_CONST;
+        break;
+    default:
+        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        break;
+    }
+}
 
 void jmp_ret(CPU* CPU, Call_stack* Call_stack)
 {
@@ -126,73 +169,73 @@ void push_ram_reg(CPU* CPU, size_t reg_id) // From RAM to stack
     switch (reg_id)
     {
     case ax:
-        if((CPU->reg[0] / 100) >= RAM_SIZE)
+        if((CPU->reg[0] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            StackPush(CPU->stack, CPU->ram[CPU->reg[0] / 100]);
+            StackPush(CPU->stack, CPU->ram[CPU->reg[0] / MUL_CONST]);
         }
         break;
     case bx:
-        if((CPU->reg[1] / 100) >= RAM_SIZE)
+        if((CPU->reg[1] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            StackPush(CPU->stack, CPU->ram[CPU->reg[1] / 100]);
+            StackPush(CPU->stack, CPU->ram[CPU->reg[1] / MUL_CONST]);
         }
         break;
     case cx:
-        if((CPU->reg[2] / 100) >= RAM_SIZE)
+        if((CPU->reg[2] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            StackPush(CPU->stack, CPU->ram[CPU->reg[2] / 100]);
+            StackPush(CPU->stack, CPU->ram[CPU->reg[2] / MUL_CONST]);
         }
         break;
     case dx:
-        if((CPU->reg[3] / 100) >= RAM_SIZE)
+        if((CPU->reg[3] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            StackPush(CPU->stack, CPU->ram[CPU->reg[3] / 100]);
+            StackPush(CPU->stack, CPU->ram[CPU->reg[3] / MUL_CONST]);
         }
         break;
     case rax:
-        if((CPU->r_reg[0] / 100) >= RAM_SIZE)
+        if((CPU->r_reg[0] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            StackPush(CPU->stack, CPU->ram[CPU->r_reg[0] / 100]);
+            StackPush(CPU->stack, CPU->ram[CPU->r_reg[0] / MUL_CONST]);
         }
         break;
     case rbx:
-        if((CPU->r_reg[1] / 100) >= RAM_SIZE)
+        if((CPU->r_reg[1] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            StackPush(CPU->stack, CPU->ram[CPU->r_reg[1] / 100]);
+            StackPush(CPU->stack, CPU->ram[CPU->r_reg[1] / MUL_CONST]);
         }
         break;
     case rcx:
-        if((CPU->r_reg[2] / 100) >= RAM_SIZE)
+        if((CPU->r_reg[2] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            StackPush(CPU->stack, CPU->ram[CPU->r_reg[2] / 100]);
+            StackPush(CPU->stack, CPU->ram[CPU->r_reg[2] / MUL_CONST]);
         }
         break;
     default:
@@ -205,73 +248,73 @@ void pop_ram_reg(CPU* CPU, size_t reg_id) // From Stack to RAM
     switch (reg_id)
     {
     case ax:
-        if((CPU->reg[0] / 100) >= RAM_SIZE)
+        if((CPU->reg[0] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            CPU->ram[CPU->reg[0] / 100] = StackPop(CPU->stack);;
+            CPU->ram[CPU->reg[0] / MUL_CONST] = StackPop(CPU->stack);;
         }
         break;
     case bx:
-        if((CPU->reg[1] / 100) >= RAM_SIZE)
+        if((CPU->reg[1] / MUL_CONST) >= RAM_SIZE)
         {   
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            CPU->ram[CPU->reg[1] / 100] = StackPop(CPU->stack);;
+            CPU->ram[CPU->reg[1] / MUL_CONST] = StackPop(CPU->stack);;
         }
         break;
     case cx:
-        if((CPU->reg[2] / 100) >= RAM_SIZE)
+        if((CPU->reg[2] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            CPU->ram[CPU->reg[2] / 100] = StackPop(CPU->stack);;
+            CPU->ram[CPU->reg[2] / MUL_CONST] = StackPop(CPU->stack);;
         }
         break;
     case dx:
-        if((CPU->reg[3] / 100) >= RAM_SIZE)
+        if((CPU->reg[3] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            CPU->ram[CPU->reg[3] / 100] = StackPop(CPU->stack);;
+            CPU->ram[CPU->reg[3] / MUL_CONST] = StackPop(CPU->stack);;
         }
         break;
     case rax:
-        if((CPU->r_reg[0] / 100) >= RAM_SIZE)
+        if((CPU->r_reg[0] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            CPU->ram[CPU->r_reg[0] / 100] = StackPop(CPU->stack);;
+            CPU->ram[CPU->r_reg[0] / MUL_CONST] = StackPop(CPU->stack);;
         }
         break;
     case rbx:
-        if((CPU->r_reg[1] / 100) >= RAM_SIZE)
+        if((CPU->r_reg[1] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            CPU->ram[CPU->r_reg[1] / 100] = StackPop(CPU->stack);;
+            CPU->ram[CPU->r_reg[1] / MUL_CONST] = StackPop(CPU->stack);;
         }
         break;
     case rcx:
-        if((CPU->r_reg[2] / 100) >= RAM_SIZE)
+        if((CPU->r_reg[2] / MUL_CONST) >= RAM_SIZE)
         {
             safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);
         }
         else
         {
-            CPU->ram[CPU->r_reg[2] / 100] = StackPop(CPU->stack);;
+            CPU->ram[CPU->r_reg[2] / MUL_CONST] = StackPop(CPU->stack);;
         }
         break;
     default:

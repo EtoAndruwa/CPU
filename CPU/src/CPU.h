@@ -88,6 +88,8 @@ enum cmd
     POP_RAM_VAL = 162,
     POP_RAM_REG = 194,
 
+    DEC  = 1,
+    JZ   = 2,
     ADD  = 3,  
     SUB  = 4, 
     MUL  = 5, 
@@ -129,7 +131,7 @@ enum error_code
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief Pushes the value from the register to the stack
+ * @brief Pushes the value from the stack to the register
  * 
  * @param CPU The main struct which is containing all information about CPU struct
  * @param reg_code The code of the register
@@ -344,6 +346,26 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
  * @param error_code The error code of the struct
  */
 void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Jumps to the index if register CX equal to the 0
+ * 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param index_to_jmp The index that must be set as current index
+ */
+void jmp_flag_jz(CPU* CPU, size_t index_to_jmp);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Decreases the value of the given register
+ * 
+ * @param CPU The main struct which is containing all information about CPU struct
+ * @param reg_code The code of the register 
+ */
+void dec(CPU* CPU, size_t reg_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

@@ -47,7 +47,14 @@ void print_ram_screen(CPU* CPU)
         {
             printf("\n");
         }
-        printf("%c ", (CPU->ram[i] / 100));
+        if((CPU->ram[i] / MUL_CONST) == (int)'X')
+        {
+            printf("\033[97m\033[107m%c \033[0m", (CPU->ram[i] / MUL_CONST));
+        }
+        else
+        {
+            printf("\033[30m\033[40m%c \033[0m", (CPU->ram[i] / MUL_CONST));
+        }
     }
     printf("\n\n----------------SCREEN-----------------\n\n");
 }
@@ -111,7 +118,7 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
             }
             fprintf(dump_log, "%c ", (CPU->ram[i] / 100));
         }
-        fprintf(dump_log, "\n\n----------------SCREEN-----------------\n\n");
+        fprintf(dump_log, "\n\n----------------SCREEN-----------------\n");
 
         fprintf(dump_log, "\n------------RAM------------\n");
         for(size_t i = 0; i < RAM_SIZE; i++)

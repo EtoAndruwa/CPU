@@ -54,21 +54,22 @@ const size_t CANARY           = 0xDEAD; /// \brief The canary value
 
 enum error_list_codes 
 {
-    STACK_IS_OK             = 0, 
-    ERR_NULL_DATA           = 1,
-    ERR_OUT_OF_STACK_RIGHT  = 2,
-    ERR_OUT_OF_STACK_LEFT   = 3,
-    ERR_LEFT_CANARY_DEAD    = 4,
-    ERR_RIGHT_CANARY_DEAD   = 5,
-    ERR_HASH_CHANGED        = 6,
-    ERR_TO_CALLOC_STACK     = 7,
-    ERR_TO_REALLOC_DOWN     = 8,
-    ERR_TO_REALLOC_UP       = 9,
-    ERR_TO_CALLOC_CMD_STR   = 10,
-    ERR_OPEN_DUMP_FILE      = 11,
-    ERR_CLOSE_DUMP_FILE     = 12,
-    ERR_OPEN_ACTION_LOG     = 13,
-    ERR_CLOSE_ACTION_LOG    = 14
+    STACK_IS_OK            = 0, 
+    ERR_NULL_DATA          = 1,
+    ERR_OUT_OF_STACK_RIGHT = 2,
+    ERR_OUT_OF_STACK_LEFT  = 3,
+    ERR_LEFT_CANARY_DEAD   = 4,
+    ERR_RIGHT_CANARY_DEAD  = 5,
+    ERR_HASH_CHANGED       = 6,
+    ERR_TO_CALLOC_STACK    = 7,
+    ERR_TO_REALLOC_DOWN    = 8,
+    ERR_TO_REALLOC_UP      = 9,
+    ERR_TO_CALLOC_CMD_STR  = 10,
+    ERR_OPEN_DUMP_FILE     = 11,
+    ERR_CLOSE_DUMP_FILE    = 12,
+    ERR_OPEN_ACTION_LOG    = 13,
+    ERR_CLOSE_ACTION_LOG   = 14,
+    ERR_DIV_TO_ZERO        = 15
 };
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

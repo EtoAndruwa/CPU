@@ -34,6 +34,8 @@ const char* Enum_to_string(size_t code) // (OK) Сonverts an enum's int value to
             return "ERR_OPEN_ACTION_LOG";
         case ERR_OPEN_DUMP_FILE:
             return "ERR_OPEN_DUMP_FILE";
+        case ERR_DIV_TO_ZERO:
+            return "ERR_DIV_TO_ZERO";
         default:
             return "NEW_ERROR_CODE"; 
     }

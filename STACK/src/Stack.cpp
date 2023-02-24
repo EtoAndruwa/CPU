@@ -123,5 +123,11 @@ void StackCheck(Stack* stack_struct, const char* FUNCT_NAME, int FUNCT_LINE, con
         StackDtor(stack_struct);
         exit(ERR_HASH_CHANGED);
     }
+    else if(stack_struct->error_code != STACK_IS_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        StackDtor(stack_struct);
+        exit(ERR_HASH_CHANGED);
+    }
 }
 

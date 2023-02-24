@@ -60,10 +60,18 @@ void StackDiv(Stack* stack_struct) // (OK) Divides the preceding element by the 
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 
-    stack_struct->data[stack_struct->next_empty_cell - 2] = ((float)(stack_struct->data[stack_struct->next_empty_cell - 2]) / (float)(stack_struct->data[stack_struct->next_empty_cell - 1]) ) * 100;
-    stack_struct->data[stack_struct->next_empty_cell - 1] = POISON_VALUE;
-    stack_struct->next_empty_cell--;
-    Calculate_hash(stack_struct);
+    if(stack_struct->data[stack_struct->next_empty_cell - 1] == 0)
+    {
+        stack_struct->error_code = ERR_DIV_TO_ZERO;
+        StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    }
+    else    
+    {
+        stack_struct->data[stack_struct->next_empty_cell - 2] = ((float)(stack_struct->data[stack_struct->next_empty_cell - 2]) / (float)(stack_struct->data[stack_struct->next_empty_cell - 1])) * 100;
+        stack_struct->data[stack_struct->next_empty_cell - 1] = POISON_VALUE;
+        stack_struct->next_empty_cell--;
+        Calculate_hash(stack_struct);
+    }
 
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 }

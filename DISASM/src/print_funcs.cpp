@@ -60,21 +60,41 @@ void write_asm(disasm_struct* disasm_struct)
     }
     else
     {
-        for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
+        for(disasm_struct->cur_cmd_index = 0; disasm_struct->cur_cmd_index < *disasm_struct->num_bin_cmd; disasm_struct->cur_cmd_index++)
         {
-            if(disasm_struct->commands[i].flag_before != 0)
+            if(disasm_struct->commands[disasm_struct->cur_cmd_index].flag_before != 0)
             {
                 fprintf(asm_file, ":%ld\n", disasm_struct->flag_num);
                 disasm_struct->flag_num++;
             }
-            else if(disasm_struct->commands[i].func_before != 0)
+            else if(disasm_struct->commands[disasm_struct->cur_cmd_index].func_before != 0)
             {
                 fprintf(asm_file, "FUNCTION%ld:\n", disasm_struct->func_num);
                 disasm_struct->func_num++;
             }
-            else if(disasm_struct->commands[i].type == cmd)
+            else if(disasm_struct->commands[disasm_struct->cur_cmd_index].type == cmd)
             {
-                fprintf(asm_file, "%s", get_cmd_string(disasm_struct->commands[i].value));
+                fprintf(asm_file, "%s", get_cmd_string(disasm_struct->commands[disasm_struct->cur_cmd_index].value));
+                disasm_struct->cur_cmd_index++;
+
+                switch(disasm_struct->commands[disasm_struct->cur_cmd_index].type)
+                {
+                case val:
+                    fprintf(asm_file, " %d", disasm_struct->commands[disasm_struct->cur_cmd_index].value);
+                    break;
+                case reg:
+                    fprintf(asm_file, " %s", get_cmd_string(disasm_struct->commands[disasm_struct->cur_cmd_index].value));
+                    break;
+                case ram_val:
+                    fprintf(asm_file, " [%d]", disasm_struct->commands[disasm_struct->cur_cmd_index].value);
+                    break;
+                case ram_reg:
+                    fprintf(asm_file, " [%s]", get_cmd_string(disasm_struct->commands[disasm_struct->cur_cmd_index].value));
+                    break;
+                default:
+                    break;
+                }
+
                 fprintf(asm_file, "\n");
             }
         }

@@ -51,11 +51,95 @@ void safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_L
 
 void get_command_types(disasm_struct* disasm_struct)
 {
-    for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
+    for(disasm_struct->cur_cmd_index =  0; disasm_struct->cur_cmd_index < *disasm_struct->num_bin_cmd;)
     {
-        if((i < 21) || (i > 27))
+        if((disasm_struct->commands[disasm_struct->cur_cmd_index].value < 21) || (disasm_struct->commands[disasm_struct->cur_cmd_index].value > 27))
         {
-            disasm_struct->commands[i].type = cmd;
+            disasm_struct->commands[disasm_struct->cur_cmd_index].type = cmd;
+            check_next_cmd(disasm_struct);
         }
     }
 }
+
+void check_next_cmd(disasm_struct* disasm_struct)
+{
+    switch(disasm_struct->commands[disasm_struct->cur_cmd_index].value)
+    {
+        case HLT:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case PUSH_ST:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = val;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case PUSH_REG:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = reg;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case PUSH_RAM_VAL:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = ram_val;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case PUSH_RAM_REG:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = ram_reg;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case POP_REG:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = reg;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case POP_RAM_VAL:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = val;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case POP_RAM_REG:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = ram_reg;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case DEC:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case JZ:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = val;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case ADD:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case SUB:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case MUL:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case DIV:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case SQRT:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case OUT:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case RET:
+            disasm_struct->cur_cmd_index++;
+            break;
+        case JMP:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = val;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case CALL:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = val;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+    }
+}
+
+// void put_flag_func(disasm_struct* disasm_struct)
+// {
+//     for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
+//     {
+
+
+//     }
+// }

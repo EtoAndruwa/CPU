@@ -45,6 +45,8 @@ enum type
     cmd   = 1, /// \brief 'command'
     reg   = 2, /// \brief 'register'
     val   = 3, /// \brief 'value' 
+    ram_val = 4,
+    ram_reg = 5,
 };
 
 typedef struct command
@@ -57,12 +59,13 @@ typedef struct command
 
 typedef struct disasm_struct
 {
-    int* bin_codes_buf = nullptr;
-    command* commands = nullptr;
-    int num_bin_cmd[1] = {};
-    size_t error_code  = STRUCT_OK;
-    size_t flag_num    = 0;
-    size_t func_num    = 0;
+    int* bin_codes_buf   = nullptr;
+    command* commands    = nullptr;
+    int num_bin_cmd[1]   = {};
+    size_t error_code    = STRUCT_OK;
+    size_t flag_num      = 0;
+    size_t func_num      = 0;
+    size_t cur_cmd_index = 0;
 }disasm_struct;
 
 enum cmd
@@ -128,6 +131,8 @@ void get_command_types(disasm_struct* disasm_struct);
 const char* get_cmd_string(size_t cmd_code);
 
 void write_asm(disasm_struct* disasm_struct);
+
+void check_next_cmd(disasm_struct* disasm_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

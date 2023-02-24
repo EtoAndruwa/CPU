@@ -36,7 +36,7 @@ void StackMul(Stack* stack_struct) // (OK) Multiplies two values of the stack
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 
-    stack_struct->data[stack_struct->next_empty_cell - 2] = (stack_struct->data[stack_struct->next_empty_cell - 1] * stack_struct->data[stack_struct->next_empty_cell - 2]) / 100;
+    stack_struct->data[stack_struct->next_empty_cell - 2] = stack_struct->data[stack_struct->next_empty_cell - 1] * (stack_struct->data[stack_struct->next_empty_cell - 2] / 100);
     stack_struct->data[stack_struct->next_empty_cell - 1] = POISON_VALUE;
     stack_struct->next_empty_cell--;
     Calculate_hash(stack_struct);

@@ -8,6 +8,7 @@ int main()
     disasm_ctor(&disasm_struct);
 
     get_command_types(&disasm_struct);
+    put_flag_func(&disasm_struct);
     print_commands(&disasm_struct);
     write_asm(&disasm_struct);
 

@@ -89,7 +89,7 @@ void check_next_cmd(disasm_struct* disasm_struct)
             disasm_struct->cur_cmd_index += 2;
             break;
         case POP_RAM_VAL:
-            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = val;
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = ram_val;
             disasm_struct->cur_cmd_index += 2;
             break;
         case POP_RAM_REG:
@@ -97,7 +97,8 @@ void check_next_cmd(disasm_struct* disasm_struct)
             disasm_struct->cur_cmd_index += 2;
             break;
         case DEC:
-            disasm_struct->cur_cmd_index++;
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = reg;
+            disasm_struct->cur_cmd_index += 2;
             break;
         case JZ:
             disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = val;
@@ -135,11 +136,22 @@ void check_next_cmd(disasm_struct* disasm_struct)
     }
 }
 
-// void put_flag_func(disasm_struct* disasm_struct)
-// {
-//     for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
-//     {
-
-
-//     }
-// }
+void put_flag_func(disasm_struct* disasm_struct)
+{
+    for(size_t i = 0; i < *disasm_struct->num_bin_cmd; i++)
+    {
+        if(disasm_struct->commands[i].type == cmd)
+        {   
+            if(disasm_struct->commands[i].value == JMP || disasm_struct->commands[i].value == JZ)
+            {
+                disasm_struct->commands[disasm_struct->commands[i + 1].value].flag_before = disasm_struct->commands[i+1].value;
+                i++;
+            }
+            else if(disasm_struct->commands[i].value == CALL)
+            {
+                disasm_struct->commands[disasm_struct->commands[i + 1].value].func_before = disasm_struct->commands[i+1].value;
+                i++;
+            }
+        }
+    }
+}

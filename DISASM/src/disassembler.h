@@ -134,6 +134,10 @@ void write_asm(disasm_struct* disasm_struct);
 
 void check_next_cmd(disasm_struct* disasm_struct);
 
+void put_flag_func(disasm_struct* disasm_struct);
+
+void print_flag_func(disasm_struct* disasm_struct, FILE* asm_file);
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #endif

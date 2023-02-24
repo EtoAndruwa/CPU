@@ -3,8 +3,8 @@
 void disasm_ctor(disasm_struct* disasm_struct)
 {
     disasm_struct->error_code = STRUCT_OK;
-    disasm_struct->flag_num = 0;
-    disasm_struct->func_num = 0;
+    disasm_struct->flag_num = 1;
+    disasm_struct->func_num = 1;
 
      disasm_struct->commands = (command*)calloc(*disasm_struct->num_bin_cmd, sizeof(command));
 

@@ -91,6 +91,13 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
                 assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2; // Skips [reg] token
             }
+            else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == 3))
+            {
+                assembly_struct->toks[cur_tok_chk].value += 1 | (7 << 5);
+                assembly_struct->toks[cur_tok_chk].type = cmd;
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+                assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2; // Skips [reg] token
+            }
             else
             {
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
@@ -118,6 +125,13 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
         else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == 2))
         {
             assembly_struct->toks[cur_tok_chk].value = 2 | (3 << 6);
+            assembly_struct->toks[cur_tok_chk].type = cmd;
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
+            assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2; // Skips [reg] token
+        }
+        else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == 3))
+        {
+            assembly_struct->toks[cur_tok_chk].value += 2 | (3 << 6);
             assembly_struct->toks[cur_tok_chk].type = cmd;
             strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");
             assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2; // Skips [reg] token

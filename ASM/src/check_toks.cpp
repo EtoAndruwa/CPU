@@ -67,12 +67,13 @@ size_t check_brackets(char* token_text)
 
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 {
+    
     if(check_brackets(token_text))
     {
         size_t strlen_token_check = strlen(token_text);
-        if(strlen_token_check >= 3)
+        if(strlen_token_check >= 3 && strlen_token_check <= 5)
         {
-            size_t length_of_inner = strlen_token_check -1 ;
+            size_t length_of_inner = strlen_token_check- 1;
             char* str_check =(char*)calloc(length_of_inner, sizeof(char));
 
             if(str_check == nullptr)
@@ -133,6 +134,89 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                 str_check = nullptr;
                 return 1; // if memmory addressing [val] 
             }
+        }
+        else if(strlen_token_check > 5)
+        {
+            size_t length_of_inner = strlen_token_check -1 ;
+            char* str_check =(char*)calloc(length_of_inner, sizeof(char));
+
+            if(str_check == nullptr)
+            {
+                assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
+                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+                dtor_asm(assembly_struct);
+                exit(ERR_TO_CHECK_INNER_RAM);
+            }
+
+            strncpy(str_check, (token_text + 1), strlen_token_check - 2);
+            str_check[strlen_token_check - 1] = '\0';
+
+            char* position_plus_sing = strchr(str_check,'+');
+
+            if(position_plus_sing == nullptr)
+            {
+                assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
+                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+                dtor_asm(assembly_struct);
+                exit(ERR_INVAL_RAM_ADDRESSING);
+            }
+            else
+            {
+                size_t text_bef_plus_len = position_plus_sing - str_check;
+
+                if(text_bef_plus_len > 0)
+                {
+                    char* text_bef_plus_ptr =(char*)calloc(text_bef_plus_len + 1, sizeof(char));
+
+                    if(text_bef_plus_ptr == nullptr)
+                    {
+                        assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
+                        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+                        dtor_asm(assembly_struct);
+                        exit(ERR_TO_CHECK_INNER_RAM);
+                    }
+
+                    strncpy(text_bef_plus_ptr, str_check, text_bef_plus_len);
+                    text_bef_plus_ptr[text_bef_plus_len] = '\0';
+
+                    if(check_reg_inner(assembly_struct, position_plus_sing + 1) && (check_num(text_bef_plus_ptr)))
+                    {
+                        if(strcmp(position_plus_sing + 1, "ax") == 0)
+                        {
+                            assembly_struct->toks[index - 1].value = 0; 
+                        }
+                        else if(strcmp(position_plus_sing + 1, "bx") == 0)
+                        {
+                            assembly_struct->toks[index - 1].value = 1 << 2; 
+                        }
+                        else if(strcmp(position_plus_sing + 1, "cx") == 0)
+                        {
+                            assembly_struct->toks[index - 1].value = 1 << 3; 
+                        }
+                        else if(strcmp(position_plus_sing + 1, "dx") == 0)
+                        {   
+                            assembly_struct->toks[index - 1].value = 1 << 4; 
+                        }
+
+                        assembly_struct->toks[index].value = atoi(text_bef_plus_ptr);
+                        assembly_struct->toks[index].type = reg;
+                        strcpy((char*)assembly_struct->toks[index].status, "OK");
+
+                        free(str_check);
+                        free(text_bef_plus_ptr);
+                        text_bef_plus_ptr = nullptr;
+                        str_check = nullptr;
+                        return 3;
+                    }
+                }
+                else
+                {   
+                    assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
+                    dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+                    dtor_asm(assembly_struct);
+                    exit(ERR_INVAL_RAM_ADDRESSING);
+                }
+            }   
         }
         else
         {
@@ -361,7 +445,8 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i)
 
 size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
 {
-    if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0) || (strcmp(inner_text, "rcx") == 0) || (strcmp(inner_text, "rax") == 0) || (strcmp(inner_text, "rbx") == 0))
+    if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0) || 
+            (strcmp(inner_text, "rcx") == 0) || (strcmp(inner_text, "rax") == 0) || (strcmp(inner_text, "rbx") == 0))
     {
         return 1; // Returns 1 if the next token is reg 
     }

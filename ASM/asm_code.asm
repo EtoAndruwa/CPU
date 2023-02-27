@@ -2,33 +2,14 @@ PUSH 88
 POP ax
 
 CALL PRINT_TOP:
-
 CALL PRINT_BOT:
 
 HLT
-
-PRINT_2:
-    PUSH ax
-    POP [bx]
-
-    CALL PRINT_X:
-    RET
 
 PRINT_4:    
     PUSH ax
     POP [bx]
 
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    RET
-
-PRINT_6:
-    PUSH ax
-    POP [bx]
-
-    CALL PRINT_X:
-    CALL PRINT_X:
     CALL PRINT_X:
     CALL PRINT_X:
     CALL PRINT_X:
@@ -47,21 +28,6 @@ PRINT_8:
     CALL PRINT_X:
     RET
 
-PRINT_10:
-    PUSH ax
-    POP [bx]
-
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:    
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X: 
-    RET
-
 PRINT_12:
     PUSH ax
     POP [bx]
@@ -73,25 +39,6 @@ PRINT_12:
     CALL PRINT_X:    
     CALL PRINT_X:
     CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X: 
-    CALL PRINT_X:
-    CALL PRINT_X:
-    RET
-
-PRINT_14:
-    PUSH ax
-    POP [bx]
-
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:    
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X: 
     CALL PRINT_X:
     CALL PRINT_X: 
     CALL PRINT_X:
@@ -142,31 +89,6 @@ PRINT_18:
     CALL PRINT_X:
     RET
 
-PRINT_20:
-    PUSH ax
-    POP [bx]
-
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:    
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X:
-    CALL PRINT_X: 
-    CALL PRINT_X:
-    CALL PRINT_X: 
-    CALL PRINT_X:
-    CALL PRINT_X: 
-    CALL PRINT_X:
-    CALL PRINT_X: 
-    CALL PRINT_X:
-    RET
-
 PRINT_X:
     PUSH 1
     PUSH bx
@@ -177,33 +99,30 @@ PRINT_X:
     RET
 
 PRINT_TOP:
-    PUSH 9
-    POP bx
-    CALL PRINT_2:
 
     PUSH 28
     POP bx
     CALL PRINT_4:
 
-    PUSH 47
+    PUSH 46
     POP bx
-    CALL PRINT_6:
+    CALL PRINT_8:
 
     PUSH 66
     POP bx
     CALL PRINT_8:
 
-    PUSH 85
+    PUSH 84
     POP bx
-    CALL PRINT_10:
+    CALL PRINT_12:
 
     PUSH 104
     POP bx
     CALL PRINT_12:
 
-    PUSH 123
+    PUSH 122
     POP bx
-    CALL PRINT_14:
+    CALL PRINT_16:
 
     PUSH 142
     POP bx
@@ -213,16 +132,16 @@ PRINT_TOP:
     POP bx
     CALL PRINT_18:
 
-    PUSH 180
+    PUSH 181
     POP bx
-    CALL PRINT_20:
+    CALL PRINT_18:
 
     RET
 
 PRINT_BOT:
-    PUSH 200
+    PUSH 201
     POP bx
-    CALL PRINT_20:
+    CALL PRINT_18:
 
     PUSH 221
     POP bx
@@ -232,32 +151,28 @@ PRINT_BOT:
     POP bx
     CALL PRINT_16:
 
-    PUSH 263
+    PUSH 262
     POP bx
-    CALL PRINT_14:
+    CALL PRINT_16:
 
     PUSH 284
     POP bx
     CALL PRINT_12:
 
-    PUSH 305
+    PUSH 304
     POP bx
-    CALL PRINT_10:
+    CALL PRINT_12:
 
     PUSH 326
     POP bx
     CALL PRINT_8:
 
-    PUSH 347
+    PUSH 346
     POP bx
-    CALL PRINT_6:
+    CALL PRINT_8:
 
     PUSH 368
     POP bx
     CALL PRINT_4:
-
-    PUSH 389
-    POP bx
-    CALL PRINT_2:
 
     RET

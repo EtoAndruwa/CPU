@@ -95,8 +95,30 @@ enum token_error_code
     ERR_FIRST_DECL_OF_FLAG       = 14
 };  
 
+
+
+// DEF_CMD(HLT, 0, code)
+// DEF_CMD(PUSH_ST, 33, 
+//     {
+//         StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
+//         CPU->curr_cmd = CPU->curr_cmd + 2;
+//     })
+
+// #include "DSL.h"
+
+// #define PUSH(arg) StackPush(CPU->stack, arg)
+
 enum cmd
 {
+// #   define DEF_CMD(name, num, ...) case name: {__VA_ARGS__} 
+// #   define DEF_REG(...) 
+// #   include "cmds.h"
+// #   undef DEF_CMD
+// #   undef DEF_REG
+
+
+
+
     HLT          = 0,  
     PUSH_ST      = 33, 
     PUSH_REG     = 65, 
@@ -158,6 +180,7 @@ typedef struct asm_struct
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)
     int* bin_codes        = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
     size_t cur_tok_chk    = 0;         /// \brief The index of the current token
+    size_t length_listing = 7;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -475,5 +498,14 @@ size_t get_new_num_toks(asm_struct* assembly_struct);
 size_t check_flag_declaration(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ */
+void max_len_tok(asm_struct* assembly_struct);
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 
 #endif

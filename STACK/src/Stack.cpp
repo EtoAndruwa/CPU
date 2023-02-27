@@ -130,4 +130,3 @@ void StackCheck(Stack* stack_struct, const char* FUNCT_NAME, int FUNCT_LINE, con
         exit(ERR_HASH_CHANGED);
     }
 }
-

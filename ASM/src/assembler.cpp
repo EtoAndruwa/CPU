@@ -585,7 +585,7 @@ void get_arr_bin_codes(asm_struct* assembly_struct)
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
         if(assembly_struct->toks[i].new_index != -1)
-        {
+        {   
             assembly_struct->bin_codes[j] = assembly_struct->toks[i].value;
             j++;
         }
@@ -595,22 +595,48 @@ void get_arr_bin_codes(asm_struct* assembly_struct)
 void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
 {
     size_t new_index = 0;
-    
-    if(assembly_struct->toks[index_cmd].type == cmd || assembly_struct->toks[index_cmd].type == val || assembly_struct->toks[index_cmd].type == reg || assembly_struct->toks[index_cmd].type == ret || ((assembly_struct->toks[index_cmd].type == fnc) && (strcmp(assembly_struct->toks[index_cmd-1].text, "CALL") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JMP") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JZ") == 0)))
+
+    if(index_cmd == 0)
+    {
+        if((assembly_struct->toks[index_cmd].type == flg) || (assembly_struct->toks[index_cmd].type == fnc))
+        {
+            assembly_struct->toks[index_cmd].new_index = -1;
+            return;
+        }
+        else
+        {
+            assembly_struct->toks[index_cmd].new_index = 0;
+            return;
+        }
+    }   
+    else if(assembly_struct->toks[index_cmd].type == cmd || assembly_struct->toks[index_cmd].type == val || assembly_struct->toks[index_cmd].type == reg || assembly_struct->toks[index_cmd].type == ret || ((assembly_struct->toks[index_cmd].type == fnc) && (strcmp(assembly_struct->toks[index_cmd-1].text, "CALL") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JMP") == 0)) || ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JZ") == 0)))
     {
         for(size_t i = 0; i < index_cmd; i++)
         {
-            if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret || ((assembly_struct->toks[i].type == fnc) && (strcmp(assembly_struct->toks[i-1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JZ") == 0)))
+            if(i == 0)
+            {
+                if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret)
+                {
+                    new_index++;
+                }
+            }  
+            else if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || assembly_struct->toks[i].type == ret || ((assembly_struct->toks[i].type == fnc) && (strcmp(assembly_struct->toks[i-1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JZ") == 0)))
             {
                 new_index++;
             }
+            else
+            {
+                assembly_struct->toks[index_cmd].new_index = -1;;
+            }
         }
-        assembly_struct->toks[index_cmd].new_index = new_index;
     }
     else
     {
         assembly_struct->toks[index_cmd].new_index = - 1;
+        return;
     }
+
+    assembly_struct->toks[index_cmd].new_index = new_index;
 }
 
 void put_new_index(asm_struct* assembly_struct)
@@ -634,3 +660,12 @@ size_t get_new_num_toks(asm_struct* assembly_struct)
     return (max + 1); // The number of tokens with right indexes
 }
 
+void max_len_tok(asm_struct* assembly_struct)
+{
+
+    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    {
+        size_t length_tok_i = strlen(assembly_struct->toks[i].text);
+        assembly_struct->length_listing = (assembly_struct->length_listing <= length_tok_i)? length_tok_i: assembly_struct->length_listing;
+    }
+}

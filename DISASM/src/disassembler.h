@@ -39,6 +39,10 @@ enum error
     ERR_CLOSE_ASM_FILE  = 10,
 };
 
+/**
+ * @brief 
+ * 
+ */
 enum type
 {
     empty = 0, /// \brief for initializing
@@ -49,6 +53,10 @@ enum type
     ram_reg = 5,
 };
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct command
 {
     int value          = 0;
@@ -57,6 +65,10 @@ typedef struct command
     size_t func_before = 0;
 }command;
 
+/**
+ * @brief 
+ * 
+ */
 typedef struct disasm_struct
 {
     int* bin_codes_buf   = nullptr;
@@ -68,6 +80,10 @@ typedef struct disasm_struct
     size_t cur_cmd_index = 0;
 }disasm_struct;
 
+/**
+ * @brief 
+ * 
+ */
 enum cmd
 {
     HLT          = 0,  
@@ -112,30 +128,129 @@ enum cmd
  */
 void dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ */
 void disasm_dtor(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ */
 void disasm_ctor(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ * @param FUNCT_NAME 
+ * @param FUNCT_LINE 
+ * @param FUNCT_FILE 
+ * @param error_code 
+ */
 void safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Get the cmd in buf object
+ * 
+ * @param disasm_struct 
+ */
 void get_cmd_in_buf(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param code 
+ * @return const char* 
+ */
 const char* enum_struct_err_to_string(size_t code); // for struct
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param arr_ptr 
+ * @param size_arr 
+ */
 void fill_with_poison(int* arr_ptr, size_t size_arr);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ */
 void print_commands(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Get the command types object
+ * 
+ * @param disasm_struct 
+ */
 void get_command_types(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Get the cmd string object
+ * 
+ * @param cmd_code 
+ * @return const char* 
+ */
 const char* get_cmd_string(size_t cmd_code);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ */
 void write_asm(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ */
 void check_next_cmd(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ */
 void put_flag_func(disasm_struct* disasm_struct);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief 
+ * 
+ * @param disasm_struct 
+ * @param asm_file 
+ */
 void print_flag_func(disasm_struct* disasm_struct, FILE* asm_file);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

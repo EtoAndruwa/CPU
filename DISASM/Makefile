@@ -17,7 +17,7 @@ PREF_SRC = ./src/
 SRC = $(wildcard $(PREF_SRC)*.cpp)
 OBJ = $(patsubst $(PREF_SRC)%.cpp, $(PREF_OBJ)%.o, $(SRC))
 
-all : $(TARGET) run_program open_files
+all : $(TARGET) run_program   
 
 $(TARGET) : $(OBJ) 
 	$(CC) $(OBJ) -o $(TARGET).exe
@@ -26,10 +26,16 @@ $(PREF_OBJ)%.o : $(PREF_SRC)%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run_program :
-	$(EXE_FLAG) ./$(TARGET).exe 
+	$(EXE_FLAG_VALGRIND) ./$(TARGET).exe 
 
 open_files : 
-	code ./test_code.txt ./test.asm ./valgrind_log.txt
+	code ./test_code.txt ./test.asm ./valgrind_log.txt ./LOG_FILE.txt
+
+delete_old_files :
+	rm test_code.txt LOG_FILE.txt asm_listing.txt valgrind_log.txt
 
 clean : 
-	rm $(TARGET).exe $(PREF_OBJ)*.o valgrind_log.txt test.asm
+	rm $(TARGET).exe $(PREF_OBJ)*.o 
+
+clean_file: 
+	rm valgrind_log.txt test_code.txt

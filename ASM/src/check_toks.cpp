@@ -67,7 +67,6 @@ size_t check_brackets(char* token_text)
 
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 {
-    
     if(check_brackets(token_text))
     {
         size_t strlen_token_check = strlen(token_text);
@@ -122,7 +121,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 
                 free(str_check);
                 str_check = nullptr;
-                return 2; // If ram addressing [reg]
+                return INNER_REG; 
             }
             else if(check_num(str_check))
             {   
@@ -132,7 +131,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 
                 free(str_check);
                 str_check = nullptr;
-                return 1; // if memmory addressing [val] 
+                return INNER_VAL; 
             }
         }
         else if(strlen_token_check > 5)
@@ -181,32 +180,24 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 
                     if(check_reg_inner(assembly_struct, position_plus_sing + 1) && (check_num(text_bef_plus_ptr)))
                     {
-                        if(strcmp(position_plus_sing + 1, "ax") == 0)
-                        {
-                            assembly_struct->toks[index - 1].value = 0; 
-                        }
-                        else if(strcmp(position_plus_sing + 1, "bx") == 0)
-                        {
-                            assembly_struct->toks[index - 1].value = 1 << 2; 
-                        }
-                        else if(strcmp(position_plus_sing + 1, "cx") == 0)
-                        {
-                            assembly_struct->toks[index - 1].value = 1 << 3; 
-                        }
-                        else if(strcmp(position_plus_sing + 1, "dx") == 0)
-                        {   
-                            assembly_struct->toks[index - 1].value = 1 << 4; 
-                        }
-
-                        assembly_struct->toks[index].value = atoi(text_bef_plus_ptr);
-                        assembly_struct->toks[index].type = reg;
-                        strcpy((char*)assembly_struct->toks[index].status, "OK");
+                        put_inner_values(assembly_struct, index, text_bef_plus_ptr, position_plus_sing + 1);
 
                         free(str_check);
                         free(text_bef_plus_ptr);
                         text_bef_plus_ptr = nullptr;
                         str_check = nullptr;
-                        return 3;
+                        return INNER_VAL_REG;
+                    }
+
+                    else if(check_reg_inner(assembly_struct, text_bef_plus_ptr) && (check_num(position_plus_sing + 1)))
+                    {
+                        put_inner_values(assembly_struct, index, position_plus_sing + 1, text_bef_plus_ptr);
+
+                        free(str_check);
+                        free(text_bef_plus_ptr);
+                        text_bef_plus_ptr = nullptr;
+                        str_check = nullptr;
+                        return INNER_VAL_REG;
                     }
                 }
                 else
@@ -454,4 +445,28 @@ size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
     {
         return 0; // Returns 0 if the next token is not a reg
     }
+}
+
+void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr)
+{
+    if(strcmp(register_text_ptr, "ax") == 0)
+    {
+        assembly_struct->toks[index - 1].value = 0; 
+    }
+    else if(strcmp(register_text_ptr, "bx") == 0)
+    {
+        assembly_struct->toks[index - 1].value = 1 << 2; 
+    }
+    else if(strcmp(register_text_ptr, "cx") == 0)
+    {
+        assembly_struct->toks[index - 1].value = 1 << 3; 
+    }
+    else if(strcmp(register_text_ptr, "dx") == 0)
+    {   
+        assembly_struct->toks[index - 1].value = 1 << 4; 
+    }
+
+    assembly_struct->toks[index].value = atoi(value_text_ptr);
+    assembly_struct->toks[index].type = reg;
+    strcpy((char*)assembly_struct->toks[index].status, "OK");
 }

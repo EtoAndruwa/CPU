@@ -50,7 +50,6 @@ void print_commands(disasm_struct* disasm_struct) // DEBUG
 void write_asm(disasm_struct* disasm_struct)
 {
     FILE* asm_file = fopen(FILE_ASM_NAME, "wb");
-    printf("\n\n%d\n\n", *disasm_struct->num_bin_cmd);
     if(asm_file == nullptr)
     {
         printf("ERROR: %s cannot be openned\n", FILE_ASM_NAME);
@@ -62,7 +61,6 @@ void write_asm(disasm_struct* disasm_struct)
     {
         for(disasm_struct->cur_cmd_index = 0; disasm_struct->cur_cmd_index < *disasm_struct->num_bin_cmd;)
         {
-            printf("\n%d\n", disasm_struct->cur_cmd_index);
             print_flag_func(disasm_struct, asm_file);
 
             if((disasm_struct->commands[disasm_struct->cur_cmd_index].type == cmd) && (disasm_struct->cur_cmd_index < *disasm_struct->num_bin_cmd))
@@ -118,8 +116,6 @@ void write_asm(disasm_struct* disasm_struct)
             }
         }
     }
-    
-    printf("\n\n curr_cmd : %d\n\n", disasm_struct->cur_cmd_index);
 
     if(fclose(asm_file) == EOF)
     {

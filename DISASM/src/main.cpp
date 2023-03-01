@@ -9,7 +9,7 @@ int main()
 
     get_command_types(&disasm_struct);
     put_flag_func(&disasm_struct);
-    print_commands(&disasm_struct);
+    //print_commands(&disasm_struct);
     write_asm(&disasm_struct);
 
     disasm_dtor(&disasm_struct);

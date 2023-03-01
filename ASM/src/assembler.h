@@ -70,7 +70,6 @@ enum type
     val   = 3, /// \brief 'value' 
     flg   = 4, /// \brief 'flag'
     fnc   = 5, /// \brief 'function'
-    ret   = 6  /// \brief 'return' 
 };
 
 /**
@@ -96,7 +95,12 @@ enum token_error_code
     ERR_INVAL_RAM_ADDRESSING     = 15,
 };  
 
-
+enum ret_codes
+{
+    INNER_REG = 1,
+    INNER_VAL = 2,
+    INNER_VAL_REG = 3
+};
 
 // DEF_CMD(HLT, 0, code)
 // DEF_CMD(PUSH_ST, 33, 
@@ -140,7 +144,6 @@ enum cmd
     SQRT = 7, 
     OUT  = 8, 
     INT  = 9,
-    RET  = 10, 
     JMP  = 11, 
     ax   = 21, 
     bx   = 22, 
@@ -187,11 +190,12 @@ typedef struct asm_struct
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief Opens and checks files with assembly code and translated code   
- *  
+ * @brief Opens and checks files with assembly code and translated code
+ * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void file_openning_check(asm_struct* assembly_struct);
+size_t file_openning_check(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -199,17 +203,19 @@ void file_openning_check(asm_struct* assembly_struct);
  * @brief Closes all file, frees all pointers, deletes all data of struct
  * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void dtor_asm(asm_struct* assembly_struct); 
+size_t dtor_asm(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief Gets the size of asm code file 
+ * @brief Gets the size of asm code file
  * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void get_size_asm(asm_struct* assembly_struct);
+size_t get_size_asm(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -217,8 +223,9 @@ void get_size_asm(asm_struct* assembly_struct);
  * @brief Creates buffer for commands and copies all commands into it
  * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void get_commands_into_buf(asm_struct* assembly_struct); 
+size_t get_commands_into_buf(asm_struct* assembly_struct); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -235,8 +242,9 @@ void print_struct(asm_struct* assembly_struct);
  * @brief Gets all tokens from the buffer
  * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void get_tokens(asm_struct* assembly_struct);
+size_t get_tokens(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -245,8 +253,9 @@ void get_tokens(asm_struct* assembly_struct);
  * 
  * @param assembly_struct The struct containing all information about the asm struct
  * @param i The position of the token in the array of tokens
+ * @return size_t 
  */
-void realloc_toks(asm_struct* assembly_struct, size_t i);
+size_t realloc_toks(asm_struct* assembly_struct, size_t i); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -294,8 +303,9 @@ size_t check_num(char* num_text);
  * @param assembly_struct The struct containing all information about the asm struct
  * @param FUNCT_NAME The string containing the name of the function which called the error
  * @param FUNCT_LINE The number of the line which called the error
+ * @return size_t 
  */
-void dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
+size_t dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -313,8 +323,9 @@ const char* enum_struct_err_to_string(size_t code);
  * @brief Makes listing of the assembled code
  * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void listing(asm_struct* assembly_struct);
+size_t listing(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -353,8 +364,9 @@ const char* enum_token_err_to_string(size_t code);
  * @brief Writes all asm code into the translated file
  * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void write_asm(asm_struct* assembly_struct);
+size_t write_asm(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -433,8 +445,9 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i);
  * @brief Creates buffer for number of commands without jmp and func
  * 
  * @param assembly_struct The struct containing all information about the asm struct
+ * @return size_t 
  */
-void get_arr_bin_codes(asm_struct* assembly_struct);
+size_t get_arr_bin_codes(asm_struct* assembly_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -508,5 +521,7 @@ size_t check_flag_declaration(asm_struct* assembly_struct);
 void max_len_tok(asm_struct* assembly_struct);
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+
+void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr);
 
 #endif

@@ -1,15 +1,15 @@
 #include "assembler.h"
 
-void listing(asm_struct* assembly_struct)
+size_t listing(asm_struct* assembly_struct)
 {
     FILE* listing_file = fopen(FILE_LISTING_NAME, "wb");
 
     if(listing_file == nullptr)
     {
         assembly_struct->err_code = ERR_OPEN_LISTING;
-        printf("ERROR: unable to open file %s.\n", FILE_LISTING_NAME);
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        exit(ERR_OPEN_LISTING);
+        dtor_asm(assembly_struct);
+        return assembly_struct->err_code;
     }
 
     fprintf(listing_file,"| ID |		%-*s		|    TYPE    |ASM|    STATUS    |\n", assembly_struct->length_listing, "COMMAND");
@@ -26,22 +26,21 @@ void listing(asm_struct* assembly_struct)
     if(fclose(listing_file) == EOF)
     {
         assembly_struct->err_code = ERR_CLOSE_LISTING;
-        printf("ERROR: unable to open file %s.\n", FILE_LISTING_NAME);
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        exit(ERR_CLOSE_LISTING);
+        dtor_asm(assembly_struct);
+        return assembly_struct->err_code;
     }
 }
 
-void dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) 
+size_t dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) 
 {
     FILE* logfile = fopen(FILE_LOG_NAME, "wb");
 
     if(logfile == nullptr)
     {
-        printf("ERROR: %s cannot be openned\n" , FILE_LOG_NAME);
         assembly_struct->err_code = ERR_OPEN_LOG_FILE;
         dtor_asm(assembly_struct);
-        exit(ERR_OPEN_LOG_FILE);
+        return assembly_struct->err_code;
     }
     else
     {
@@ -66,10 +65,9 @@ void dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LIN
 
     if(fclose(logfile) == EOF)
     {
-        printf("ERROR: %s cannot be closed\n", FILE_LOG_NAME);
         assembly_struct->err_code = ERR_CLOSE_LOG_FILE;
         dtor_asm(assembly_struct);
-        exit(ERR_CLOSE_LOG_FILE);
+        return assembly_struct->err_code;
     }
 }
 

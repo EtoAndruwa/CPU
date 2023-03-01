@@ -1,2 +1,2 @@
-POP [1+dx]
+PUSH 10
 HLT

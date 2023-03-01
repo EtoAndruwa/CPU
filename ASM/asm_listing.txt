@@ -1,4 +1,4 @@
 | ID |		COMMAND		|    TYPE    |ASM|    STATUS    |
-|0000|		POP    		|    cmd     |210|      OK      |
-|0001|		[1+dx] 		|    reg     |001|      OK      |
+|0000|		PUSH   		|    cmd     |033|      OK      |
+|0001|		10     		|    val     |010|      OK      |
 |0002|		HLT    		|    cmd     |000|      OK      |

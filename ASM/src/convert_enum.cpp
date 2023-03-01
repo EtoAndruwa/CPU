@@ -94,8 +94,6 @@ const char* enum_type_to_string(size_t code) // for token type
             return "flg";
         case fnc:
             return "fnc";
-        case ret:
-            return "ret";
         default:
             return "---";
     }

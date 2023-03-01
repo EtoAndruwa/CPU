@@ -82,7 +82,7 @@ enum cmd
     PUSH_ST      = 33, 
     PUSH_REG     = 65, 
     PUSH_RAM_VAL = 161, 
-    PUSH_RAM_REG = 193, 
+    PUSH_RAM_REG = 193,
     
     POP_REG     = 66,
     POP_RAM_VAL = 162,
@@ -108,6 +108,7 @@ enum cmd
     rcx  = 27, 
     CALL = 30  
 };
+
 
 enum error_code
 {

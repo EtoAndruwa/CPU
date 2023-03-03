@@ -25,13 +25,16 @@
 /**
  * @brief Defines used in the code
  */
-#define FILE_ASM_NAME "asm_code.asm"        /// \brief Defines the name of assembly file
-#define FILE_CODE_NAME "bin_code.bin"       /// \brief Defines the name of translated file
-#define FILE_LOG_NAME "LOG_FILE.txt"        /// \brief Defines the name of the log file
-#define FILE_LISTING_NAME "asm_listing.txt" /// \brief Defines the name of the listing file
 #define FUNC_LINE __LINE__                  /// \brief Defines the line from which the error was called 
 #define FUNC_NAME __func__                  /// \brief Defines the name of the function which called the line
 #define FUNC_FILE __FILE__                  /// \brief Defines the name of the file from which dump was called 
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+static const char* FILE_ASM_NAME     = "asm_code.asm";    /// \brief Defines the name of assembly file
+static const char* FILE_CODE_NAME    = "bin_code.bin";    /// \brief Defines the name of translated file
+static const char* FILE_LOG_NAME     = "LOG_FILE.txt";    /// \brief Defines the name of the log file
+static const char* FILE_LISTING_NAME = "asm_listing.txt"; /// \brief Defines the name of the listing file
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -120,10 +123,8 @@ enum cmd
 // #   include "cmds.h"
 // #   undef DEF_CMD
 // #   undef DEF_REG
-
-
-
-
+    PUSH = 1,
+    POP = 2,
     HLT          = 0,  
     PUSH_ST      = 33, 
     PUSH_REG     = 65, 
@@ -135,8 +136,8 @@ enum cmd
     POP_RAM_VAL  = 162,
     POP_RAM_REG  = 194,
 
-    DEC  = 1,
-    JZ   = 2,
+    DEC  = 12,
+    JZ   = 13,
     ADD  = 3, 
     SUB  = 4, 
     MUL  = 5, 
@@ -144,6 +145,7 @@ enum cmd
     SQRT = 7, 
     OUT  = 8, 
     INT  = 9,
+    RET  = 10,
     JMP  = 11, 
     ax   = 21, 
     bx   = 22, 
@@ -523,5 +525,7 @@ void max_len_tok(asm_struct* assembly_struct);
 
 
 void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr);
+
+const char* get_cmd_string(size_t cmd_code);
 
 #endif

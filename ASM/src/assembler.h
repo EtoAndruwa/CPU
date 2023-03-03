@@ -148,7 +148,7 @@ enum cmd
     RET  = 10,
     JMP  = 11, 
     ax   = 21, 
-    bx   = 22, 
+    bx   = 22,  
     cx   = 23, 
     dx   = 24, 
     rax  = 25, 

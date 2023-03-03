@@ -1,5 +1,4 @@
 PUSH 10
-PUSH ax
 POP ax
-PUSH [10+ax]
+OUT
 HLT

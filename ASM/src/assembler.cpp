@@ -1,5 +1,4 @@
 #include "assembler.h"
-#include "cmd.h"
 
 
 size_t file_openning_check(asm_struct* assembly_struct) 
@@ -28,6 +27,9 @@ size_t file_openning_check(asm_struct* assembly_struct)
 
 void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk) 
 {
+    if(0) {}
+
+    #include "gen_cmd.h"
     if((strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0) ||  
         (strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0) ||
             (strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0) || 
@@ -35,7 +37,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
         DEF_CMD_REGS(assembly_struct, cur_tok_chk)
     else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "PUSH") == 0)
     {
-        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk)))                                                                                                                           
+        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_VAL))                                                                                                                           
         {                                                                                                                                                                        
             assembly_struct->toks[cur_tok_chk].value = PUSH | (1 << 5);                                                                                                                         
             assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                       
@@ -71,7 +73,6 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
         DEF_CMD_DEC
     else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "CALL") == 0)
         DEF_CMD_CALL
-    
     else if(check_num(assembly_struct->toks[cur_tok_chk].text) == 1)
         DEF_CMD_VAL
     else if((assembly_struct->toks[cur_tok_chk].text[0] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))
@@ -85,7 +86,6 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         assembly_struct->cur_tok_chk++;
     }
-    
 }
 
 size_t get_commands_into_buf(asm_struct* assembly_struct) 
@@ -232,8 +232,8 @@ size_t write_asm(asm_struct* assembly_struct)
 {   
     put_new_index(assembly_struct); // Gets new indexes of all tokens
 
-    if(check_all_valid(assembly_struct) && check_flags(assembly_struct) && check_func(assembly_struct) && check_fnc_declaration(assembly_struct) && 
-        check_flag_declaration(assembly_struct)) // Rules
+    if(check_all_valid(assembly_struct) == ALL_TOKENS_VALID && check_flags(assembly_struct) == ALL_JMPS_OKEY && check_func(assembly_struct) == ALL_CALLS_OK && check_fnc_declaration(assembly_struct) == ALL_FUNCS_OK && 
+        check_flag_declaration(assembly_struct) == ALL_FLAGS_OKEY) // Rules
     {   
         if(get_arr_bin_codes(assembly_struct) != STRUCT_OK)
         {

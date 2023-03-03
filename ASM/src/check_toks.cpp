@@ -25,49 +25,35 @@ size_t check_num(char* num_text)
 
 size_t check_next_token(asm_struct* assembly_struct, size_t i) 
 {
-    if(((assembly_struct->num_toks - 1) > i) && (check_num(assembly_struct->toks[i+1].text)))
-    {
-        return 1; // Returns 1 if the next token is number
-    }
-    else
-    {
-        return 0; // Returns 0 if the next token is text
-    }
+    return (((assembly_struct->num_toks - 1) > i) && (check_num(assembly_struct->toks[i+1].text)))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD;
 }
 
 size_t check_all_valid(asm_struct* assembly_struct) 
 {
     if(assembly_struct->err_code != STRUCT_OK)
     {
-        return 0;
+        return SOME_TOKEN_INVALID;
     }
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {
         if(assembly_struct->toks[i].error_code != TOKEN_OK)
         {   
-            return 0; // Returns 0 if some token is invalid or asm struct has an error 
+            return SOME_TOKEN_INVALID; 
         }
     }
 
-    return 1; // Returns 1 if all valid and code can be converted into assembly code
+    return ALL_TOKENS_VALID; 
 }
 
 size_t check_brackets(char* token_text) 
 {
-    if((token_text[0] == '[') && (token_text[strlen(token_text) - 1] == ']'))
-    {
-        return 1; // Returns 1 if brackets are closed
-    }
-    else
-    {
-        return 0; // Returns 1 if brackets are not closed
-    }
+    return ((token_text[0] == '[') && (token_text[strlen(token_text) - 1] == ']'))? BRACKETS_OKEY: BRACKETS_NOT_OKEY;
 }
 
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 {
-    if(check_brackets(token_text))
+    if(check_brackets(token_text) == BRACKETS_OKEY)
     {
         size_t strlen_token_check = strlen(token_text);
         if(strlen_token_check >= 3 && strlen_token_check <= 5)
@@ -126,7 +112,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             else if(check_num(str_check))
             {   
                 assembly_struct->toks[index].value = atoi(str_check);
-                assembly_struct->toks[index].type = val;
+                assembly_struct->toks[index].type  = val;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
 
                 free(str_check);
@@ -211,34 +197,34 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
         }
         else
         {
-            return 0;
+            return INNER_RAM_INVALID;
         }
     }
     else
     {
-        return 0;
+        return INNER_RAM_INVALID;
     }
 }
 
 size_t check_num_int(char* num_text) 
 {
-    size_t flag = 1; 
+    size_t is_int = TOKEN_IS_INT; 
 
     size_t length_text = strlen(num_text);
     for(size_t i  = 0; i < length_text; i++)
     {
         if(isdigit(num_text[i]) == 0) // If the character is not a digit
         {
-            flag = 0;
+            is_int = TOKEN_IS_NOT_INT;
         }
     }
 
-    return flag; // Returns 1 if all characters are digits (word is an integer)
+    return is_int; // Returns 1 if all characters are digits (word is an integer)
 }
 
 size_t check_flags(asm_struct* assembly_struct) 
 {
-    size_t flags_ok = 1;    
+    size_t flags_ok = ALL_JMPS_OKEY;    
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
@@ -259,17 +245,17 @@ size_t check_flags(asm_struct* assembly_struct)
                                 break;
                             }
                         }
-                        flags_ok = 1; // Flag exists
+                        flags_ok = ALL_JMPS_OKEY; 
                         break;
                     }
                     else 
                     {
-                        flags_ok = 0; // Flag does not exist
+                        flags_ok = SOME_JMP_NOT_OK; 
                     }
                 }
             }
 
-            if(flags_ok == 0) 
+            if(flags_ok == SOME_JMP_NOT_OK) 
             {   
                 assembly_struct->toks[i].error_code = ERR_NO_FLAG_TO_JMP;
                 strcpy((char*)assembly_struct->toks[i].status, "--");
@@ -277,12 +263,12 @@ size_t check_flags(asm_struct* assembly_struct)
         }
     }
 
-    return flags_ok; // Returns '1' if all flags are ok and '0' if there is some flag missing
+    return flags_ok; 
 }
 
 size_t check_func(asm_struct* assembly_struct) 
 {
-    size_t funcs_ok = 1;
+    size_t funcs_ok = ALL_CALLS_OK;
 
     if(assembly_struct->num_toks > 1)
     {
@@ -297,7 +283,7 @@ size_t check_func(asm_struct* assembly_struct)
                     {   
                         if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0))) // The token is not a call of the function or is the firts command in the assembly code
                         {   
-                            funcs_ok = 1; // Calls declared function
+                            funcs_ok = ALL_FUNCS_OK; // Calls declared function
                             for(size_t q = j + 1; q < assembly_struct->num_toks; q++)
                             {
                                 if(assembly_struct->toks[q].new_index != -1)
@@ -310,28 +296,30 @@ size_t check_func(asm_struct* assembly_struct)
                         }
                         else 
                         {
-                            funcs_ok = 0; // Calls undeclared function
+                            funcs_ok = SOME_CALL_NOT_OKEY; // Calls undeclared function
                         }
                     }
                 }
-                if(funcs_ok == 0)
+                if(funcs_ok == SOME_CALL_NOT_OKEY)
                 {   
                     assembly_struct->toks[i].error_code = ERR_CALLS_NON_EXISTEN_FNC;
                     strcpy((char*)assembly_struct->toks[i].status, "--");
+                    break;
                 }
             }  
         }
-        return funcs_ok; // Returns '1' if all CALL commands call declared functions 
+        return funcs_ok; 
     }
     else
     {
-        return funcs_ok; // Returns '1' if all CALL commands call declared functions 
+        return funcs_ok; 
     }
 }
 
 size_t check_fnc_declaration(asm_struct* assembly_struct) 
 {
-    size_t declaration_ok = 1; // Returns 1 if all declarations of function are uniqe
+    size_t func_decl_ok = ALL_FUNCS_OK; // Returns 1 if all declarations of function are uniqe
+
     if(assembly_struct->num_toks > 1)
     {
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -347,18 +335,18 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
                             if((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) // If the token is a function declaration and is not a call of the function
                             {   
                                 i = j; // Check all tokens after found one (prevents upper search)
-                                declaration_ok = 0;
+                                func_decl_ok = SOME_FUNC_NOT_OK;
                                 assembly_struct->toks[j].error_code = ERR_DOUBLE_DECL_OF_FNC;
                                 strcpy((char*)assembly_struct->toks[i].status, "--");
                                 break;
                             }
                             else 
                             {
-                                declaration_ok = 1; // The declaration is an uniqe one
+                                func_decl_ok = ALL_FUNCS_OK; // The declaration is an uniqe one
                             }
                         }
                     }
-                    if(declaration_ok == 0)
+                    if(func_decl_ok == SOME_FUNC_NOT_OK)
                     {   
                         assembly_struct->toks[positon_of_first_decl].error_code = ERR_FIRST_DECL_OF_FNC; 
                         strcpy((char*)assembly_struct->toks[positon_of_first_decl].status, "--");
@@ -366,18 +354,18 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
                     }
                 }
             }    
-
-        return declaration_ok; // Returns 1 if all declarations of function are uniqe
+        return func_decl_ok; 
     }
     else
     {
-        return declaration_ok; // Returns 1 if all declarations of function are uniqe
+        return func_decl_ok; 
     }
 }
 
 size_t check_flag_declaration(asm_struct* assembly_struct) 
 {
-    size_t declaration_ok = 1; // Returns 1 if all declarations of flag are uniqe
+    size_t  flag_decl_ok = ALL_FLAGS_OKEY; // Returns 1 if all declarations of flag are uniqe
+
     if(assembly_struct->num_toks > 1)
     {
         for(size_t i = 0; i < assembly_struct->num_toks; i++)
@@ -393,18 +381,18 @@ size_t check_flag_declaration(asm_struct* assembly_struct)
                             if((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (strcmp(assembly_struct->toks[j-1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[j-1].text, "JZ") != 0)) // If the token is a function declaration and is not a call of the function
                             {   
                                 i = j; // Check all tokens after found one (prevents upper search)
-                                declaration_ok = 0;
+                                flag_decl_ok = SOME_FLAG_NOT_OK;
                                 assembly_struct->toks[j].error_code = ERR_DOUBLE_DECL_OF_FLAG;
                                 strcpy((char*)assembly_struct->toks[i].status, "--");
                                 break;
                             }
                             else 
                             {
-                                declaration_ok = 1; // The declaration is an uniqe one
+                                flag_decl_ok = ALL_FLAGS_OKEY; // The declaration is an uniqe one
                             }
                         }
                     }
-                    if(declaration_ok == 0)
+                    if(flag_decl_ok == SOME_FLAG_NOT_OK)
                     {   
                         assembly_struct->toks[positon_of_first_decl].error_code = ERR_FIRST_DECL_OF_FLAG; 
                         strcpy((char*)assembly_struct->toks[positon_of_first_decl].status, "--");
@@ -413,24 +401,26 @@ size_t check_flag_declaration(asm_struct* assembly_struct)
                 }
             }    
 
-        return declaration_ok; // Returns 1 if all declarations of function are uniqe
+        return flag_decl_ok; 
     }
     else
     {
-        return declaration_ok; // Returns 1 if all declarations of function are uniqe
+        return flag_decl_ok; 
     }
 }
 
 size_t check_next_reg(asm_struct* assembly_struct, size_t i)
 {
     //printf("%s", assembly_struct->toks[i+1].text);
-    if((strcmp(assembly_struct->toks[i+1].text, "ax") == 0) || (strcmp(assembly_struct->toks[i+1].text, "bx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "cx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "dx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rcx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rax") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rbx") == 0))
+    if((strcmp(assembly_struct->toks[i+1].text, "ax") == 0) || (strcmp(assembly_struct->toks[i+1].text, "bx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "cx") == 0) || 
+            (strcmp(assembly_struct->toks[i+1].text, "dx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rcx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rax") == 0) || 
+                (strcmp(assembly_struct->toks[i+1].text, "rbx") == 0))
     {
-        return 1; // Returns 1 if the next token is reg 
+        return NEXT_TOKEN_IS_REG; 
     }
     else
     {
-        return 0;
+        return NEXT_TOKEN_NOT_REG;
     }
 }
 
@@ -439,11 +429,11 @@ size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
     if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0) || 
             (strcmp(inner_text, "rcx") == 0) || (strcmp(inner_text, "rax") == 0) || (strcmp(inner_text, "rbx") == 0))
     {
-        return 1; // Returns 1 if the next token is reg 
+        return 1; 
     }
     else
     {
-        return 0; // Returns 0 if the next token is not a reg
+        return 0; 
     }
 }
 
@@ -467,6 +457,6 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
     }
 
     assembly_struct->toks[index].value = atoi(value_text_ptr);
-    assembly_struct->toks[index].type = reg;
+    assembly_struct->toks[index].type  = reg;
     strcpy((char*)assembly_struct->toks[index].status, "OK");
 }

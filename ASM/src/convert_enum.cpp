@@ -43,6 +43,8 @@ const char* enum_struct_err_to_string(size_t code) // for struct
 {
     switch(code)
     {
+        case STRUCT_OK:
+            return "STRUCT_OK";
         case ERR_ASM_CODE_BUF_NULL:
             return "ERR_ASM_CODE_BUF_NULL";
         case ERR_CLOSE_ASM_FILE:
@@ -76,7 +78,7 @@ const char* enum_struct_err_to_string(size_t code) // for struct
         case ERR_OPEN_LISTING:
             return "ERR_OPEN_LISTING";
         default:
-            return "STRUCT_OK"; 
+            return "NEW_ERROR_CODE"; 
     }
 }
 

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -100,32 +101,32 @@ enum token_error_code
 
 enum ret_codes
 {
-    INNER_REG = 1,
-    INNER_VAL = 2,
-    INNER_VAL_REG = 3
+    INNER_RAM_INVALID  = 0,
+    INNER_REG          = 1,
+    INNER_VAL          = 2,
+    INNER_VAL_REG      = 3,
+    NEXT_TOKEN_CMD     = 4,
+    NEXT_TOKEN_VAL     = 5,
+    ALL_TOKENS_VALID   = 6,
+    SOME_TOKEN_INVALID = 7,
+    BRACKETS_OKEY      = 8,
+    BRACKETS_NOT_OKEY  = 9,
+    ALL_FUNCS_OK       = 10,
+    SOME_FUNC_NOT_OK   = 11, 
+    TOKEN_IS_INT       = 12,
+    TOKEN_IS_NOT_INT   = 13,
+    ALL_CALLS_OK       = 14,
+    SOME_CALL_NOT_OKEY = 15,
+    ALL_FLAGS_OKEY     = 16,
+    SOME_FLAG_NOT_OK   = 17,
+    NEXT_TOKEN_IS_REG  = 18,
+    NEXT_TOKEN_NOT_REG = 19,
+    ALL_JMPS_OKEY      = 20,
+    SOME_JMP_NOT_OK    = 21,
 };
 
-// DEF_CMD(HLT, 0, code)
-// DEF_CMD(PUSH_ST, 33, 
-//     {
-//         StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
-//         CPU->curr_cmd = CPU->curr_cmd + 2;
-//     })
-
-// #include "DSL.h"
-
-// #define PUSH(arg) StackPush(CPU->stack, arg)
-
 enum cmd
-{
-// #   define DEF_CMD(name, num, ...) case name: {__VA_ARGS__} 
-// #   define DEF_REG(...) 
-// #   include "cmds.h"
-// #   undef DEF_CMD
-// #   undef DEF_REG
-    PUSH = 1,
-    POP = 2,
-    HLT          = 0,  
+{  
     PUSH_ST      = 33, 
     PUSH_REG     = 65, 
     PUSH_RAM_VAL = 161, 
@@ -136,6 +137,9 @@ enum cmd
     POP_RAM_VAL  = 162,
     POP_RAM_REG  = 194,
 
+    HLT  = 0,
+    PUSH = 1,
+    POP = 2,
     DEC  = 12,
     JZ   = 13,
     ADD  = 3, 
@@ -186,7 +190,7 @@ typedef struct asm_struct
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)
     int* bin_codes        = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
     size_t cur_tok_chk    = 0;         /// \brief The index of the current token
-    size_t length_listing = 7;
+    size_t length_listing = 7;         /// \brief The minimum length of the cell in the listing with the names of tokens
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -520,12 +524,30 @@ size_t check_flag_declaration(asm_struct* assembly_struct);
  * 
  * @param assembly_struct 
  */
+
 void max_len_tok(asm_struct* assembly_struct);
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
+/**
+ * @brief 
+ * 
+ * @param assembly_struct 
+ * @param index 
+ * @param value_text_ptr 
+ * @param register_text_ptr 
+ */
 void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr);
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * @brief Get the cmd string object
+ * 
+ * @param cmd_code 
+ * @return const char* 
+ */
 const char* get_cmd_string(size_t cmd_code);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #endif

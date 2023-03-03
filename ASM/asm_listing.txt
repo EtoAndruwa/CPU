@@ -4,4 +4,6 @@
 |0002|		POP    		|    cmd     |066|      OK      |
 |0003|		ax     		|    reg     |021|      OK      |
 |0004|		OUT    		|    cmd     |008|      OK      |
-|0005|		HLT    		|    cmd     |000|      OK      |
+|0005|		PUSH   		|    cmd     |225|      OK      |
+|0006|		[10+ax]		|    reg     |010|      OK      |
+|0007|		HLT    		|    cmd     |000|      OK      |

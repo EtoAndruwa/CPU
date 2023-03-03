@@ -123,6 +123,9 @@ enum ret_codes
     NEXT_TOKEN_NOT_REG = 19,
     ALL_JMPS_OKEY      = 20,
     SOME_JMP_NOT_OK    = 21,
+    INNER_NOT_REG      = 22,
+    ALL_DIGITS         = 23,
+    NOT_ALL_DIGITS     = 24
 };
 
 enum cmd
@@ -299,7 +302,7 @@ void get_token_value(asm_struct* assembly_struct, size_t i);
  * @param num_text The string that must be checked
  * @return size_t Returns '1' if all characters are digit or contain '.'
  */
-size_t check_num(char* num_text);     
+size_t check_is_number(char* num_text);     
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

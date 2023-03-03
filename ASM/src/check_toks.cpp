@@ -1,8 +1,8 @@
 #include "assembler.h"
 
-size_t check_num(char* num_text) 
+size_t check_num_int(char* num_text) 
 {
-    size_t flag = 0; // Returns 1 if all characters are digit or contain '.'
+    size_t is_int = TOKEN_IS_INT; // Returns 1 if all characters are digit or contain '.'
 
     size_t length_text = strlen(num_text);
     for(size_t i  = 0; i < length_text; i++)
@@ -11,35 +11,35 @@ size_t check_num(char* num_text)
 
         if(isdigit(check_char) != 0 || ((check_char == '-') && (i == 0))) // Check does the text contain digits
         {
-            flag = 1;
+            is_int = TOKEN_IS_INT;
         }
         else
         {
-            flag = 0;
+            is_int = TOKEN_IS_NOT_INT;
             break;
         }
     }
 
-    return flag; // Returns 1 if all characters are digit or contain '.'
+    return is_int; 
 }
 
 size_t check_next_token(asm_struct* assembly_struct, size_t i) 
 {
-    return (((assembly_struct->num_toks - 1) > i) && (check_num(assembly_struct->toks[i+1].text)))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD;
+    return ((((assembly_struct->num_toks - 1) > i) && (check_num_int(assembly_struct->toks[i+1].text) == TOKEN_IS_INT))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD);
 }
 
 size_t check_all_valid(asm_struct* assembly_struct) 
 {
     if(assembly_struct->err_code != STRUCT_OK)
-    {
-        return SOME_TOKEN_INVALID;
+    {   
+        return assembly_struct->err_code;
     }
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {
         if(assembly_struct->toks[i].error_code != TOKEN_OK)
         {   
-            return SOME_TOKEN_INVALID; 
+            return assembly_struct->toks[i].error_code; 
         }
     }
 
@@ -48,7 +48,7 @@ size_t check_all_valid(asm_struct* assembly_struct)
 
 size_t check_brackets(char* token_text) 
 {
-    return ((token_text[0] == '[') && (token_text[strlen(token_text) - 1] == ']'))? BRACKETS_OKEY: BRACKETS_NOT_OKEY;
+    return (((token_text[0] == '[') && (token_text[strlen(token_text) - 1] == ']'))? BRACKETS_OKEY: BRACKETS_NOT_OKEY);
 }
 
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
@@ -72,35 +72,35 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             strncpy(str_check, (token_text + 1), strlen_token_check - 2);
             str_check[strlen_token_check - 1] = '\0';
 
-            if(check_reg_inner(assembly_struct, str_check))
+            if(check_reg_inner(assembly_struct, str_check) == INNER_REG)
             {
                 if(strcmp(str_check, "ax") == 0)
                 {
-                    assembly_struct->toks[index].value = 21; 
+                    assembly_struct->toks[index].value = ax; 
                 }
                 else if(strcmp(str_check, "bx") == 0)
                 {
-                    assembly_struct->toks[index].value = 22;
+                    assembly_struct->toks[index].value = bx;
                 }
                 else if(strcmp(str_check, "cx") == 0)
                 {
-                    assembly_struct->toks[index].value = 23;
+                    assembly_struct->toks[index].value = cx;
                 }
                 else if(strcmp(str_check, "dx") == 0)
                 {   
-                    assembly_struct->toks[index].value = 24;
+                    assembly_struct->toks[index].value = dx;
                 }
                 if(strcmp(str_check, "rax") == 0)
                 {
-                    assembly_struct->toks[index].value = 25; 
+                    assembly_struct->toks[index].value = rax; 
                 }
                 else if(strcmp(str_check, "rbx") == 0)
                 {
-                    assembly_struct->toks[index].value = 26;
+                    assembly_struct->toks[index].value = rbx;
                 }
                 else if(strcmp(str_check, "rcx") == 0)
                 {
-                    assembly_struct->toks[index].value = 27;
+                    assembly_struct->toks[index].value = rcx;
                 }
                 assembly_struct->toks[index].type = reg;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
@@ -109,7 +109,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                 str_check = nullptr;
                 return INNER_REG; 
             }
-            else if(check_num(str_check))
+            else if(check_num_int(str_check) == TOKEN_IS_INT)
             {   
                 assembly_struct->toks[index].value = atoi(str_check);
                 assembly_struct->toks[index].type  = val;
@@ -164,7 +164,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                     strncpy(text_bef_plus_ptr, str_check, text_bef_plus_len);
                     text_bef_plus_ptr[text_bef_plus_len] = '\0';
 
-                    if(check_reg_inner(assembly_struct, position_plus_sing + 1) && (check_num(text_bef_plus_ptr)))
+                    if(check_reg_inner(assembly_struct, position_plus_sing + 1) == INNER_REG && (check_num_int(text_bef_plus_ptr) == TOKEN_IS_INT))
                     {
                         put_inner_values(assembly_struct, index, text_bef_plus_ptr, position_plus_sing + 1);
 
@@ -175,7 +175,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                         return INNER_VAL_REG;
                     }
 
-                    else if(check_reg_inner(assembly_struct, text_bef_plus_ptr) && (check_num(position_plus_sing + 1)))
+                    else if(check_reg_inner(assembly_struct, text_bef_plus_ptr) == INNER_REG && (check_num_int(position_plus_sing + 1) == TOKEN_IS_INT))
                     {
                         put_inner_values(assembly_struct, index, position_plus_sing + 1, text_bef_plus_ptr);
 
@@ -206,20 +206,20 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
     }
 }
 
-size_t check_num_int(char* num_text) 
+size_t check_is_number(char* num_text) 
 {
-    size_t is_int = TOKEN_IS_INT; 
+    size_t is_digits = ALL_DIGITS; 
 
     size_t length_text = strlen(num_text);
     for(size_t i  = 0; i < length_text; i++)
     {
         if(isdigit(num_text[i]) == 0) // If the character is not a digit
         {
-            is_int = TOKEN_IS_NOT_INT;
+            is_digits = NOT_ALL_DIGITS;
         }
     }
 
-    return is_int; // Returns 1 if all characters are digits (word is an integer)
+    return is_digits; // Returns 1 if all characters are digits (word is an integer)
 }
 
 size_t check_flags(asm_struct* assembly_struct) 
@@ -429,11 +429,11 @@ size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
     if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0) || 
             (strcmp(inner_text, "rcx") == 0) || (strcmp(inner_text, "rax") == 0) || (strcmp(inner_text, "rbx") == 0))
     {
-        return 1; 
+        return INNER_REG; 
     }
     else
     {
-        return 0; 
+        return INNER_NOT_REG; 
     }
 }
 

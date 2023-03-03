@@ -1,28 +1,106 @@
-==416== Memcheck, a memory error detector
-==416== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==416== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==416== Command: ./ASM.exe
-==416== Parent PID: 415
-==416== 
-==416== error calling PR_SET_PTRACER, vgdb might block
-==416== Conditional jump or move depends on uninitialised value(s)
-==416==    at 0x10CBC8: check_all_valid(asm_struct*) (check_toks.cpp:47)
-==416==    by 0x10C19C: write_asm(asm_struct*) (assembler.cpp:234)
-==416==    by 0x10EEDB: main (main.cpp:14)
-==416== 
-==416== 
-==416== HEAP SUMMARY:
-==416==     in use at exit: 0 bytes in 0 blocks
-==416==   total heap usage: 13 allocs, 13 frees, 3,502 bytes allocated
-==416== 
-==416== All heap blocks were freed -- no leaks are possible
-==416== 
-==416== ERROR SUMMARY: 5 errors from 1 contexts (suppressed: 0 from 0)
-==416== 
-==416== 5 errors in context 1 of 1:
-==416== Conditional jump or move depends on uninitialised value(s)
-==416==    at 0x10CBC8: check_all_valid(asm_struct*) (check_toks.cpp:47)
-==416==    by 0x10C19C: write_asm(asm_struct*) (assembler.cpp:234)
-==416==    by 0x10EEDB: main (main.cpp:14)
-==416== 
-==416== ERROR SUMMARY: 5 errors from 1 contexts (suppressed: 0 from 0)
+==726== Memcheck, a memory error detector
+==726== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==726== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==726== Command: ./ASM.exe
+==726== Parent PID: 725
+==726== 
+==726== error calling PR_SET_PTRACER, vgdb might block
+==726== Invalid write of size 1
+==726==    at 0x10D0F2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:137)
+==726==    by 0x109BF5: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726==  Address 0x4a8dff6 is 0 bytes after a block of size 6 alloc'd
+==726==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==726==    by 0x10D074: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==726==    by 0x109BF5: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726== 
+==726== Invalid write of size 1
+==726==    at 0x10D0F2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:137)
+==726==    by 0x109CE4: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726==  Address 0x4a8e096 is 0 bytes after a block of size 6 alloc'd
+==726==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==726==    by 0x10D074: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==726==    by 0x109CE4: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726== 
+==726== Invalid write of size 1
+==726==    at 0x10D0F2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:137)
+==726==    by 0x109DD3: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726==  Address 0x4a8e136 is 0 bytes after a block of size 6 alloc'd
+==726==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==726==    by 0x10D074: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==726==    by 0x109DD3: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726== 
+==726== Conditional jump or move depends on uninitialised value(s)
+==726==    at 0x10CBDA: check_all_valid(asm_struct*) (check_toks.cpp:40)
+==726==    by 0x10C1B5: write_asm(asm_struct*) (assembler.cpp:233)
+==726==    by 0x10EF11: main (main.cpp:14)
+==726== 
+==726== 
+==726== HEAP SUMMARY:
+==726==     in use at exit: 0 bytes in 0 blocks
+==726==   total heap usage: 21 allocs, 21 frees, 4,271 bytes allocated
+==726== 
+==726== All heap blocks were freed -- no leaks are possible
+==726== 
+==726== ERROR SUMMARY: 10 errors from 4 contexts (suppressed: 0 from 0)
+==726== 
+==726== 1 errors in context 1 of 4:
+==726== Invalid write of size 1
+==726==    at 0x10D0F2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:137)
+==726==    by 0x109DD3: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726==  Address 0x4a8e136 is 0 bytes after a block of size 6 alloc'd
+==726==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==726==    by 0x10D074: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==726==    by 0x109DD3: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726== 
+==726== 
+==726== 1 errors in context 2 of 4:
+==726== Invalid write of size 1
+==726==    at 0x10D0F2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:137)
+==726==    by 0x109CE4: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726==  Address 0x4a8e096 is 0 bytes after a block of size 6 alloc'd
+==726==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==726==    by 0x10D074: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==726==    by 0x109CE4: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726== 
+==726== 
+==726== 1 errors in context 3 of 4:
+==726== Invalid write of size 1
+==726==    at 0x10D0F2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:137)
+==726==    by 0x109BF5: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726==  Address 0x4a8dff6 is 0 bytes after a block of size 6 alloc'd
+==726==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==726==    by 0x10D074: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==726==    by 0x109BF5: get_token_value(asm_struct*, unsigned long) (assembler.cpp:46)
+==726==    by 0x10C174: translate_to_asm(asm_struct*) (assembler.cpp:225)
+==726==    by 0x10EEF9: main (main.cpp:12)
+==726== 
+==726== 
+==726== 7 errors in context 4 of 4:
+==726== Conditional jump or move depends on uninitialised value(s)
+==726==    at 0x10CBDA: check_all_valid(asm_struct*) (check_toks.cpp:40)
+==726==    by 0x10C1B5: write_asm(asm_struct*) (assembler.cpp:233)
+==726==    by 0x10EF11: main (main.cpp:14)
+==726== 
+==726== ERROR SUMMARY: 10 errors from 4 contexts (suppressed: 0 from 0)

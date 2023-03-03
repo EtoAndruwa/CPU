@@ -100,3 +100,64 @@ const char* enum_type_to_string(size_t code) // for token type
             return "---";
     }
 }
+
+const char* get_cmd_string(size_t cmd_code)
+{
+    switch(cmd_code)
+    {
+        case HLT:
+            return "HLT";
+        case PUSH_ST:
+            return "PUSH";
+        case PUSH_REG:
+            return "PUSH";
+        case PUSH_RAM_VAL:
+            return "PUSH";
+        case PUSH_RAM_REG:
+            return "PUSH";
+        case POP_REG:
+            return "POP";
+        case POP_RAM_VAL:
+            return "POP";
+        case POP_RAM_REG:
+            return "POP";
+        case DEC:
+            return "DEC";
+        case JZ:
+            return "JZ";
+        case ADD:
+            return "ADD";
+        case SUB:
+            return "SUB";
+        case MUL:
+            return "MUL";
+        case DIV:
+            return "DIV";
+        case SQRT:
+            return "SQRT";
+        case OUT:
+            return "OUT";
+        case RET:
+            return "RET";
+        case JMP:
+            return "JMP";
+        case ax:
+            return "ax";
+        case bx:
+            return "bx";
+        case cx:
+            return "cx";
+        case dx:
+            return "dx";
+        case rax:
+            return "rax";
+        case rbx:
+            return "rbx";
+        case rcx:
+            return "rcx";
+        case CALL:
+            return "CALL";
+        default:
+            return "NEW_CMD"; 
+    }
+}

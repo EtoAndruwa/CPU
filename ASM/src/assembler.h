@@ -20,6 +20,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include "enums.h"
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -36,135 +37,6 @@ static const char* FILE_ASM_NAME     = "asm_code.asm";    /// \brief Defines the
 static const char* FILE_CODE_NAME    = "bin_code.bin";    /// \brief Defines the name of translated file
 static const char* FILE_LOG_NAME     = "LOG_FILE.txt";    /// \brief Defines the name of the log file
 static const char* FILE_LISTING_NAME = "asm_listing.txt"; /// \brief Defines the name of the listing file
-
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief The enum used in order to determine the type of error connected with files
- */
-enum asm_errors 
-{
-    STRUCT_OK                 = 0,
-    ERR_ASM_CODE_BUF_NULL     = 1,
-    ERR_OPEN_ASM_FILE         = 2,
-    ERR_OPEN_BIN_FILE         = 3,
-    ERR_CLOSE_ASM_FILE        = 4,
-    ERR_CLOSE_BIN_FILE        = 5,
-    ERR_EMPTY_ASM_FILE        = 6, 
-    ERR_OPEN_LOG_FILE         = 7,
-    ERR_CLOSE_LOG_FILE        = 8,
-    ERR_TO_WRITE_CODE         = 9,
-    ERR_TO_CALLOC_TOKS        = 10,
-    ERR_TO_CALLOC_ASM_BUF     = 11,
-    ERR_READ_TO_ASM_BUF       = 12,
-    ERR_TO_CALLOC_BIN_CODES   = 13,
-    ERR_TO_REALLOC_TOKS       = 14,
-    ERR_OPEN_LISTING          = 15,
-    ERR_CLOSE_LISTING         = 16
-};
-
-/**
- * @brief The enum used in order to determine the type of token (command, register or value)
- */
-enum type
-{
-    empty = 0, /// \brief for initializing
-    cmd   = 1, /// \brief 'command'
-    reg   = 2, /// \brief 'register'
-    val   = 3, /// \brief 'value' 
-    flg   = 4, /// \brief 'flag'
-    fnc   = 5, /// \brief 'function'
-};
-
-/**
- * @brief The enum is used in order to determine the error connected with token
- */
-enum token_error_code 
-{
-    TOKEN_OK                     = 0,  /// \brief Example: 'PUSH 10'
-    ERR_INVALID_TOKEN            = 1,  /// \brief Example: 'asdfadfas'
-    ERR_TOKEN_WITHOUT_VALUE      = 2,  /// \brief Example: 'POP 10'
-    ERR_TOKEN_WITH_VALUE         = 3,  /// \brief Example: 'PUSH ______'
-    ERR_NO_FLAG                  = 4,  /// \brief Example: 'JMP _____'
-    ERR_INVALID_FLAG             = 5,  /// \brief Example: ':abc'
-    ERR_NO_FLAG_TO_JMP           = 6,  
-    ERR_INVALID_REG              = 7,   
-    ERR_CALLS_NON_EXISTEN_FNC    = 8,  
-    ERR_NO_FNC_NAME              = 9,  
-    ERR_DOUBLE_DECL_OF_FNC       = 10, 
-    ERR_FIRST_DECL_OF_FNC        = 11,
-    ERR_TO_CHECK_INNER_RAM       = 12,
-    ERR_DOUBLE_DECL_OF_FLAG      = 13,
-    ERR_FIRST_DECL_OF_FLAG       = 14,
-    ERR_INVAL_RAM_ADDRESSING     = 15,
-};  
-
-enum ret_codes
-{
-    INNER_RAM_INVALID  = 0,
-    INNER_REG          = 1,
-    INNER_VAL          = 2,
-    INNER_VAL_REG      = 3,
-    NEXT_TOKEN_CMD     = 4,
-    NEXT_TOKEN_VAL     = 5,
-    ALL_TOKENS_VALID   = 6,
-    SOME_TOKEN_INVALID = 7,
-    BRACKETS_OKEY      = 8,
-    BRACKETS_NOT_OKEY  = 9,
-    ALL_FUNCS_OK       = 10,
-    SOME_FUNC_NOT_OK   = 11, 
-    TOKEN_IS_INT       = 12,
-    TOKEN_IS_NOT_INT   = 13,
-    ALL_CALLS_OK       = 14,
-    SOME_CALL_NOT_OKEY = 15,
-    ALL_FLAGS_OKEY     = 16,
-    SOME_FLAG_NOT_OK   = 17,
-    NEXT_TOKEN_IS_REG  = 18,
-    NEXT_TOKEN_NOT_REG = 19,
-    ALL_JMPS_OKEY      = 20,
-    SOME_JMP_NOT_OK    = 21,
-    INNER_NOT_REG      = 22,
-    ALL_DIGITS         = 23,
-    NOT_ALL_DIGITS     = 24
-};
-
-enum cmd
-{  
-    PUSH_ST      = 33, 
-    PUSH_REG     = 65, 
-    PUSH_RAM_VAL = 161, 
-    PUSH_RAM_REG = 193, 
-    
-    POP_REG      = 66, 
-    POP_ST       = 34,
-    POP_RAM_VAL  = 162,
-    POP_RAM_REG  = 194,
-
-    HLT  = 0,
-    PUSH = 1,
-    POP = 2,
-    DEC  = 12,
-    JZ   = 13,
-    ADD  = 3, 
-    SUB  = 4, 
-    MUL  = 5, 
-    DIV  = 6, 
-    SQRT = 7, 
-    OUT  = 8, 
-    INT  = 9,
-    RET  = 10,
-    JMP  = 11, 
-    ax   = 21, 
-    bx   = 22,  
-    cx   = 23, 
-    dx   = 24, 
-    rax  = 25, 
-    rbx  = 26, 
-    rcx  = 27, 
-    CALL = 30  
-};
-
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief The struct of the token
@@ -188,10 +60,10 @@ typedef struct asm_struct
     FILE* asm_file        = nullptr;   /// \brief The pointer to the file with assembly code 
     FILE* translated_file = nullptr;   /// \brief The pointer to the file with translated code 
     tokens* toks          = nullptr;   /// \brief The pointer to the array with tokens
+    int* bin_codes        = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
     size_t err_code       = STRUCT_OK; /// \brief The error code of program
     size_t size           = 0;         /// \brief The size of the assembly file
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)
-    int* bin_codes        = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
     size_t cur_tok_chk    = 0;         /// \brief The index of the current token
     size_t length_listing = 7;         /// \brief The minimum length of the cell in the listing with the names of tokens
 };
@@ -527,8 +399,8 @@ size_t check_flag_declaration(asm_struct* assembly_struct);
  * 
  * @param assembly_struct 
  */
-
 void max_len_tok(asm_struct* assembly_struct);
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**

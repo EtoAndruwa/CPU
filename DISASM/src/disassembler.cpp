@@ -1,6 +1,6 @@
 #include "disassembler.h"
 
-FILE* check_code_file(disasm_struct* disasm_struct)
+size_t check_code_file(disasm_struct* disasm_struct)
 {
     FILE* bin_file_ptr = fopen("../ASM/bin_code.bin", "rb"); // Opens an empty file
 
@@ -10,11 +10,11 @@ FILE* check_code_file(disasm_struct* disasm_struct)
     }
     else
     {   
-        return bin_file_ptr;
+        disasm_struct->bin_file_ptr;
     }
 }
 
-void get_cmd_in_buf(disasm_struct* disasm_struct)
+size_t get_cmd_in_buf(disasm_struct* disasm_struct)
 {
     FILE* bin_file_ptr = check_code_file(disasm_struct);
 

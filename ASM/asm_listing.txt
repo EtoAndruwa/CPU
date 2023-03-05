@@ -1,6 +1,14 @@
-| ID |		COMMAND		|    TYPE    |ASM|    STATUS    |
-|0000|		OUT    		|    cmd     |008|      OK      |
-|0001|		ADD    		|    cmd     |003|      OK      |
-|0002|		MUL    		|    cmd     |005|      OK      |
-|0003|		SUB    		|    cmd     |004|      OK      |
-|0004|		HLT    		|    cmd     |000|      OK      |
+| ID |		COMMAND 		|    TYPE    |		ASM 		|    STATUS    |
+|0000|		PUSH    		|    cmd     |		33  		|      OK      |
+|0001|		10      		|    val     |		10  		|      OK      |
+|0002|		PUSH    		|    cmd     |		65  		|      OK      |
+|0003|		ax      		|    reg     |		21  		|      OK      |
+|0004|		PUSH    		|    cmd     |		229 		|      OK      |
+|0005|		[100+bx]		|    reg     |		100 		|      OK      |
+|0006|		POP     		|    cmd     |		234 		|      OK      |
+|0007|		[100+cx]		|    reg     |		100 		|      OK      |
+|0008|		POP     		|    cmd     |		66  		|      OK      |
+|0009|		ax      		|    reg     |		21  		|      OK      |
+|0010|		ADD     		|    cmd     |		3   		|      OK      |
+|0011|		SUB     		|    cmd     |		4   		|      OK      |
+|0012|		HLT     		|    cmd     |		0   		|      OK      |

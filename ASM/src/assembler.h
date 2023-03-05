@@ -395,9 +395,9 @@ size_t check_flag_declaration(asm_struct* assembly_struct);
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief 
+ * @brief Gets the maximum length of the token
  * 
- * @param assembly_struct 
+ * @param assembly_struct The struct containing all information about the asm struct
  */
 void max_len_tok(asm_struct* assembly_struct);
 
@@ -416,10 +416,10 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief Get the cmd string object
+ * @brief Converts the enum size_t code into string containing enum's name
  * 
- * @param cmd_code 
- * @return const char* 
+ * @param cmd_code The enum code of the cmd
+ * @return const char* Returns the enum name as string
  */
 const char* get_cmd_string(size_t cmd_code);
 

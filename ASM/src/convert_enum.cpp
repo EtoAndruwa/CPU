@@ -107,19 +107,9 @@ const char* get_cmd_string(size_t cmd_code)
     {
         case HLT:
             return "HLT";
-        case PUSH_ST:
+        case PUSH:
             return "PUSH";
-        case PUSH_REG:
-            return "PUSH";
-        case PUSH_RAM_VAL:
-            return "PUSH";
-        case PUSH_RAM_REG:
-            return "PUSH";
-        case POP_REG:
-            return "POP";
-        case POP_RAM_VAL:
-            return "POP";
-        case POP_RAM_REG:
+        case POP:
             return "POP";
         case DEC:
             return "DEC";

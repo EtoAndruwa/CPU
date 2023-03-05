@@ -1,5 +1,8 @@
-OUT
+PUSH 10
+PUSH ax
+PUSH [100+bx]
+POP [100+cx]
+POP ax
 ADD
-MUL
 SUB
 HLT

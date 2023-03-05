@@ -12,10 +12,10 @@ size_t listing(asm_struct* assembly_struct)
         return assembly_struct->err_code;
     }
 
-    fprintf(listing_file,"| ID |		%-*s		|    TYPE    |ASM|    STATUS    |\n", assembly_struct->length_listing, "COMMAND");
+    fprintf(listing_file,"| ID |		%-*s		|    TYPE    |		%-*s		|    STATUS    |\n", assembly_struct->length_listing, "COMMAND", assembly_struct->length_listing - 4, "ASM");
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
-        fprintf(listing_file,"|%04d|		%-*s		|    %s     |%03d|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->length_listing, assembly_struct->toks[i].text, enum_type_to_string(assembly_struct->toks[i].type), assembly_struct->toks[i].value, assembly_struct->toks[i].status);
+        fprintf(listing_file,"|%04d|		%-*s		|    %s     |		%-*d		|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->length_listing, assembly_struct->toks[i].text, enum_type_to_string(assembly_struct->toks[i].type), assembly_struct->length_listing - 4, assembly_struct->toks[i].value, assembly_struct->toks[i].status);
         if(strcmp(assembly_struct->toks[i].status, "--") == 0)
         {
             fprintf(listing_file, " <----- %s", enum_token_err_to_string(assembly_struct->toks[i].error_code)); 

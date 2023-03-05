@@ -122,7 +122,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
         }
         else if(strlen_token_check > 5)
         {
-            size_t length_of_inner = strlen_token_check -1 ;
+            size_t length_of_inner = strlen_token_check - 1;
             char* str_check =(char*)calloc(length_of_inner, sizeof(char));
 
             if(str_check == nullptr)
@@ -140,10 +140,25 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 
             if(position_plus_sing == nullptr)
             {
-                assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
-                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-                dtor_asm(assembly_struct);
-                exit(ERR_INVAL_RAM_ADDRESSING);
+                if(check_num_int(str_check) == TOKEN_IS_INT)
+                {
+                    assembly_struct->toks[index].value = atoi(str_check);
+                    assembly_struct->toks[index].type  = val;
+                    strcpy((char*)assembly_struct->toks[index].status, "OK");
+
+                    free(str_check);
+                    str_check = nullptr;
+                    return INNER_VAL; 
+                }
+                else
+                {
+                    free(str_check);
+                    str_check = nullptr;
+                    assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
+                    dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+                    dtor_asm(assembly_struct);
+                    exit(ERR_INVAL_RAM_ADDRESSING);
+                }
             }
             else
             {
@@ -155,6 +170,8 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 
                     if(text_bef_plus_ptr == nullptr)
                     {
+                        free(str_check);
+                        str_check = nullptr;
                         assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
                         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
                         dtor_asm(assembly_struct);
@@ -188,6 +205,8 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                 }
                 else
                 {   
+                    free(str_check);
+                    str_check = nullptr;
                     assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
                     dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
                     dtor_asm(assembly_struct);

@@ -1,5 +1,5 @@
 #include "assembler.h"
-#include "def_cmd.h"
+
 
 
 size_t file_openning_check(asm_struct* assembly_struct) 
@@ -28,62 +28,227 @@ size_t file_openning_check(asm_struct* assembly_struct)
 
 void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk) 
 {
-    if((strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0) ||  
-        (strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0) ||
-            (strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0) || 
-                (strcmp(assembly_struct->toks[cur_tok_chk].text, "rcx") == 0)) 
-        DEF_CMD_REGS(assembly_struct, cur_tok_chk)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "PUSH") == 0)
-    {
-        if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_VAL))                                                                                                                           
-        {                                                                                                                                                                        
-            assembly_struct->toks[cur_tok_chk].value = PUSH | (1 << 5);                                                                                                                         
-            assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                       
-            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                                         
-            assembly_struct->cur_tok_chk++;                                                                                                                                      
-        }                                                                                                                                                                        
-        else                                                                                                                                                                        
-            DEF_CMD_PUSH_POP(PUSH)
-    }
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "POP") == 0)    
-        DEF_CMD_PUSH_POP(POP)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "ADD") == 0)  
-        DEF_CMD_OTHERS(ADD)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "SUB") == 0)  
-        DEF_CMD_OTHERS(SUB)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "MUL") == 0)  
-        DEF_CMD_OTHERS(MUL)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "DIV") == 0)   
-        DEF_CMD_OTHERS(DIV)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "SQRT") == 0)       
-        DEF_CMD_OTHERS(SQRT)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "HLT") == 0)  
-        DEF_CMD_OTHERS(HLT)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "OUT") == 0)  
-        DEF_CMD_OTHERS(OUT)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "RET") == 0)
-        DEF_CMD_OTHERS(RET)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "JMP") == 0)
-        DEF_CMD_JMP(JMP)       
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "JZ") == 0)
-        DEF_CMD_JMP(JZ)
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "DEC") == 0)
-        DEF_CMD_DEC
-    else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "CALL") == 0)
-        DEF_CMD_CALL
-    else if(check_num_int(assembly_struct->toks[cur_tok_chk].text) == TOKEN_IS_INT)
-        DEF_CMD_VAL
-    else if((assembly_struct->toks[cur_tok_chk].text[0] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))
-        DEF_CMD_FLAG
-    else if((assembly_struct->toks[cur_tok_chk].text[(strlen(assembly_struct->toks[cur_tok_chk].text) - 1)] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))
-        DEF_CMD_FUNC
-    else
-    {
-        strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");
-        assembly_struct->toks[cur_tok_chk].error_code = ERR_INVALID_TOKEN;
-        dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        assembly_struct->cur_tok_chk++;
-    }
+    #define DEF_CMD_REGS                                                                                                                                                \                                                                                                                                
+    if((strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0) ||                                  \   
+        (strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0) ||                                 \
+            (strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0) ||                           \
+                (strcmp(assembly_struct->toks[cur_tok_chk].text, "rcx") == 0))                                                                                          \
+    {                                                                                                                                                                   \
+    if((((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_CMD) &&                                        \
+            (check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_NOT_REG)) || ((assembly_struct->num_toks - 1) == cur_tok_chk))                                  \
+    {                                                                                                                                                                   \
+        if(strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0)                                                                                                  \
+        {                                                                                                                                                               \
+            assembly_struct->toks[cur_tok_chk].value = ax;                                                                                                              \
+        }                                                                                                                                                               \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0)                                                                                             \
+        {                                                                                                                                                               \
+            assembly_struct->toks[cur_tok_chk].value = bx;                                                                                                              \
+        }                                                                                                                                                               \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0)                                                                                             \
+        {                                                                                                                                                               \
+            assembly_struct->toks[cur_tok_chk].value = cx;                                                                                                              \                                                                                                             
+        }                                                                                                                                                               \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0)                                                                                             \                                                              
+        {                                                                                                                                                               \
+            assembly_struct->toks[cur_tok_chk].value = dx;                                                                                                              \
+        }                                                                                                                                                               \
+        if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0)                                                                                                 \
+        {                                                                                                                                                               \   
+            assembly_struct->toks[cur_tok_chk].value = rax;                                                                                                             \
+        }                                                                                                                                                               \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0)                                                                                            \
+        {                                                                                                                                                               \
+            assembly_struct->toks[cur_tok_chk].value = rbx;                                                                                                             \
+        }                                                                                                                                                               \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rcx") == 0)                                                                                            \
+        {                                                                                                                                                               \
+            assembly_struct->toks[cur_tok_chk].value = rcx;                                                                                                             \                        
+        }                                                                                                                                                               \
+        assembly_struct->toks[cur_tok_chk].type = reg;                                                                                                                  \
+        strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                 \
+    }                                                                                                                                                                   \
+    else                                                                                                                                                                \
+    {                                                                                                                                                                   \
+        strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                                                                 \
+        assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;                                                                                        \
+    }                                                                                                                                                                   \  
+    assembly_struct->cur_tok_chk++;                                                                                                                                     \
+    }                                                                                                                                                                  
+
+    #define DEF_CMD_PUSH_POP(command_id)                                                                                                                                            \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, get_cmd_string(command_id)) == 0)                                                                                   \
+        {                                                                                                                                                                           \
+            if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_VAL) &&                                             \
+                (strcmp(assembly_struct->toks[cur_tok_chk].text, "PUSH") == 0))                                                                                                     \                                                                                            
+            {                                                                                                                                                                       \ 
+                assembly_struct->toks[cur_tok_chk].value = PUSH | (1 << 5);                                                                                                         \                
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \     
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \                                                                                                                                     
+                                                                                                                                                                                    \
+                assembly_struct->toks[cur_tok_chk + 1].value = atoi(assembly_struct->toks[cur_tok_chk + 1].text);                                                                   \
+                assembly_struct->toks[cur_tok_chk + 1].type = val;                                                                                                                  \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk + 1].status, "OK");                                                                                                 \
+                assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \                                                                                               
+            }                                                                                                                                                                       \
+            else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_IS_REG)                                           \   
+            {                                                                                                                                                                       \
+                assembly_struct->toks[cur_tok_chk].value = command_id | (1 << 6);                                                                                                   \
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
+                assembly_struct->cur_tok_chk++;                                                                                                                                     \
+            }                                                                                                                                                                       \
+            else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == INNER_VAL))     \
+            {                                                                                                                                                                       \
+                assembly_struct->toks[cur_tok_chk].value = command_id | (5 << 5);                                                                                                   \
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
+                assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \
+            }                                                                                                                                                                       \
+            else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == INNER_REG))     \
+            {                                                                                                                                                                       \
+                assembly_struct->toks[cur_tok_chk].value = command_id | (3 << 6);                                                                                                   \
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
+                assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \       
+            }                                                                                                                                                                       \               
+            else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == INNER_VAL_REG)) \
+            {                                                                                                                                                                       \
+                assembly_struct->toks[cur_tok_chk].value += command_id | (7 << 5);                                                                                                  \
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
+                assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \
+            }                                                                                                                                                                       \   
+            else                                                                                                                                                                    \
+            {                                                                                                                                                                       \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                                                                     \
+                assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITH_VALUE;                                                                                               \
+                assembly_struct->cur_tok_chk++;                                                                                                                                     \
+            }                                                                                                                                                                       \
+        }                                                                                                                                                                           \                                                                                                                                                                  
+
+    #define DEF_CMD_OTHERS(command_id)                                                                                                      \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, get_cmd_string(command_id)) == 0)                                           \
+        {                                                                                                                                   \                                                                                                       
+            if((((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_CMD &&      \
+                (check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_NOT_REG)) || ((assembly_struct->num_toks - 1) == cur_tok_chk))  \                                                                                                       
+            {                                                                                                                               \                               
+                assembly_struct->toks[cur_tok_chk].value = command_id;                                                                      \                                
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                             \                                
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                             \                                
+                assembly_struct->cur_tok_chk++;                                                                                             \                               
+            }                                                                                                                               \                                
+            else                                                                                                                            \                                
+            {                                                                                                                               \                                
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                             \                                
+                assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;                                                    \                               
+                assembly_struct->cur_tok_chk++;                                                                                             \                                
+            }                                                                                                                               \                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        }
+
+    #define DEF_CMD_JMP(command_id)                                                                                             \
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, get_cmd_string(command_id)) == 0)                               \
+        {                                                                                                                       \
+            if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (strlen(assembly_struct->toks[cur_tok_chk + 1].text) > 1) &&  \
+                (check_is_number(assembly_struct->toks[cur_tok_chk + 1].text + 1) == TOKEN_IS_INT))                             \
+            {                                                                                                                   \
+                assembly_struct->toks[cur_tok_chk].value = command_id;                                                          \
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                 \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                 \
+                assembly_struct->cur_tok_chk++;                                                                                 \
+            }                                                                                                                   \
+            else                                                                                                                \
+            {                                                                                                                   \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                 \   
+                assembly_struct->toks[cur_tok_chk].error_code = ERR_NO_FLAG;                                                    \
+                assembly_struct->cur_tok_chk++;                                                                                 \
+            }                                                                                                                   \
+        }                                                                                                                       \
+
+    #define DEF_CMD_DEC                                                                                                                  \   
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "DEC") == 0)                                                             \
+        {                                                                                                                                \ 
+            if(((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_IS_REG)     \
+            {                                                                                                                            \
+                assembly_struct->toks[cur_tok_chk].value = DEC;                                                                          \   
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                          \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                          \
+                assembly_struct->cur_tok_chk++;                                                                                          \
+            }                                                                                                                            \   
+            else                                                                                                                         \
+            {                                                                                                                            \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                          \
+                assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITH_VALUE;                                                    \
+                assembly_struct->cur_tok_chk++;                                                                                          \
+            }                                                                                                                            \
+        }                                                                                                                                \
+
+    #define DEF_CMD_CALL                                                                                                                \                                                          
+        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "CALL") == 0)                                                           \
+        {                                                                                                                               \
+            if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_CMD) && \
+                    (assembly_struct->toks[cur_tok_chk+1].text[(strlen(assembly_struct->toks[cur_tok_chk+1].text) - 1)] == ':'))        \
+            {                                                                                                                           \
+                assembly_struct->toks[cur_tok_chk].value = CALL;                                                                        \
+                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                         \   
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                         \
+                assembly_struct->cur_tok_chk++;                                                                                         \
+            }                                                                                                                           \
+            else                                                                                                                        \
+            {                                                                                                                           \   
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                         \
+                assembly_struct->toks[cur_tok_chk].error_code = ERR_NO_FNC_NAME;                                                        \
+            }                                                                                                                           \
+        }                                                                                                                               \
+
+    #define DEF_CMD_FUNC                                                                                                                                                            \ 
+        else if((assembly_struct->toks[cur_tok_chk].text[(strlen(assembly_struct->toks[cur_tok_chk].text) - 1)] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))   \
+        {                                                                                                                                                                           \
+            assembly_struct->toks[cur_tok_chk].type = fnc;                                                                                                                          \
+            assembly_struct->toks[cur_tok_chk].value = 0;                                                                                                                           \
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                         \
+            assembly_struct->cur_tok_chk++;                                                                                                                                         \
+        }                                                                                                                                                                           \                                                                         
+
+    #define DEF_CMD_FLAG                                                                                                        \
+        else if((assembly_struct->toks[cur_tok_chk].text[0] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))   \
+        {                                                                                                                       \
+            if(check_is_number(assembly_struct->toks[cur_tok_chk].text + 1) == TOKEN_IS_INT)                                    \
+            {                                                                                                                   \
+                assembly_struct->toks[cur_tok_chk].type = flg;                                                                  \   
+                assembly_struct->toks[cur_tok_chk].value = 0;                                                                   \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                 \
+                assembly_struct->cur_tok_chk++;                                                                                 \       
+            }                                                                                                                   \
+            else                                                                                                                \
+            {                                                                                                                   \
+                strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                 \
+                assembly_struct->toks[cur_tok_chk].error_code = ERR_INVALID_FLAG;                                               \
+                assembly_struct->cur_tok_chk++;                                                                                 \
+            }                                                                                                                   \
+        }                                                                                                                       \    
+
+    #define CMD_ERROR_TOKEN                                                     \                                  
+        else                                                                    \
+        {                                                                       \
+            strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");     \
+            assembly_struct->toks[cur_tok_chk].error_code = ERR_INVALID_TOKEN;  \
+            dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);         \
+            assembly_struct->cur_tok_chk++;                                     \
+        } 
+    
+    #include "gen_cmd.h"
+
+    #undef CMD_ERROR_TOKEN
+    #undef DEF_CMD_FLAG
+    #undef DEF_CMD_FUNC
+    #undef DEF_CMD_CALL
+    #undef DEF_CMD_DEC
+    #undef DEF_CMD_JMP
+    #undef DEF_CMD_JMP
+    #undef DEF_CMD_OTHERS
+    #undef DEF_CMD_PUSH_POP
+    #undef DEF_CMD_REGS
 }
 
 size_t get_commands_into_buf(asm_struct* assembly_struct) 

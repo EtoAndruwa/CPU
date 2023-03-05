@@ -1,6 +1,6 @@
 #include "disassembler.h"
 
-void disasm_ctor(disasm_struct* disasm_struct)
+size_t disasm_ctor(disasm_struct* disasm_struct)
 {
     disasm_struct->error_code = STRUCT_OK;
     disasm_struct->flag_num   = 1;
@@ -27,7 +27,7 @@ void disasm_ctor(disasm_struct* disasm_struct)
 }
 
 
-void disasm_dtor(disasm_struct* disasm_struct)
+size_t disasm_dtor(disasm_struct* disasm_struct)
 {
     dump_disasm(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
 

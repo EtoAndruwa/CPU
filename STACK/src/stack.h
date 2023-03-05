@@ -110,7 +110,16 @@ stack_type Get_cur_value_of_hash(Stack* stack_struct);
  * @param stack_struct The main struct which is containing all data about the stack
  * @param stack_size The total number of elements in the stack
  */
-void StackCtor(Stack* stack_struct, size_t stack_size);                        
+
+
+/**
+ * @brief Creates and initializes stack
+ * 
+ * @param stack_struct The main struct which is containing all data about the stack
+ * @param stack_size The total number of elements in the stack
+ * @return size_t The error code of the function
+ */
+size_t StackCtor(Stack* stack_struct, size_t stack_size);                        
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

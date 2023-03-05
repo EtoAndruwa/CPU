@@ -32,12 +32,12 @@ enum asm_errors
  */
 enum type
 {
-    empty = 0, /// \brief for initializing
-    cmd   = 1, /// \brief 'command'
-    reg   = 2, /// \brief 'register'
-    val   = 3, /// \brief 'value' 
-    flg   = 4, /// \brief 'flag'
-    fnc   = 5, /// \brief 'function'
+    EMPTY = 0, /// \brief for initializing
+    CMD   = 1, /// \brief 'command'
+    REG   = 2, /// \brief 'register'
+    VAL   = 3, /// \brief 'value' 
+    FLG   = 4, /// \brief 'flag'
+    FNC   = 5, /// \brief 'function'
 };
 
 /**
@@ -102,20 +102,9 @@ enum ret_codes
  */
 enum cmd
 {  
-    PUSH_ST      = 33, 
-    PUSH_REG     = 65, 
-    PUSH_RAM_VAL = 161, 
-    PUSH_RAM_REG = 193, 
-    POP_REG      = 66, 
-    POP_ST       = 34,
-    POP_RAM_VAL  = 162,
-    POP_RAM_REG  = 194,
-
     HLT  = 0,
     PUSH = 1,
     POP  = 2,
-    DEC  = 12,
-    JZ   = 13,
     ADD  = 3, 
     SUB  = 4, 
     MUL  = 5, 
@@ -124,15 +113,15 @@ enum cmd
     OUT  = 8, 
     RET  = 10,
     JMP  = 11, 
-    ax   = 21, 
-    bx   = 22,  
-    cx   = 23, 
-    dx   = 24, 
-    rax  = 25, 
-    rbx  = 26, 
-    rcx  = 27, 
+    DEC  = 12,
+    JZ   = 13,
+    AX   = 21,
+    BX   = 22,
+    CX   = 23,
+    DX   = 24,
     CALL = 30  
 };
+
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

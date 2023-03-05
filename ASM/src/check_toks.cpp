@@ -39,7 +39,8 @@ size_t check_all_valid(asm_struct* assembly_struct)
     {
         if(assembly_struct->toks[i].error_code != TOKEN_OK)
         {   
-            return assembly_struct->toks[i].error_code; 
+            printf("%d\n\n", i);
+            return SOME_TOKEN_INVALID; 
         }
     }
 
@@ -76,33 +77,21 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             {
                 if(strcmp(str_check, "ax") == 0)
                 {
-                    assembly_struct->toks[index].value = ax; 
+                    assembly_struct->toks[index].value = AX; 
                 }
                 else if(strcmp(str_check, "bx") == 0)
                 {
-                    assembly_struct->toks[index].value = bx;
+                    assembly_struct->toks[index].value = BX;
                 }
                 else if(strcmp(str_check, "cx") == 0)
                 {
-                    assembly_struct->toks[index].value = cx;
+                    assembly_struct->toks[index].value = CX;
                 }
                 else if(strcmp(str_check, "dx") == 0)
                 {   
-                    assembly_struct->toks[index].value = dx;
+                    assembly_struct->toks[index].value = DX;
                 }
-                if(strcmp(str_check, "rax") == 0)
-                {
-                    assembly_struct->toks[index].value = rax; 
-                }
-                else if(strcmp(str_check, "rbx") == 0)
-                {
-                    assembly_struct->toks[index].value = rbx;
-                }
-                else if(strcmp(str_check, "rcx") == 0)
-                {
-                    assembly_struct->toks[index].value = rcx;
-                }
-                assembly_struct->toks[index].type = reg;
+                assembly_struct->toks[index].type = REG;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
 
                 free(str_check);
@@ -112,7 +101,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             else if(check_num_int(str_check) == TOKEN_IS_INT)
             {   
                 assembly_struct->toks[index].value = atoi(str_check);
-                assembly_struct->toks[index].type  = val;
+                assembly_struct->toks[index].type  = VAL;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
 
                 free(str_check);
@@ -143,7 +132,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                 if(check_num_int(str_check) == TOKEN_IS_INT)
                 {
                     assembly_struct->toks[index].value = atoi(str_check);
-                    assembly_struct->toks[index].type  = val;
+                    assembly_struct->toks[index].type  = VAL;
                     strcpy((char*)assembly_struct->toks[index].status, "OK");
 
                     free(str_check);
@@ -252,7 +241,7 @@ size_t check_flags(asm_struct* assembly_struct)
             char* flag_name = assembly_struct->toks[i+1].text;
             for(size_t j = 0; j < assembly_struct->num_toks ; j++) // Checks all tokens
             {   
-                if(assembly_struct->toks[j].type == flg) // If the command is flag
+                if(assembly_struct->toks[j].type == FLG) // If the command is flag
                 {   
                     if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && ((strcmp(assembly_struct->toks[j-1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[j-1].text, "JZ") != 0))) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
                     {   
@@ -298,11 +287,11 @@ size_t check_func(asm_struct* assembly_struct)
                 char* func_name = assembly_struct->toks[i+1].text; // Gets the name of the function which is called
                 for(size_t j = 0; j < assembly_struct->num_toks ; j++) // Searches through the ALL tokens!
                 {   
-                    if(assembly_struct->toks[j].type == fnc) // If the token is a function
+                    if(assembly_struct->toks[j].type == FNC) // If the token is a function
                     {   
                         if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) || ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0))) // The token is not a call of the function or is the firts command in the assembly code
                         {   
-                            funcs_ok = ALL_FUNCS_OK; // Calls declared function
+                            funcs_ok = ALL_CALLS_OK; // Calls declared function
                             for(size_t q = j + 1; q < assembly_struct->num_toks; q++)
                             {
                                 if(assembly_struct->toks[q].new_index != -1)
@@ -349,7 +338,7 @@ size_t check_fnc_declaration(asm_struct* assembly_struct)
                     char* func_name = assembly_struct->toks[i].text; // The function name that is used in order to search another declarations of the function with the same name
                     for(size_t j = i + 1; j < assembly_struct->num_toks ; j++) // Check the tokens after the firts function declaration
                     {   
-                        if(assembly_struct->toks[j].type == fnc) // If the token is a function
+                        if(assembly_struct->toks[j].type == FNC) // If the token is a function
                         {   
                             if((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (strcmp(assembly_struct->toks[j-1].text, "CALL") != 0)) // If the token is a function declaration and is not a call of the function
                             {   
@@ -395,7 +384,7 @@ size_t check_flag_declaration(asm_struct* assembly_struct)
                     char* flag_name = assembly_struct->toks[i].text; // The flag name that is used in order to search another declarations of the flag with the same name
                     for(size_t j = i + 1; j < assembly_struct->num_toks ; j++) // Check the tokens after the firts flag declaration
                     {   
-                        if(assembly_struct->toks[j].type == flg) // If the token is a flag
+                        if(assembly_struct->toks[j].type == FLG) // If the token is a flag
                         {   
                             if((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (strcmp(assembly_struct->toks[j-1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[j-1].text, "JZ") != 0)) // If the token is a function declaration and is not a call of the function
                             {   
@@ -432,8 +421,7 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i)
 {
     //printf("%s", assembly_struct->toks[i+1].text);
     if((strcmp(assembly_struct->toks[i+1].text, "ax") == 0) || (strcmp(assembly_struct->toks[i+1].text, "bx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "cx") == 0) || 
-            (strcmp(assembly_struct->toks[i+1].text, "dx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rcx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "rax") == 0) || 
-                (strcmp(assembly_struct->toks[i+1].text, "rbx") == 0))
+            (strcmp(assembly_struct->toks[i+1].text, "dx") == 0))
     {
         return NEXT_TOKEN_IS_REG; 
     }
@@ -445,8 +433,7 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i)
 
 size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
 {
-    if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0) || 
-            (strcmp(inner_text, "rcx") == 0) || (strcmp(inner_text, "rax") == 0) || (strcmp(inner_text, "rbx") == 0))
+    if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0))
     {
         return INNER_REG; 
     }
@@ -476,6 +463,6 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
     }
 
     assembly_struct->toks[index].value = atoi(value_text_ptr);
-    assembly_struct->toks[index].type  = reg;
+    assembly_struct->toks[index].type  = REG;
     strcpy((char*)assembly_struct->toks[index].status, "OK");
 }

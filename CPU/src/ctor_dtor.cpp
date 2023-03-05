@@ -1,8 +1,13 @@
 #include "CPU.h"
 
-void cpu_ctor(CPU* CPU, Stack* Stack)
+size_t cpu_ctor(CPU* CPU, Stack* Stack)
 {
-    StackCtor(Stack, STACK_SIZE);
+    size_t error_code = StackCtor(Stack, STACK_SIZE);
+    if(error_code != 0)
+    {
+        return error_code;
+    }
+
     CPU->stack = Stack;
     CPU->error_code = CPU_OK;
 
@@ -15,9 +20,13 @@ void cpu_ctor(CPU* CPU, Stack* Stack)
     }
 }
 
-void cpu_dtor(CPU* CPU)
+size_t cpu_dtor(CPU* CPU)
 {
-    dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    size_t error_code = dump_cpu(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    if(error_code != 0);
+    {
+        return error_code;
+    }
 
     StackDtor(CPU->stack);
     CPU->stack = nullptr;
@@ -35,10 +44,9 @@ void cpu_dtor(CPU* CPU)
     {
         CPU->error_code = ERR_BIN_NULL_BEF_DTOR;
         printf("Error code: %d (%s)\n", ERR_BIN_NULL_BEF_DTOR, convert_enum_cpu(ERR_BIN_NULL_BEF_DTOR));
-        exit(ERR_BIN_NULL_BEF_DTOR);
+        return CPU->error_code;
     }
     CPU->error_code = 0;
-
 }
 
 void call_stack_ctor_dtor(Call_stack* Call_stack)

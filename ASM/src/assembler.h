@@ -375,12 +375,12 @@ void put_new_index(asm_struct* assembly_struct);
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * @brief Calculates new number of tokens to be written to the bin file
+ * @brief Get the new num toks object
  * 
- * @param assembly_struct The struct containing all information about the asm struct
- * @return size_t The number of tokens with right indexes
+ * @param assembly_struct 
+ * @return int 
  */
-size_t get_new_num_toks(asm_struct* assembly_struct); 
+int  get_new_num_toks(asm_struct* assembly_struct); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

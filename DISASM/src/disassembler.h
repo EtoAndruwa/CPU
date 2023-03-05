@@ -45,12 +45,13 @@ enum error
  */
 enum type
 {
-    empty = 0, /// \brief for initializing
-    cmd   = 1, /// \brief 'command'
-    reg   = 2, /// \brief 'register'
-    val   = 3, /// \brief 'value' 
-    ram_val = 4,
-    ram_reg = 5,
+    EMPTY       = 0, /// \brief for initializing
+    CMD         = 1, /// \brief 'command'
+    REG         = 2, /// \brief 'register'
+    VAL         = 3, /// \brief 'value' 
+    RAM_VAL     = 4,
+    RAM_REG     = 5,
+    RAM_VAL_REG = 6
 };
 
 /**
@@ -60,7 +61,7 @@ enum type
 typedef struct command
 {
     int value          = 0;
-    size_t type        = empty;
+    size_t type        = EMPTY;
     size_t flag_before = 0;
     size_t func_before = 0;
 }command;
@@ -75,8 +76,6 @@ typedef struct disasm_struct
     command* commands    = nullptr;
     int num_bin_cmd[1]   = {};
     size_t error_code    = STRUCT_OK;
-    size_t flag_num      = 0;
-    size_t func_num      = 0;
     size_t cur_cmd_index = 0;
 }disasm_struct;
 
@@ -86,7 +85,6 @@ typedef struct disasm_struct
  */
 enum cmd
 {
-    HLT          = 0,  
     PUSH_ST      = 33, 
     PUSH_REG     = 65, 
     PUSH_RAM_VAL = 161, 
@@ -96,27 +94,29 @@ enum cmd
     POP_RAM_VAL = 162,
     POP_RAM_REG = 194,
 
-    DEC  = 1,
-    JZ   = 2,
-    ADD  = 3,  
+    HLT  = 0,
+    PUSH = 1,
+    POP  = 2,
+    ADD  = 3, 
     SUB  = 4, 
     MUL  = 5, 
     DIV  = 6, 
     SQRT = 7, 
     OUT  = 8, 
-    RET  = 10, 
+    RET  = 10,
     JMP  = 11, 
-    ax   = 21, 
-    bx   = 22, 
-    cx   = 23, 
-    dx   = 24, 
-    rax  = 25, 
-    rbx  = 26, 
-    rcx  = 27, 
-    CALL = 30  
+    DEC  = 12,
+    JZ   = 13,
+    AX   = 21,
+    BX   = 22,
+    CX   = 23,
+    DX   = 24,
+    CALL = 30 
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+FILE* check_code_file(disasm_struct* disasm_struct);
 
 /**
  * @brief 
@@ -143,8 +143,9 @@ void disasm_dtor(disasm_struct* disasm_struct);
  * @brief 
  * 
  * @param disasm_struct 
+ * @return size_t 
  */
-void disasm_ctor(disasm_struct* disasm_struct);
+size_t  disasm_ctor(disasm_struct* disasm_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -156,8 +157,9 @@ void disasm_ctor(disasm_struct* disasm_struct);
  * @param FUNCT_LINE 
  * @param FUNCT_FILE 
  * @param error_code 
+ * @return size_t 
  */
-void safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
+size_t safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -165,8 +167,9 @@ void safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_L
  * @brief Get the cmd in buf object
  * 
  * @param disasm_struct 
+ * @return size_t 
  */
-void get_cmd_in_buf(disasm_struct* disasm_struct);
+size_t get_cmd_in_buf(disasm_struct* disasm_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -222,8 +225,9 @@ const char* get_cmd_string(size_t cmd_code);
  * @brief 
  * 
  * @param disasm_struct 
+ * @return size_t 
  */
-void write_asm(disasm_struct* disasm_struct);
+size_t write_asm(disasm_struct* disasm_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -254,5 +258,7 @@ void put_flag_func(disasm_struct* disasm_struct);
 void print_flag_func(disasm_struct* disasm_struct, FILE* asm_file);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+char* get_reg_inner_ram(int command_code);
 
 #endif

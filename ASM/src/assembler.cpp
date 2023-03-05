@@ -30,42 +30,28 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
 {
     #define DEF_CMD_REGS                                                                                                                                                \                                                                                                                                
     if((strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0) ||                                  \   
-        (strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0) ||                                 \
-            (strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0) ||                           \
-                (strcmp(assembly_struct->toks[cur_tok_chk].text, "rcx") == 0))                                                                                          \
+        (strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0))                                   \                                                       
     {                                                                                                                                                                   \
     if((((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_CMD) &&                                        \
             (check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_NOT_REG)) || ((assembly_struct->num_toks - 1) == cur_tok_chk))                                  \
     {                                                                                                                                                                   \
         if(strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0)                                                                                                  \
         {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = ax;                                                                                                              \
+            assembly_struct->toks[cur_tok_chk].value = AX;                                                                                                              \
         }                                                                                                                                                               \
         else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0)                                                                                             \
         {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = bx;                                                                                                              \
+            assembly_struct->toks[cur_tok_chk].value = BX;                                                                                                              \
         }                                                                                                                                                               \
         else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0)                                                                                             \
         {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = cx;                                                                                                              \                                                                                                             
+            assembly_struct->toks[cur_tok_chk].value = CX;                                                                                                              \                                                                                                             
         }                                                                                                                                                               \
         else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0)                                                                                             \                                                              
         {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = dx;                                                                                                              \
-        }                                                                                                                                                               \
-        if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rax") == 0)                                                                                                 \
-        {                                                                                                                                                               \   
-            assembly_struct->toks[cur_tok_chk].value = rax;                                                                                                             \
-        }                                                                                                                                                               \
-        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rbx") == 0)                                                                                            \
-        {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = rbx;                                                                                                             \
-        }                                                                                                                                                               \
-        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "rcx") == 0)                                                                                            \
-        {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = rcx;                                                                                                             \                        
-        }                                                                                                                                                               \
-        assembly_struct->toks[cur_tok_chk].type = reg;                                                                                                                  \
+            assembly_struct->toks[cur_tok_chk].value = DX;                                                                                                              \
+        }                                                                                                                                                               \                                                                                                                                                             
+        assembly_struct->toks[cur_tok_chk].type = REG;                                                                                                                  \
         strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                 \
     }                                                                                                                                                                   \
     else                                                                                                                                                                \
@@ -83,39 +69,39 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
                 (strcmp(assembly_struct->toks[cur_tok_chk].text, "PUSH") == 0))                                                                                                     \                                                                                            
             {                                                                                                                                                                       \ 
                 assembly_struct->toks[cur_tok_chk].value = PUSH | (1 << 5);                                                                                                         \                
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \     
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                                                                     \     
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \                                                                                                                                     
                                                                                                                                                                                     \
                 assembly_struct->toks[cur_tok_chk + 1].value = atoi(assembly_struct->toks[cur_tok_chk + 1].text);                                                                   \
-                assembly_struct->toks[cur_tok_chk + 1].type = val;                                                                                                                  \
+                assembly_struct->toks[cur_tok_chk + 1].type = VAL;                                                                                                                  \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk + 1].status, "OK");                                                                                                 \
                 assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \                                                                                               
             }                                                                                                                                                                       \
             else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_IS_REG)                                           \   
             {                                                                                                                                                                       \
                 assembly_struct->toks[cur_tok_chk].value = command_id | (1 << 6);                                                                                                   \
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                                                                     \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
                 assembly_struct->cur_tok_chk++;                                                                                                                                     \
             }                                                                                                                                                                       \
             else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == INNER_VAL))     \
             {                                                                                                                                                                       \
                 assembly_struct->toks[cur_tok_chk].value = command_id | (5 << 5);                                                                                                   \
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                                                                     \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
                 assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \
             }                                                                                                                                                                       \
             else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == INNER_REG))     \
             {                                                                                                                                                                       \
                 assembly_struct->toks[cur_tok_chk].value = command_id | (3 << 6);                                                                                                   \
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                                                                     \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
                 assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \       
             }                                                                                                                                                                       \               
             else if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_chk + 1].text, cur_tok_chk + 1) == INNER_VAL_REG)) \
             {                                                                                                                                                                       \
                 assembly_struct->toks[cur_tok_chk].value += command_id | (7 << 5);                                                                                                  \
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                                                                     \
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                                                                     \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                     \
                 assembly_struct->cur_tok_chk = assembly_struct->cur_tok_chk + 2;                                                                                                    \
             }                                                                                                                                                                       \   
@@ -134,7 +120,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
                 (check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_NOT_REG)) || ((assembly_struct->num_toks - 1) == cur_tok_chk))  \                                                                                                       
             {                                                                                                                               \                               
                 assembly_struct->toks[cur_tok_chk].value = command_id;                                                                      \                                
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                             \                                
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                             \                                
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                             \                                
                 assembly_struct->cur_tok_chk++;                                                                                             \                               
             }                                                                                                                               \                                
@@ -150,10 +136,10 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
         else if(strcmp(assembly_struct->toks[cur_tok_chk].text, get_cmd_string(command_id)) == 0)                               \
         {                                                                                                                       \
             if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (strlen(assembly_struct->toks[cur_tok_chk + 1].text) > 1) &&  \
-                (check_is_number(assembly_struct->toks[cur_tok_chk + 1].text + 1) == TOKEN_IS_INT))                             \
+                (check_is_number(assembly_struct->toks[cur_tok_chk + 1].text + 1) == ALL_DIGITS))                               \
             {                                                                                                                   \
                 assembly_struct->toks[cur_tok_chk].value = command_id;                                                          \
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                 \
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                 \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                 \
                 assembly_struct->cur_tok_chk++;                                                                                 \
             }                                                                                                                   \
@@ -171,7 +157,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
             if(((assembly_struct->num_toks - 1) > cur_tok_chk) && check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_IS_REG)     \
             {                                                                                                                            \
                 assembly_struct->toks[cur_tok_chk].value = DEC;                                                                          \   
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                          \
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                          \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                          \
                 assembly_struct->cur_tok_chk++;                                                                                          \
             }                                                                                                                            \   
@@ -187,10 +173,10 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
         else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "CALL") == 0)                                                           \
         {                                                                                                                               \
             if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_CMD) && \
-                    (assembly_struct->toks[cur_tok_chk+1].text[(strlen(assembly_struct->toks[cur_tok_chk+1].text) - 1)] == ':'))        \
+                    (assembly_struct->toks[cur_tok_chk + 1].text[(strlen(assembly_struct->toks[cur_tok_chk+1].text) - 1)] == ':'))      \
             {                                                                                                                           \
                 assembly_struct->toks[cur_tok_chk].value = CALL;                                                                        \
-                assembly_struct->toks[cur_tok_chk].type  = cmd;                                                                         \   
+                assembly_struct->toks[cur_tok_chk].type  = CMD;                                                                         \   
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                         \
                 assembly_struct->cur_tok_chk++;                                                                                         \
             }                                                                                                                           \
@@ -204,7 +190,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
     #define DEF_CMD_FUNC                                                                                                                                                            \ 
         else if((assembly_struct->toks[cur_tok_chk].text[(strlen(assembly_struct->toks[cur_tok_chk].text) - 1)] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))   \
         {                                                                                                                                                                           \
-            assembly_struct->toks[cur_tok_chk].type = fnc;                                                                                                                          \
+            assembly_struct->toks[cur_tok_chk].type = FNC;                                                                                                                          \
             assembly_struct->toks[cur_tok_chk].value = 0;                                                                                                                           \
             strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                         \
             assembly_struct->cur_tok_chk++;                                                                                                                                         \
@@ -213,9 +199,9 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
     #define DEF_CMD_FLAG                                                                                                        \
         else if((assembly_struct->toks[cur_tok_chk].text[0] == ':') && (strlen(assembly_struct->toks[cur_tok_chk].text) > 1))   \
         {                                                                                                                       \
-            if(check_is_number(assembly_struct->toks[cur_tok_chk].text + 1) == TOKEN_IS_INT)                                    \
+            if(check_is_number(assembly_struct->toks[cur_tok_chk].text + 1) == ALL_DIGITS)                                      \
             {                                                                                                                   \
-                assembly_struct->toks[cur_tok_chk].type = flg;                                                                  \   
+                assembly_struct->toks[cur_tok_chk].type = FLG;                                                                  \   
                 assembly_struct->toks[cur_tok_chk].value = 0;                                                                   \
                 strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                 \
                 assembly_struct->cur_tok_chk++;                                                                                 \       
@@ -304,7 +290,7 @@ size_t dtor_asm(asm_struct* assembly_struct)
         assembly_struct->toks[i].new_index  = -1;
         strcpy((char*)assembly_struct->toks[i].status, "---");
         assembly_struct->toks[i].text  = nullptr;
-        assembly_struct->toks[i].type  = cmd;
+        assembly_struct->toks[i].type  = CMD;
         assembly_struct->toks[i].value = 0;
     }
 
@@ -394,16 +380,17 @@ void translate_to_asm(asm_struct* assembly_struct)
 size_t write_asm(asm_struct* assembly_struct) 
 {   
     put_new_index(assembly_struct); // Gets new indexes of all tokens
+    listing(assembly_struct);
 
     if(check_all_valid(assembly_struct) == ALL_TOKENS_VALID && check_flags(assembly_struct) == ALL_JMPS_OKEY && check_func(assembly_struct) == ALL_CALLS_OK && check_fnc_declaration(assembly_struct) == ALL_FUNCS_OK && 
         check_flag_declaration(assembly_struct) == ALL_FLAGS_OKEY) // Rules
-    {        
+    {         
         if(get_arr_bin_codes(assembly_struct) != STRUCT_OK)
         {
             return assembly_struct->err_code;
         }   
 
-        size_t new_num_cmd = get_new_num_toks(assembly_struct);
+        int new_num_cmd = get_new_num_toks(assembly_struct);
 
         int tokens_wrote = fwrite(assembly_struct->bin_codes, sizeof(int), new_num_cmd + 1, assembly_struct->translated_file);
 
@@ -426,7 +413,8 @@ size_t write_asm(asm_struct* assembly_struct)
 
 size_t get_arr_bin_codes(asm_struct* assembly_struct)
 {
-    size_t new_num_cmd = get_new_num_toks(assembly_struct);
+    int new_num_cmd = get_new_num_toks(assembly_struct);
+
     assembly_struct->bin_codes = (int*)calloc(new_num_cmd + 1, sizeof(int)); // Creates buffer for number of commands without jmp and func
 
     if(assembly_struct->bin_codes == nullptr)
@@ -448,6 +436,8 @@ size_t get_arr_bin_codes(asm_struct* assembly_struct)
             j++;
         }
     }
+
+    return 0;
 }
 
 void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
@@ -456,7 +446,7 @@ void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
 
     if(index_cmd == 0)
     {
-        if((assembly_struct->toks[index_cmd].type == flg) || (assembly_struct->toks[index_cmd].type == fnc))
+        if((assembly_struct->toks[index_cmd].type == FLG) || (assembly_struct->toks[index_cmd].type == FNC))
         {
             assembly_struct->toks[index_cmd].new_index = -1;
             return;
@@ -467,23 +457,23 @@ void new_index_tok(asm_struct* assembly_struct, size_t index_cmd)
             return;
         }
     }   
-    else if(assembly_struct->toks[index_cmd].type == cmd || assembly_struct->toks[index_cmd].type == val || assembly_struct->toks[index_cmd].type == reg || 
-                ((assembly_struct->toks[index_cmd].type == fnc) && (strcmp(assembly_struct->toks[index_cmd-1].text, "CALL") == 0)) || 
-                    ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JMP") == 0)) || 
-                        ((assembly_struct->toks[index_cmd].type == flg) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JZ") == 0)))
+    else if(assembly_struct->toks[index_cmd].type == CMD || assembly_struct->toks[index_cmd].type == VAL || assembly_struct->toks[index_cmd].type == REG || 
+                ((assembly_struct->toks[index_cmd].type == FNC) && (strcmp(assembly_struct->toks[index_cmd-1].text, "CALL") == 0)) || 
+                    ((assembly_struct->toks[index_cmd].type == FLG) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JMP") == 0)) || 
+                        ((assembly_struct->toks[index_cmd].type == FLG) && (strcmp(assembly_struct->toks[index_cmd-1].text, "JZ") == 0)))
     {
         for(size_t i = 0; i < index_cmd; i++)
         {
             if(i == 0)
             {
-                if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg)
+                if(assembly_struct->toks[i].type == CMD || assembly_struct->toks[i].type == VAL || assembly_struct->toks[i].type == REG)
                 {
                     new_index++;
                 }
             }  
-            else if(assembly_struct->toks[i].type == cmd || assembly_struct->toks[i].type == val || assembly_struct->toks[i].type == reg || 
-                        ((assembly_struct->toks[i].type == fnc) && (strcmp(assembly_struct->toks[i-1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == flg) && 
-                            (strcmp(assembly_struct->toks[i-1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == flg) && (strcmp(assembly_struct->toks[i-1].text, "JZ") == 0)))
+            else if(assembly_struct->toks[i].type == CMD || assembly_struct->toks[i].type == VAL || assembly_struct->toks[i].type == REG || 
+                        ((assembly_struct->toks[i].type == FNC) && (strcmp(assembly_struct->toks[i-1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == FLG) && 
+                            (strcmp(assembly_struct->toks[i-1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i-1].text, "JZ") == 0)))
             {
                 new_index++;
             }
@@ -510,13 +500,13 @@ void put_new_index(asm_struct* assembly_struct)
     }
 }
 
-size_t get_new_num_toks(asm_struct* assembly_struct)
+int get_new_num_toks(asm_struct* assembly_struct)
 {
-    size_t max = 0;
+    int max = 0;
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)   
     {
-        max = max <= assembly_struct->toks[i].new_index ? assembly_struct->toks[i].new_index : max;
+        max = (max <= assembly_struct->toks[i].new_index ? assembly_struct->toks[i].new_index : max);
     }
 
     return (max + 1); // The number of tokens with right indexes

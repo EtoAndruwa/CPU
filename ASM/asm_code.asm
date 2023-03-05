@@ -1,8 +1,15 @@
-PUSH 10
-PUSH ax
-PUSH [100+bx]
-POP [100+cx]
-POP ax
 ADD
-SUB
+:4
 HLT
+:3
+DUNCT:
+:2
+PUSH 10
+JMP :2
+CALL DUNCT:
+JMP :3
+JMP :4
+
+
+ADD
+CALL DUNCT:

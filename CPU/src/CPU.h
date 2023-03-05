@@ -57,11 +57,12 @@ typedef struct
     Stack* stack                = nullptr; /// \brief The pointer to the stack
     stack_type ram[RAM_SIZE]    = {};      /// \brief The array with cells of RAM
     int* bin_code               = {};      /// \brief The pointer to the array with binary codes 
-    int num_bin_cmd[1]          = {};      /// \brief The number of the commands in the array of the binary codes
+    int* num_bin_cmd            = nullptr;      /// \brief The number of the commands in the array of the binary codes
     size_t curr_cmd             = 0;       /// \brief The index of the current command in the array with binary codes  
     stack_type reg [REG_NUM]    = {};      /// \brief The array registers for values
     stack_type r_reg[R_REG_NUM] = {};      /// \brief The array with registers for adresses
     size_t error_code           = 0;       /// \brief The error code of the struct
+    FILE* bin_file              = nullptr;
 }CPU; 
 
 /**
@@ -76,31 +77,36 @@ typedef struct
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+/**
+ * @brief The codes of the asm commands
+ * 
+ */
 enum cmd
-{
-    HLT          = 0,  
+{  
     PUSH_ST      = 33, 
     PUSH_REG     = 65, 
     PUSH_RAM_VAL = 161, 
-    PUSH_RAM_REG = 193,
-    
-    POP_REG     = 66,
-    POP_RAM_VAL = 162,
-    POP_RAM_REG = 194,
+    PUSH_RAM_REG = 193, 
+    POP_REG      = 66, 
+    POP_ST       = 34,
+    POP_RAM_VAL  = 162,
+    POP_RAM_REG  = 194,
 
-    DEC  = 1,
-    JZ   = 2,
-    ADD  = 3,  
+    HLT  = 0,
+    PUSH = 1,
+    POP  = 2,
+    DEC  = 12,
+    JZ   = 13,
+    ADD  = 3, 
     SUB  = 4, 
     MUL  = 5, 
     DIV  = 6, 
     SQRT = 7, 
     OUT  = 8, 
-    INT  = 9,
-    RET  = 10, 
+    RET  = 10,
     JMP  = 11, 
     ax   = 21, 
-    bx   = 22, 
+    bx   = 22,  
     cx   = 23, 
     dx   = 24, 
     rax  = 25, 
@@ -126,8 +132,15 @@ enum error_code
     ERR_CANNOT_READ_CMD   = 11,
     ERR_CALLOC_BIN_CODE   = 12,
     ERR_CLOSE_BIN_FILE    = 13,
-    ERR_BIN_NULL_BEF_DTOR = 14
+    ERR_BIN_NULL_BEF_DTOR = 14,
 };
+
+// enum return_codes
+// {
+
+
+
+// };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -196,8 +209,9 @@ void pop_ram_val(CPU* CPU, size_t ram_index);
  * 
  * @param CPU The main struct which is containing all information about CPU struct
  * @param Stack The pointer to the stack from StackCtor
+ * @return size_t  Returns the error code of the function
  */
-void cpu_ctor(CPU* CPU, Stack* Stack);
+size_t cpu_ctor(CPU* CPU, Stack* Stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -233,8 +247,9 @@ void print_ram(CPU* CPU);
  * @brief Deletes all data about CPU struct and calls the StackDtor
  * 
  * @param CPU The main struct which is containing all information about CPU struct
+ * @return size_t Returns the error code of the function
  */
-void cpu_dtor(CPU* CPU);
+size_t cpu_dtor(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -242,8 +257,9 @@ void cpu_dtor(CPU* CPU);
  * @brief Reads all codes from the binary code file
  * 
  * @param CPU The main struct which is containing all information about CPU struct
+ * @return size_t Returns the error code of the function
  */
-void get_cmd_in_buf(CPU* CPU);
+size_t get_cmd_in_buf(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -332,8 +348,9 @@ void print_ram_screen(CPU* CPU);
  * @param FUNCT_NAME The name of the function which is called the dump
  * @param FUNCT_LINE The line from which the dump was called
  * @param FUNCT_FILE The file from which the dump was called
+ * @return size_t Returns the error code of the function
  */
-void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
+size_t dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -345,8 +362,9 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
  * @param FUNCT_LINE The line from which the dump was called
  * @param FUNCT_FILE The file from which the dump was called
  * @param error_code The error code of the struct
+ *@return size_t The error code of the function
  */
-void safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
+size_t safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

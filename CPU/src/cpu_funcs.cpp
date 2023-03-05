@@ -26,37 +26,32 @@ void jmp_flag_jz(CPU* CPU, size_t index_to_jmp)
     }
     else
     {
-        CPU->curr_cmd += 2;
+        CPU->curr_cmd += 2; 
     }
 }
 
-void dec(CPU* CPU, size_t reg_code)
+size_t dec(CPU* CPU, size_t reg_code)
 {
+    #define CMD_DEC(reg_code)                               \
+        case reg_code:                                      \
+            if(reg_code < rax)                              \
+            {                                               \
+                CPU->reg[reg_code - ax] -= MUL_CONST;       \
+                break;                                      \
+            }                                               \
+            else                                            \`
+            {                                               \
+                CPU->r_reg[reg_code - rax] -= MUL_CONST;    \
+                break;                                      \
+            }                                               \      
+
     switch (reg_code)
     {
-    case ax:
-        CPU->reg[0] -= MUL_CONST;
-        break;
-    case bx:
-        CPU->reg[1] -= MUL_CONST;
-        break;
-    case cx:
-        CPU->reg[2] -= MUL_CONST;
-        break;
-    case dx:
-        CPU->reg[3] -= MUL_CONST;
-        break;
-    case rax:
-        CPU->r_reg[0] -= MUL_CONST;
-        break;
-    case rbx:
-        CPU->r_reg[1] -= MUL_CONST;
-        break;
-    case rcx:
-        CPU->r_reg[2] -= MUL_CONST;
-        break;
+        #include ""    
+        #undef CMD_DEC
+
     default:
-        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
         break;
     }
 }

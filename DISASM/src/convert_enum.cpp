@@ -4,30 +4,25 @@ const char* enum_struct_err_to_string(size_t code) // for struct
 {
     switch(code)
     {
-        case STRUCT_OK:
-            return "STRUCT_OK";
-        case ERR_OPEN_BIN_FILE:
-            return "ERR_OPEN_BIN_FILE";
-        case ERR_CLOSE_BIN_FILE:
-            return "ERR_CLOSE_BIN_FILE";
-        case ERR_OPEN_DUMP_FILE:
-            return "ERR_OPEN_DUMP_FILE";
-        case ERR_CLOSE_DUMP_FILE:
-            return "ERR_CLOSE_DUMP_FILE";
-        case ERR_CALLOC_BIN_BUF:
-            return "ERR_CALLOC_BIN_BUF";
-        case ERR_INV_READ_NUM_CMD:
-            return "ERR_INV_READ_NUM_CMD";
-        case ERR_CANNOT_READ_CMD:
-            return "ERR_CANNOT_READ_CMD";
-        case ERR_CALLOC_COMMANDS:
-            return "ERR_CALLOC_COMMANDS";
-        case ERR_OPEN_ASM_FILE:
-            return "ERR_OPEN_ASM_FILE";
-        case ERR_CLOSE_ASM_FILE:
-            return "ERR_CLOSE_ASM_FILE";
+        #define DEF_CMD_STRING(code)      \
+            case code:                    \
+                return #code;             \
+
+        DEF_CMD_STRING(STRUCT_OK)
+        DEF_CMD_STRING(ERR_OPEN_BIN_FILE)
+        DEF_CMD_STRING(ERR_CLOSE_BIN_FILE)
+        DEF_CMD_STRING(ERR_OPEN_DUMP_FILE)
+        DEF_CMD_STRING(ERR_CLOSE_DUMP_FILE)
+        DEF_CMD_STRING(ERR_CALLOC_BIN_BUF)
+        DEF_CMD_STRING(ERR_INV_READ_NUM_CMD)
+        DEF_CMD_STRING(ERR_CANNOT_READ_CMD)
+        DEF_CMD_STRING(ERR_CALLOC_COMMANDS)
+        DEF_CMD_STRING(ERR_OPEN_ASM_FILE)
+        DEF_CMD_STRING(ERR_CLOSE_ASM_FILE)
+
+        #undef DEF_CMD_STRING
         default:
-            return "NEW_ERROR_CODE"; 
+            return "NEW_ERROR_CODE";
     }
 }
 
@@ -35,8 +30,6 @@ const char* get_cmd_string(size_t cmd_code)
 {
     switch(cmd_code)
     {
-        case HLT:
-            return "HLT";
         case PUSH_ST:
             return "PUSH";
         case PUSH_REG:
@@ -51,43 +44,30 @@ const char* get_cmd_string(size_t cmd_code)
             return "POP";
         case POP_RAM_REG:
             return "POP";
-        case DEC:
-            return "DEC";
-        case JZ:
-            return "JZ";
-        case ADD:
-            return "ADD";
-        case SUB:
-            return "SUB";
-        case MUL:
-            return "MUL";
-        case DIV:
-            return "DIV";
-        case SQRT:
-            return "SQRT";
-        case OUT:
-            return "OUT";
-        case RET:
-            return "RET";
-        case JMP:
-            return "JMP";
-        case ax:
-            return "ax";
-        case bx:
-            return "bx";
-        case cx:
-            return "cx";
-        case dx:
-            return "dx";
-        case rax:
-            return "rax";
-        case rbx:
-            return "rbx";
-        case rcx:
-            return "rcx";
-        case CALL:
-            return "CALL";
+        
+        #define DEF_CMD_STRING(cmd_code)      \
+            case cmd_code:                    \
+                return #cmd_code;             \
+
+        DEF_CMD_STRING(HLT)
+        DEF_CMD_STRING(DEC)
+        DEF_CMD_STRING(JZ)
+        DEF_CMD_STRING(ADD)
+        DEF_CMD_STRING(SUB)
+        DEF_CMD_STRING(MUL)
+        DEF_CMD_STRING(DIV)
+        DEF_CMD_STRING(SQRT)
+        DEF_CMD_STRING(OUT)
+        DEF_CMD_STRING(RET)
+        DEF_CMD_STRING(JMP)
+        DEF_CMD_STRING(AX)
+        DEF_CMD_STRING(BX)
+        DEF_CMD_STRING(CX)
+        DEF_CMD_STRING(DX)
+        DEF_CMD_STRING(CALL)
+
+        #undef DEF_CMD_STRING
         default:
-            return "NEW_CMD"; 
+            return "NEW_CMD";
     }
 }

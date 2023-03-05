@@ -1,6 +1,6 @@
 #include "stack.h"
 
-void StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and initializes stack
+size_t StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and initializes stack
 {   
     stack_struct->capacity = stack_size;
     stack_struct->stack_pointer = calloc(1, 2 * sizeof(size_t) + stack_struct->capacity * sizeof(stack_type)); 
@@ -10,7 +10,7 @@ void StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and initi
         stack_struct->error_code = ERR_TO_CALLOC_STACK;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         StackDtor(stack_struct);
-        exit(ERR_TO_CALLOC_STACK);
+        return stack_struct->error_code;
     }
 
     stack_struct->left_canary_position = (size_t*)stack_struct->stack_pointer;

@@ -12,7 +12,7 @@ int main()
     translate_to_asm(&asm_struct);
     max_len_tok(&asm_struct);
     write_asm(&asm_struct);
-    listing(&asm_struct); 
+    listing(&asm_struct);
 
     dtor_asm(&asm_struct);
 

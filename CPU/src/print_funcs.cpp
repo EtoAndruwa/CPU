@@ -59,7 +59,7 @@ void print_ram_screen(CPU* CPU)
     printf("\n\n----------------SCREEN-----------------\n\n");
 }
 
-void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE)
+size_t dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE)
 {
     FILE* dump_log = fopen(DUMP_NAME, "w");
 
@@ -68,7 +68,7 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
         printf("ERROR: %s cannot be openned", DUMP_NAME);
         CPU->error_code = ERR_OPEN_DUMP_FILE;
         cpu_dtor(CPU);
-        exit(ERR_OPEN_DUMP_FILE);
+        return CPU->error_code;
     }
     else
     {   
@@ -133,6 +133,6 @@ void dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNC
         printf("ERROR: %s cannot be closed", DUMP_NAME);
         CPU->error_code = ERR_CLOSE_DUMP_FILE;
         cpu_dtor(CPU);
-        exit(ERR_CLOSE_DUMP_FILE);
+        return CPU->error_code;
     }
 }

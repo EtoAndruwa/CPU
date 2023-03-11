@@ -29,13 +29,13 @@
 #include <math.h>
 #include <string.h>
 #include "../../STACK/src/stack.h"
+#include "DSL.h"
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 static const size_t RAM_SIZE        = 400;            /// \brief The size of the RAM
 static const size_t SCREEN_SIZE     = 20;             /// \brief The resolution of the screen   
 static const size_t REG_NUM         = 4;              /// \brief The number of general purpose registers
-static const size_t R_REG_NUM       = 3;              /// \brief The number of additional registers
 static const size_t STACK_SIZE      = 10;             /// \brief The capacity of the stack 
 static const size_t CALL_STACK_SIZE = 20;             /// \brief The capacity of the call stack 
 static const size_t MUL_CONST       = 100;            /// \brief Constant used in order to calculate with precision of 2 digits after the floating point
@@ -46,74 +46,10 @@ static const char* DUMP_NAME        = "dump_log.txt"; /// \brief The name of the
 #define FUNC_LINE __LINE__            /// \brief Used in order to get the line from which the error was called
 #define FUNC_FILE __FILE__            /// \brief Used in order ot get the file from which the error was called
 
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
-
-/**
- * @brief The main struct which is containing all information about CPU struct
- * 
- */
-typedef struct
-{
-    Stack* stack                = nullptr; /// \brief The pointer to the stack
-    stack_type ram[RAM_SIZE]    = {};      /// \brief The array with cells of RAM
-    int* bin_code               = {};      /// \brief The pointer to the array with binary codes 
-    int* num_bin_cmd            = nullptr;      /// \brief The number of the commands in the array of the binary codes
-    size_t curr_cmd             = 0;       /// \brief The index of the current command in the array with binary codes  
-    stack_type reg [REG_NUM]    = {};      /// \brief The array registers for values
-    stack_type r_reg[R_REG_NUM] = {};      /// \brief The array with registers for adresses
-    size_t error_code           = 0;       /// \brief The error code of the struct
-    FILE* bin_file              = nullptr;
-}CPU; 
-
-/**
- * @brief The struct which is used in order to control returns after call of the functions
- * 
- */
-typedef struct 
-{   
-    stack_type call_stack[CALL_STACK_SIZE] = {}; /// \brief The array of the call stack
-    size_t cur_index                       = 0;  /// \brief The current index in the call stack         
-}Call_stack;
-
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-/**
- * @brief The codes of the asm commands
- * 
- */
-enum cmd
-{  
-    PUSH_ST      = 33, 
-    PUSH_REG     = 65, 
-    PUSH_RAM_VAL = 161, 
-    PUSH_RAM_REG = 193, 
-    POP_REG      = 66, 
-    POP_ST       = 34,
-    POP_RAM_VAL  = 162,
-    POP_RAM_REG  = 194,
-
-    HLT  = 0,
-    PUSH = 1,
-    POP  = 2,
-    DEC  = 12,
-    JZ   = 13,
-    ADD  = 3, 
-    SUB  = 4, 
-    MUL  = 5, 
-    DIV  = 6, 
-    SQRT = 7, 
-    OUT  = 8, 
-    RET  = 10,
-    JMP  = 11, 
-    ax   = 21, 
-    bx   = 22,  
-    cx   = 23, 
-    dx   = 24, 
-    rax  = 25, 
-    rbx  = 26, 
-    rcx  = 27, 
-    CALL = 30  
-};
+#define DEF_CMD_ID_CODE
+#include "../../ASM/src/enums.h"
 
 
 enum error_code
@@ -135,12 +71,33 @@ enum error_code
     ERR_BIN_NULL_BEF_DTOR = 14,
 };
 
-// enum return_codes
-// {
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
 
+/**
+ * @brief The main struct which is containing all information about CPU struct
+ * 
+ */
+typedef struct
+{
+    Stack* stack                = nullptr; /// \brief The pointer to the stack
+    FILE* bin_file              = nullptr; /// \breif 
+    int  num_bin_cmd[1]         = {}; /// \brief The number of the commands in the array of the binary codes
+    stack_type ram[RAM_SIZE]    = {};      /// \brief The array with cells of RAM
+    int* bin_code               = {};      /// \brief The pointer to the array with binary codes 
+    stack_type reg [REG_NUM]    = {};      /// \brief The array registers for values
+    size_t curr_cmd             = 0;       /// \brief The index of the current command in the array with binary codes  
+    size_t error_code           = 0;       /// \brief The error code of the struct
+}CPU; 
 
-
-// };
+/**
+ * @brief The struct which is used in order to control returns after call of the functions
+ * 
+ */
+typedef struct 
+{   
+    stack_type call_stack[CALL_STACK_SIZE] = {}; /// \brief The array of the call stack
+    size_t cur_index                       = 0;  /// \brief The current index in the call stack         
+}Call_stack;
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -150,7 +107,7 @@ enum error_code
  * @param CPU The main struct which is containing all information about CPU struct
  * @param reg_code The code of the register
  */
-void pop_reg(CPU* CPU, size_t reg_code);
+size_t pop_reg(CPU* CPU, size_t reg_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -160,7 +117,7 @@ void pop_reg(CPU* CPU, size_t reg_code);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param reg_code The code of the register
  */
-void push_reg(CPU* CPU, size_t reg_code);
+size_t push_reg(CPU* CPU, size_t reg_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -170,7 +127,7 @@ void push_reg(CPU* CPU, size_t reg_code);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param ram_index The index of the RAM cell whose value will be pushed to the stack
  */
-void push_ram_val(CPU* CPU, size_t ram_index); 
+size_t push_ram_val(CPU* CPU, size_t ram_index); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -180,7 +137,7 @@ void push_ram_val(CPU* CPU, size_t ram_index);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param reg_id The code of the register whose value will be used in order to address to the RAM
  */
-void push_ram_reg(CPU* CPU, size_t reg_id); 
+size_t push_ram_reg(CPU* CPU, size_t reg_id); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -190,7 +147,7 @@ void push_ram_reg(CPU* CPU, size_t reg_id);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param reg_id The code of the register whose value will be used in order to address to the RAM
  */
-void pop_ram_reg(CPU* CPU, size_t reg_id); 
+size_t pop_ram_reg(CPU* CPU, size_t reg_id); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -200,7 +157,7 @@ void pop_ram_reg(CPU* CPU, size_t reg_id);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param ram_index The index of the RAM cell to which will be pushed the value from the stack
  */
-void pop_ram_val(CPU* CPU, size_t ram_index); 
+size_t pop_ram_val(CPU* CPU, size_t ram_index); 
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -249,7 +206,7 @@ void print_ram(CPU* CPU);
  * @param CPU The main struct which is containing all information about CPU struct
  * @return size_t Returns the error code of the function
  */
-size_t cpu_dtor(CPU* CPU);
+void cpu_dtor(CPU* CPU);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -269,7 +226,7 @@ size_t get_cmd_in_buf(CPU* CPU);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param Call_stack The pointer to the call stack
  */
-void cpu_work(CPU* CPU, Call_stack* Call_stack);
+size_t cpu_work(CPU* CPU, Call_stack* Call_stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -298,7 +255,7 @@ void print_call_stack(Call_stack* Call_stack);
  * @param Call_stack The pointer to the call stack
  * @param index_to_jmp The index of return that will be pushed to the call stack
  */
-void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
+size_t push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -308,7 +265,7 @@ void push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param Call_stack The pointer to the call stack array
  */
-void jmp_ret(CPU* CPU, Call_stack* Call_stack);
+size_t jmp_ret(CPU* CPU, Call_stack* Call_stack);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -384,8 +341,17 @@ void jmp_flag_jz(CPU* CPU, size_t index_to_jmp);
  * @param CPU The main struct which is containing all information about CPU struct
  * @param reg_code The code of the register 
  */
-void dec(CPU* CPU, size_t reg_code);
+size_t dec(CPU* CPU, size_t reg_code);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+size_t ram_reg_func(CPU* CPU, int func_id, size_t shift_value);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+size_t push_ram_reg_val(CPU* CPU, int push_id, size_t shift_value);
+
+size_t pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value);
 
 #endif

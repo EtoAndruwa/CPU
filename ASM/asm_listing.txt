@@ -1,20 +1,13 @@
-| ID |		COMMAND		|    TYPE    |		ASM		|    STATUS    |
-|0000|		ADD    		|    CMD     |		3  		|      OK      |
-|-001|		:4     		|    FLG     |		0  		|      OK      |
-|0001|		HLT    		|    CMD     |		0  		|      OK      |
-|-001|		:3     		|    FLG     |		0  		|      OK      |
-|-001|		DUNCT: 		|    FNC     |		0  		|      OK      |
-|-001|		:2     		|    FLG     |		0  		|      OK      |
-|0002|		PUSH   		|    CMD     |		33 		|      OK      |
-|0003|		10     		|    VAL     |		10 		|      OK      |
-|0004|		JMP    		|    CMD     |		11 		|      OK      |
-|0005|		:2     		|    FLG     |		2  		|      OK      |
-|0006|		CALL   		|    CMD     |		30 		|      OK      |
-|0007|		DUNCT: 		|    FNC     |		2  		|      OK      |
-|0008|		JMP    		|    CMD     |		11 		|      OK      |
-|0009|		:3     		|    FLG     |		2  		|      OK      |
-|0010|		JMP    		|    CMD     |		11 		|      OK      |
-|0011|		:4     		|    FLG     |		1  		|      OK      |
-|0012|		ADD    		|    CMD     |		3  		|      OK      |
-|0013|		CALL   		|    CMD     |		30 		|      OK      |
-|0014|		DUNCT: 		|    FNC     |		2  		|      OK      |
+| ID |		COMMAND 		|    TYPE    |		ASM 		|    STATUS    |
+|000|		PUSH    		|    CMD     |		33  		|      OK      |
+|001|		10      		|    VAL     |		10  		|      OK      |
+|002|		PUSH    		|    CMD     |		33  		|      OK      |
+|003|		20      		|    VAL     |		20  		|      OK      |
+|004|		PUSH    		|    CMD     |		33  		|      OK      |
+|005|		1       		|    VAL     |		1   		|      OK      |
+|006|		POP     		|    CMD     |		66  		|      OK      |
+|007|		ax      		|    REG     |		21  		|      OK      |
+|008|		POP     		|    CMD     |		226 		|      OK      |
+|009|		[100+ax]		|    REG     |		100 		|      OK      |
+|010|		OUT     		|    CMD     |		8   		|      OK      |
+|011|		HLT     		|    CMD     |		0   		|      OK      |

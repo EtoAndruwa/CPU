@@ -1,6 +1,12 @@
 #ifndef ASSEMBLER_H
 #define ASSEMBLER_H
 
+#define DEF_ASM_STRUCT_ERR_CODE
+#define DEF_TOKEN_TYPE
+#define DEF_TOKEN_ERR_CODE
+#define DEF_RET_CODES_ASM
+#define DEF_CMD_ID_CODE
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /**

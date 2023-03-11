@@ -1,7 +1,5 @@
 #include "assembler.h"
 
-
-
 size_t file_openning_check(asm_struct* assembly_struct) 
 {   
     FILE* asm_code = fopen(FILE_ASM_NAME, "rb"); // Opens the file with text

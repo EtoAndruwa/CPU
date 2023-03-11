@@ -8,13 +8,7 @@ void print_cpu_data(CPU* CPU)
     printf("\nREGS:\n");
     for(size_t i = 0; i < REG_NUM; i++)
     {
-        printf("reg[%ld] = %d\n", ax + i, CPU->reg[i]);
-    }
-
-    printf("\nR_REGS:\n");
-    for(size_t i = 0; i < R_REG_NUM; i++)
-    {
-        printf("r_reg[%ld] = %d\n", rax + i, CPU->r_reg[i]);
+        printf("reg[%ld] = %d\n", AX + i, CPU->reg[i]);
     }
 }
 
@@ -65,7 +59,6 @@ size_t dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FU
 
     if (dump_log == nullptr)
     {
-        printf("ERROR: %s cannot be openned", DUMP_NAME);
         CPU->error_code = ERR_OPEN_DUMP_FILE;
         cpu_dtor(CPU);
         return CPU->error_code;
@@ -75,7 +68,7 @@ size_t dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FU
         fprintf(dump_log, "\n------------STRUCT_DATA------------\n");
         fprintf(dump_log, "Error code: %ld (%s)\n", CPU->error_code, convert_enum_cpu(CPU->error_code));
         fprintf(dump_log, "Current command: %ld\n", CPU->curr_cmd);
-        fprintf(dump_log, "Number of commands: %d\n", *CPU->num_bin_cmd);
+        fprintf(dump_log, "Number of commands: %d\n", CPU->num_bin_cmd[0]);
         fprintf(dump_log, "Pointer to the bin code: %p\n", CPU->bin_code);
         fprintf(dump_log, "Pointer to the stack: %p\n", CPU->stack);
         fprintf(dump_log, "------------STRUCT_DATA------------\n");
@@ -94,13 +87,6 @@ size_t dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FU
             fprintf(dump_log, "REG[%ld] = %d\n", i, CPU->reg[i]);
         }
         fprintf(dump_log, "------------REGS------------\n");
-
-        fprintf(dump_log, "\n------------R_REGS------------\n");
-        for(size_t i = 0; i < R_REG_NUM; i++)
-        {
-            fprintf(dump_log, "R_REG[%ld] = %d\n", i, CPU->r_reg[i]);
-        }
-        fprintf(dump_log, "------------R_REGS------------\n");
 
         fprintf(dump_log, "\n------------STACK------------\n");
         for(size_t i = 0; i < CPU->stack->capacity; i++)
@@ -130,7 +116,6 @@ size_t dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FU
 
     if(fclose(dump_log) == EOF)
     {
-        printf("ERROR: %s cannot be closed", DUMP_NAME);
         CPU->error_code = ERR_CLOSE_DUMP_FILE;
         cpu_dtor(CPU);
         return CPU->error_code;

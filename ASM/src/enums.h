@@ -3,6 +3,7 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef DEF_ASM_STRUCT_ERR_CODE
 /**
  * @brief The enum used in order to determine the type of error connected with files
  */
@@ -26,7 +27,9 @@ enum asm_errors
     ERR_OPEN_LISTING          = 15,
     ERR_CLOSE_LISTING         = 16
 };
+#endif
 
+#ifdef DEF_TOKEN_TYPE
 /**
  * @brief The enum used in order to determine the type of token (command, register or value)
  */
@@ -39,7 +42,9 @@ enum type
     FLG   = 4, /// \brief 'flag'
     FNC   = 5, /// \brief 'function'
 };
+#endif
 
+#ifdef DEF_TOKEN_ERR_CODE
 /**
  * @brief The enum is used in order to determine the error connected with token
  */
@@ -62,7 +67,9 @@ enum token_error_code
     ERR_FIRST_DECL_OF_FLAG       = 14,
     ERR_INVAL_RAM_ADDRESSING     = 15,
 };  
+#endif
 
+#ifdef DEF_RET_CODES_ASM
 /**
  * @brief The enum codes for function's returns 
  * 
@@ -95,7 +102,9 @@ enum ret_codes
     ALL_DIGITS         = 23,
     NOT_ALL_DIGITS     = 24
 };
+#endif
 
+#ifdef DEF_CMD_ID_CODE
 /**
  * @brief The codes of the asm commands
  * 
@@ -119,9 +128,24 @@ enum cmd
     BX   = 22,
     CX   = 23,
     DX   = 24,
-    CALL = 30  
+    CALL = 30,
+    PUSH_ST       = PUSH | (1 << 5), 
+    PUSH_REG      = PUSH | (1 << 6),
+    PUSH_RAM_REG  = PUSH | (3 << 6),
+    PUSH_RAM_VAL  = PUSH | (5 << 5),
+    PUSH_RAM_V_R_A  = 225,
+    POP_RAM_V_R_A   = 226,
+    PUSH_RAM_V_R_B  = 229,
+    POP_RAM_V_R_B   = 230,
+    PUSH_RAM_V_R_C  = 233,
+    POP_RAM_V_R_C   = 234,
+    PUSH_RAM_V_R_D  = 241,
+    POP_RAM_V_R_D   = 242,
+    POP_RAM_REG   = POP | (3 << 6),
+    POP_RAM_VAL   = POP | (5 << 5),
+    POP_REG       = POP | (1 << 6),
 };
-
+#endif
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

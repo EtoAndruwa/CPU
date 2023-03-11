@@ -29,6 +29,8 @@ size_t StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and ini
     }
 
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+
+    return 0;
 }
 
 void StackDtor(Stack* stack_struct) // (OK) Deletes the stack and spoils all stack's data with the poison value

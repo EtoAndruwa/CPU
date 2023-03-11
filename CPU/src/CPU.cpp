@@ -6,91 +6,27 @@ size_t check_code_file(CPU* CPU)
 
     if(bin_file_ptr == nullptr)
     {
-        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_OPEN_BIN_FILE);
+        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_OPEN_BIN_FILE);
     }
     else
     {   
         CPU->bin_file = bin_file_ptr;
+        return 0;
     }
 }
 
-void cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
+size_t cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
 {
+    #define DEF_CMD(name, body) case name: body; break;
+
     switch (cmd_code)
     {
-    case PUSH_ST: 
-        StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST);
-        CPU->curr_cmd = CPU->curr_cmd + 2;
-        break;
-    case PUSH_REG: 
-        push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
-        CPU->curr_cmd = CPU->curr_cmd + 2;
-        break;
-    case POP_REG: 
-        pop_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
-        CPU->curr_cmd = CPU->curr_cmd + 2;
-        break;
-// CODEGENERATION
-    // case ADD: 
-    //     StackAdd(CPU->stack);
-    //     CPU->curr_cmd++;
-    //     break;
-    // case MUL: 
-    //     StackMul(CPU->stack);
-    //     CPU->curr_cmd++;
-    //     break;
-    // case OUT: 
-    //     StackOut(CPU->stack);
-    //     CPU->curr_cmd++;
-    //     break;
-    // case DIV: 
-    //     StackDiv(CPU->stack);
-    //     CPU->curr_cmd++;
-    //     break;
-    // case SQRT: 
-    //     StackSqrt(CPU->stack);
-    //     CPU->curr_cmd++;
-    //     break;
-    // case SUB: 
-    //     StackSub(CPU->stack);
-    //     CPU->curr_cmd++;
-    //     break;
-    case CALL: 
-        push_ret(CPU, Call_stack, CPU->curr_cmd + 2);
-        CPU->curr_cmd = CPU->bin_code[CPU->curr_cmd + 1];
-        break;
-    case RET:
-        jmp_ret(CPU, Call_stack);
-        break;
-    case JMP:
-        jmp_flag(CPU, CPU->curr_cmd + 1);
-        break;
-    case JZ:
-        jmp_flag_jz(CPU, CPU->curr_cmd + 1);
-        break;
-    case DEC:
-        dec(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
-        CPU->curr_cmd = CPU->curr_cmd + 2;
-        break;
-// CODEGENERATIOM
-    // case PUSH_RAM_REG:
-    //     push_ram_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
-    //     CPU->curr_cmd = CPU->curr_cmd + 2;
-    //     break;
-    // case PUSH_RAM_VAL:
-    //     push_ram_val(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
-    //     CPU->curr_cmd = CPU->curr_cmd + 2;
-    //     break;
-    // case POP_RAM_REG:
-    //     pop_ram_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
-    //     CPU->curr_cmd = CPU->curr_cmd + 2;
-    //     break;
-    // case POP_RAM_VAL:
-    //     pop_ram_val(CPU, CPU->bin_code[CPU->curr_cmd + 1]);
-    //     CPU->curr_cmd = CPU->curr_cmd + 2;
-    //     break;
+
+    #include "gen_cmd.h"
+    #undef DEF_CMD
+
     default:
-        safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_UNKNOWN_CMD);
+        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_UNKNOWN_CMD);
     }
 }
 
@@ -100,43 +36,52 @@ size_t get_cmd_in_buf(CPU* CPU)
     {
         return CPU->error_code;
     }
-
     if(fread(CPU->num_bin_cmd, sizeof(int), 1, CPU->bin_file) != 1)
     {
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INV_READ_NUM_CMD);
     }
-
-    CPU->bin_code = (int*)calloc(*CPU->num_bin_cmd, sizeof(int));
+    CPU->bin_code = (int*)calloc(CPU->num_bin_cmd[0], sizeof(int));
 
     if(CPU->bin_code == nullptr)    
     {
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALLOC_BIN_CODE);
     }
 
-    if(fread(CPU->bin_code, sizeof(int), *CPU->num_bin_cmd, CPU->bin_file) != *CPU->num_bin_cmd)
+    if(fread(CPU->bin_code, sizeof(int), CPU->num_bin_cmd[0], CPU->bin_file) != *CPU->num_bin_cmd)
     {
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CANNOT_READ_CMD);
     }
-
     if(fclose(CPU->bin_file) == EOF)
     {
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CLOSE_BIN_FILE);
     }
     CPU->bin_file = nullptr;
+
+    return 0;
 }
 
-void cpu_work(CPU* CPU, Call_stack* Call_stack)
+size_t cpu_work(CPU* CPU, Call_stack* Call_stack)
 {
     while(CPU->bin_code[CPU->curr_cmd] != HLT)
     {
-        cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU, Call_stack);
+        size_t error_code = cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU, Call_stack);
+        // if(error_code != 0)
+        // {
+        //     return error_code;
+        // }
     }
+    return 0;
 }
 
 size_t safe_exit(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE, size_t error_code)
 {
     CPU->error_code = error_code;
-    dump_cpu(CPU, FUNCT_NAME, FUNCT_LINE, FUNCT_FILE);
+    if(dump_cpu(CPU, FUNCT_NAME, FUNCT_LINE, FUNCT_FILE) != 0)
+    {
+        return CPU->error_code;
+    }
     cpu_dtor(CPU);
+
     return CPU->error_code;
 }
+

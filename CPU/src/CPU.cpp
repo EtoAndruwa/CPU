@@ -65,10 +65,10 @@ size_t cpu_work(CPU* CPU, Call_stack* Call_stack)
     while(CPU->bin_code[CPU->curr_cmd] != HLT)
     {
         size_t error_code = cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU, Call_stack);
-        // if(error_code != 0)
-        // {
-        //     return error_code;
-        // }
+        if(error_code != 0)
+        {
+            return error_code;
+        }
     }
     return 0;
 }

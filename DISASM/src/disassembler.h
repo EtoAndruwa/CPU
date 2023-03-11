@@ -15,8 +15,8 @@
 #define FUNC_FILE __FILE__                  /// \brief Defines the name of the file from which dump was called 
 
 static const char* FILE_DUMP_NAME = "dump_log.txt";
-static const char* FILE_ASM_NAME = "asm_code.asm";
-static const size_t POISON = 0xDED;
+static const char* FILE_ASM_NAME  = "asm_code.asm";
+static const size_t POISON        = 0xDED;
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -26,17 +26,17 @@ static const size_t POISON = 0xDED;
  */
 enum error
 {
-    STRUCT_OK = 0,
-    ERR_OPEN_BIN_FILE = 1,
-    ERR_CLOSE_BIN_FILE = 2,
-    ERR_OPEN_DUMP_FILE = 3,
-    ERR_CLOSE_DUMP_FILE = 4,
-    ERR_CALLOC_BIN_BUF  = 5,
-    ERR_INV_READ_NUM_CMD =6,
-    ERR_CANNOT_READ_CMD = 7,   
-    ERR_CALLOC_COMMANDS = 8,
-    ERR_OPEN_ASM_FILE   = 9,
-    ERR_CLOSE_ASM_FILE  = 10,
+    STRUCT_OK            = 0,
+    ERR_OPEN_BIN_FILE    = 1,
+    ERR_CLOSE_BIN_FILE   = 2,
+    ERR_OPEN_DUMP_FILE   = 3,
+    ERR_CLOSE_DUMP_FILE  = 4,
+    ERR_CALLOC_BIN_BUF   = 5,
+    ERR_INV_READ_NUM_CMD = 6,
+    ERR_CANNOT_READ_CMD  = 7,   
+    ERR_CALLOC_COMMANDS  = 8,
+    ERR_OPEN_ASM_FILE    = 9,
+    ERR_CLOSE_ASM_FILE   = 10,
 };
 
 /**
@@ -74,59 +74,18 @@ typedef struct disasm_struct
 {
     int* bin_codes_buf   = nullptr;
     command* commands    = nullptr;
+    FILE* bin_file_ptr   = nullptr;
     int num_bin_cmd[1]   = {};
     size_t error_code    = STRUCT_OK;
     size_t cur_cmd_index = 0;
 }disasm_struct;
 
-/**
- * @brief 
- * 
- */
-enum cmd
-{
-    PUSH_ST      = 33, 
-    PUSH_REG     = 65, 
-    PUSH_RAM_VAL = 161, 
-    PUSH_RAM_REG = 193, 
-    
-    POP_REG     = 66,
-    POP_RAM_VAL = 162,
-    POP_RAM_REG = 194,
-
-    HLT  = 0,
-    PUSH = 1,
-    POP  = 2,
-    ADD  = 3, 
-    SUB  = 4, 
-    MUL  = 5, 
-    DIV  = 6, 
-    SQRT = 7, 
-    OUT  = 8, 
-    RET  = 10,
-    JMP  = 11, 
-    DEC  = 12,
-    JZ   = 13,
-    AX   = 21,
-    BX   = 22,
-    CX   = 23,
-    DX   = 24,
-    CALL = 30 
-};
+#define DEF_CMD_ID_CODE
+#include "../../ASM/src/enums.h"
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-FILE* check_code_file(disasm_struct* disasm_struct);
-
-/**
- * @brief 
- * 
- * @param assembly_struct 
- * @param FUNCT_NAME 
- * @param FUNCT_LINE 
- * @param FUNCT_FILE 
- */
-void dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
+size_t check_code_file(disasm_struct* disasm_struct);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -260,5 +219,11 @@ void print_flag_func(disasm_struct* disasm_struct, FILE* asm_file);
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 char* get_reg_inner_ram(int command_code);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+size_t dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 #endif

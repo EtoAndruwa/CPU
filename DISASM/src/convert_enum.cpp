@@ -22,7 +22,7 @@ const char* enum_struct_err_to_string(size_t code) // for struct
 
         #undef DEF_CMD_STRING
         default:
-            return "NEW_ERROR_CODE";
+            return "NEW_ERROR_CODE\n";
     }
 }
 
@@ -31,7 +31,23 @@ const char* get_cmd_string(size_t cmd_code)
     switch(cmd_code)
     {
         case PUSH_ST:
+            return "PUSH";   
+        case PUSH_RAM_V_R_A:
             return "PUSH";
+        case PUSH_RAM_V_R_B:
+            return "PUSH";
+        case PUSH_RAM_V_R_C:
+            return "PUSH";
+        case PUSH_RAM_V_R_D:
+            return "PUSH";
+        case POP_RAM_V_R_A:
+            return "POP";
+        case POP_RAM_V_R_B:
+            return "POP";
+        case POP_RAM_V_R_C:
+            return "POP";
+        case POP_RAM_V_R_D:
+            return "POP";
         case PUSH_REG:
             return "PUSH";
         case PUSH_RAM_VAL:

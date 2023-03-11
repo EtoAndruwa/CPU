@@ -1,106 +1,184 @@
-==1539== Memcheck, a memory error detector
-==1539== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==1539== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==1539== Command: ./ASM.exe
-==1539== Parent PID: 1538
-==1539== 
-==1539== error calling PR_SET_PTRACER, vgdb might block
-==1539== Invalid write of size 1
-==1539==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
-==1539==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539==  Address 0x4a8e8e7 is 0 bytes after a block of size 7 alloc'd
-==1539==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1539==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
-==1539==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539== 
-==1539== Invalid write of size 1
-==1539==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
-==1539==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539==  Address 0x4a8e987 is 0 bytes after a block of size 7 alloc'd
-==1539==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1539==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
-==1539==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539== 
-==1539== Invalid write of size 1
-==1539==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
-==1539==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539==  Address 0x4a8ea27 is 0 bytes after a block of size 7 alloc'd
-==1539==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1539==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
-==1539==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539== 
-==1539== Conditional jump or move depends on uninitialised value(s)
-==1539==    at 0x10CB75: check_all_valid(asm_struct*) (check_toks.cpp:40)
-==1539==    by 0x10C13E: write_asm(asm_struct*) (assembler.cpp:383)
-==1539==    by 0x10EEFE: main (main.cpp:14)
-==1539== 
-==1539== 
-==1539== HEAP SUMMARY:
-==1539==     in use at exit: 0 bytes in 0 blocks
-==1539==   total heap usage: 28 allocs, 28 frees, 7,822 bytes allocated
-==1539== 
-==1539== All heap blocks were freed -- no leaks are possible
-==1539== 
-==1539== ERROR SUMMARY: 14 errors from 4 contexts (suppressed: 0 from 0)
-==1539== 
-==1539== 1 errors in context 1 of 4:
-==1539== Invalid write of size 1
-==1539==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
-==1539==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539==  Address 0x4a8ea27 is 0 bytes after a block of size 7 alloc'd
-==1539==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1539==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
-==1539==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539== 
-==1539== 
-==1539== 1 errors in context 2 of 4:
-==1539== Invalid write of size 1
-==1539==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
-==1539==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539==  Address 0x4a8e987 is 0 bytes after a block of size 7 alloc'd
-==1539==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1539==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
-==1539==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539== 
-==1539== 
-==1539== 1 errors in context 3 of 4:
-==1539== Invalid write of size 1
-==1539==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
-==1539==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539==  Address 0x4a8e8e7 is 0 bytes after a block of size 7 alloc'd
-==1539==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1539==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
-==1539==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
-==1539==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
-==1539==    by 0x10EEE6: main (main.cpp:12)
-==1539== 
-==1539== 
-==1539== 11 errors in context 4 of 4:
-==1539== Conditional jump or move depends on uninitialised value(s)
-==1539==    at 0x10CB75: check_all_valid(asm_struct*) (check_toks.cpp:40)
-==1539==    by 0x10C13E: write_asm(asm_struct*) (assembler.cpp:383)
-==1539==    by 0x10EEFE: main (main.cpp:14)
-==1539== 
-==1539== ERROR SUMMARY: 14 errors from 4 contexts (suppressed: 0 from 0)
+==2143== Memcheck, a memory error detector
+==2143== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2143== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2143== Command: ./ASM.exe
+==2143== Parent PID: 2142
+==2143== 
+==2143== error calling PR_SET_PTRACER, vgdb might block
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x109B1F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8de36 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x109B1F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x109C0E: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8ded6 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x109C0E: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x109CFD: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8df76 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x109CFD: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8e016 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8e0b6 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8e156 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== Conditional jump or move depends on uninitialised value(s)
+==2143==    at 0x10CB75: check_all_valid(asm_struct*) (check_toks.cpp:40)
+==2143==    by 0x10C13E: write_asm(asm_struct*) (assembler.cpp:383)
+==2143==    by 0x10EEFE: main (main.cpp:14)
+==2143== 
+==2143== 
+==2143== HEAP SUMMARY:
+==2143==     in use at exit: 0 bytes in 0 blocks
+==2143==   total heap usage: 29 allocs, 29 frees, 5,406 bytes allocated
+==2143== 
+==2143== All heap blocks were freed -- no leaks are possible
+==2143== 
+==2143== ERROR SUMMARY: 12 errors from 7 contexts (suppressed: 0 from 0)
+==2143== 
+==2143== 1 errors in context 1 of 7:
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8e156 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x10A2FE: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== 
+==2143== 1 errors in context 2 of 7:
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8e0b6 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x10A20F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== 
+==2143== 1 errors in context 3 of 7:
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8e016 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x10A120: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:4)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== 
+==2143== 1 errors in context 4 of 7:
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x109CFD: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8df76 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x109CFD: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== 
+==2143== 1 errors in context 5 of 7:
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x109C0E: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8ded6 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x109C0E: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== 
+==2143== 1 errors in context 6 of 7:
+==2143== Invalid write of size 1
+==2143==    at 0x10CFD2: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:126)
+==2143==    by 0x109B1F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143==  Address 0x4a8de36 is 0 bytes after a block of size 6 alloc'd
+==2143==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2143==    by 0x10CF54: check_ram(asm_struct*, char*, unsigned long) (check_toks.cpp:115)
+==2143==    by 0x109B1F: get_token_value(asm_struct*, unsigned long) (gen_cmd.h:3)
+==2143==    by 0x10C0F1: translate_to_asm(asm_struct*) (assembler.cpp:374)
+==2143==    by 0x10EEE6: main (main.cpp:12)
+==2143== 
+==2143== 
+==2143== 6 errors in context 7 of 7:
+==2143== Conditional jump or move depends on uninitialised value(s)
+==2143==    at 0x10CB75: check_all_valid(asm_struct*) (check_toks.cpp:40)
+==2143==    by 0x10C13E: write_asm(asm_struct*) (assembler.cpp:383)
+==2143==    by 0x10EEFE: main (main.cpp:14)
+==2143== 
+==2143== ERROR SUMMARY: 12 errors from 7 contexts (suppressed: 0 from 0)

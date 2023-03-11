@@ -1,7 +1,4 @@
 PUSH 10
-PUSH 20
-PUSH 1
-POP ax
-POP [100+ax]
-OUT
+PUSH [10+ax]
+POP [bx+20]
 HLT

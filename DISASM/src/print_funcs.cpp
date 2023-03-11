@@ -1,6 +1,6 @@
 #include "disassembler.h"
 
-void dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) 
+size_t dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) 
 {
     FILE* logfile = fopen(FILE_DUMP_NAME, "wb");
 
@@ -9,7 +9,7 @@ void dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT
         printf("ERROR: %s cannot be openned\n" , FILE_DUMP_NAME);
         disasm_struct->error_code = ERR_OPEN_DUMP_FILE;
         disasm_dtor(disasm_struct);
-        exit(ERR_OPEN_DUMP_FILE);
+        return disasm_struct->error_code;
     }
     else
     {
@@ -31,7 +31,7 @@ void dump_disasm(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT
         printf("ERROR: %s cannot be closed\n", FILE_DUMP_NAME);
         disasm_struct->error_code = ERR_CLOSE_DUMP_FILE;
         disasm_dtor(disasm_struct);
-        exit(ERR_CLOSE_DUMP_FILE);
+        return disasm_struct->error_code;
     }
 }
 
@@ -79,7 +79,15 @@ size_t write_asm(disasm_struct* disasm_struct)
                 }
                 else if(disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type != CMD)
                 {
-                    disasm_struct->cur_cmd_index++;
+                    if(disasm_struct->cur_cmd_index + 1 < *disasm_struct->num_bin_cmd)
+                    {
+                        disasm_struct->cur_cmd_index++;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
                     switch(disasm_struct->commands[disasm_struct->cur_cmd_index].type)
                     {
                         case VAL:
@@ -104,6 +112,12 @@ size_t write_asm(disasm_struct* disasm_struct)
                             break;
                         case RAM_VAL_REG:
                             fprintf(asm_file, " [%d+%s]", disasm_struct->commands[disasm_struct->cur_cmd_index].value, get_reg_inner_ram(disasm_struct->commands[disasm_struct->cur_cmd_index - 1].value));
+                            disasm_struct->cur_cmd_index++;
+                            fprintf(asm_file, "\n");
+                            break;
+                        default:
+                            printf("Type: %d\n\n\n", disasm_struct->commands[disasm_struct->cur_cmd_index].type);
+                            fprintf(asm_file, "\nERROR CODE DETECTED\n");
                             disasm_struct->cur_cmd_index++;
                             fprintf(asm_file, "\n");
                             break;

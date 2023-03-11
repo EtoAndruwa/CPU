@@ -16,7 +16,7 @@ DIR_DISASM = ./DISASM/
 
 TARGET = PROCESSOR 
 
-all :  Make_ASM Make_CPU
+all :  Make_ASM Make_DISASM Make_CPU
 
 Make_ASM: 
 	cd $(DIR_ASM) && make

@@ -1,29 +1,34 @@
 #include "disassembler.h"
 
-FILE* check_code_file(disasm_struct* disasm_struct)
+size_t check_code_file(disasm_struct* disasm_struct)
 {
     FILE* bin_file_ptr = fopen("../ASM/bin_code.bin", "rb"); 
 
     if(bin_file_ptr == nullptr)
     {
-        printf("ERROR CHECK CODE FILE");
+        disasm_struct->error_code = ERR_OPEN_BIN_FILE;
+        return disasm_struct->error_code;
     }
     else
     {   
-        return bin_file_ptr;
+        disasm_struct->bin_file_ptr = bin_file_ptr;
+        return 0;
     }
 }
 
 size_t get_cmd_in_buf(disasm_struct* disasm_struct)
 {
-    FILE* bin_file_ptr = check_code_file(disasm_struct);
+    if(check_code_file(disasm_struct) != 0)
+    {
+        return disasm_struct->error_code;
+    }
 
-    int read = fread(disasm_struct->num_bin_cmd, sizeof(int), 1, bin_file_ptr);
-
-    if(read != 1)
+    if(fread(disasm_struct->num_bin_cmd, sizeof(int), 1, disasm_struct->bin_file_ptr) != 1)
     {
         return safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INV_READ_NUM_CMD);
     }
+
+    printf("%d\n\n", disasm_struct->num_bin_cmd[0]);
 
     disasm_struct->bin_codes_buf = (int*)calloc(*disasm_struct->num_bin_cmd, sizeof(int));
 
@@ -32,12 +37,12 @@ size_t get_cmd_in_buf(disasm_struct* disasm_struct)
         return safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALLOC_BIN_BUF);
     }
 
-    if(fread(disasm_struct->bin_codes_buf, sizeof(int), *disasm_struct->num_bin_cmd, bin_file_ptr) != *disasm_struct->num_bin_cmd)
+    if(fread(disasm_struct->bin_codes_buf, sizeof(int), *disasm_struct->num_bin_cmd, disasm_struct->bin_file_ptr) != *disasm_struct->num_bin_cmd)
     {
         return safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CANNOT_READ_CMD);
     }
 
-    if(fclose(bin_file_ptr) == EOF)
+    if(fclose(disasm_struct->bin_file_ptr) == EOF)
     {
         return safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CLOSE_BIN_FILE);
     }
@@ -55,9 +60,10 @@ size_t safe_exit(disasm_struct* disasm_struct, const char* FUNCT_NAME, int FUNCT
 
 void get_command_types(disasm_struct* disasm_struct)
 {
-    for(disasm_struct->cur_cmd_index =  0; disasm_struct->cur_cmd_index < *disasm_struct->num_bin_cmd;)
+    for(disasm_struct->cur_cmd_index = 0; disasm_struct->cur_cmd_index < *disasm_struct->num_bin_cmd;)
     {
-        if((disasm_struct->commands[disasm_struct->cur_cmd_index].value < 21) || (disasm_struct->commands[disasm_struct->cur_cmd_index].value > 27))
+        if(disasm_struct->commands[disasm_struct->cur_cmd_index].value != AX && disasm_struct->commands[disasm_struct->cur_cmd_index].value != BX && 
+                disasm_struct->commands[disasm_struct->cur_cmd_index].value != CX && disasm_struct->commands[disasm_struct->cur_cmd_index].value != DX)
         {
             disasm_struct->commands[disasm_struct->cur_cmd_index].type = CMD;
             check_next_cmd(disasm_struct);
@@ -100,6 +106,38 @@ void check_next_cmd(disasm_struct* disasm_struct)
             disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_REG;
             disasm_struct->cur_cmd_index += 2;
             break;
+        case PUSH_RAM_V_R_A:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case PUSH_RAM_V_R_B:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case PUSH_RAM_V_R_C:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case PUSH_RAM_V_R_D:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case POP_RAM_V_R_A:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case POP_RAM_V_R_B:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case POP_RAM_V_R_C:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
+        case POP_RAM_V_R_D:
+            disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = RAM_VAL_REG;
+            disasm_struct->cur_cmd_index += 2;
+            break;
         case DEC:
             disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = REG;
             disasm_struct->cur_cmd_index += 2;
@@ -136,6 +174,9 @@ void check_next_cmd(disasm_struct* disasm_struct)
         case CALL:
             disasm_struct->commands[disasm_struct->cur_cmd_index + 1].type = VAL;
             disasm_struct->cur_cmd_index += 2;
+            break;
+        default:
+            printf("NEW_CMD CODE\n");
             break;
     }
 }

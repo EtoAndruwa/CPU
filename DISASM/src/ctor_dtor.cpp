@@ -4,7 +4,7 @@ size_t disasm_ctor(disasm_struct* disasm_struct)
 {
     disasm_struct->error_code = STRUCT_OK;
 
-     disasm_struct->commands = (command*)calloc(*disasm_struct->num_bin_cmd, sizeof(command));
+    disasm_struct->commands = (command*)calloc(*disasm_struct->num_bin_cmd, sizeof(command));
 
     if(disasm_struct->commands == nullptr)    
     {
@@ -21,7 +21,6 @@ size_t disasm_ctor(disasm_struct* disasm_struct)
 
     fill_with_poison(disasm_struct->bin_codes_buf, *disasm_struct->num_bin_cmd);
 }
-
 
 void disasm_dtor(disasm_struct* disasm_struct)
 {

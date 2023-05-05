@@ -26,7 +26,7 @@ size_t check_is_int(char* num_text) // CHECKED
 
 size_t check_next_token(asm_struct* assembly_struct, size_t token_index) // HERE NEEDS FLOAT RETURN
 {
-    return ((((assembly_struct->num_toks - 1) > token_index) && (check_num_int(assembly_struct->toks[token_index+1].text) == TOKEN_IS_INT))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD);
+    return ((((assembly_struct->num_toks - 1) > token_index) && (check_is_int(assembly_struct->toks[token_index+1].text) == TOKEN_IS_INT))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD);
 }
 
 size_t check_all_valid(asm_struct* assembly_struct) // CHECKED
@@ -76,7 +76,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             strncpy(str_check, (token_text + 1), strlen_token_check - 2);
             str_check[strlen_token_check - 1] = '\0';
 
-            if(check_reg_inner(assembly_struct, str_check) == INNER_REG)
+            if(check_inner_reg(assembly_struct, str_check) == INNER_REG)
             {
                 if(strcmp(str_check, "ax") == 0)
                 {
@@ -101,7 +101,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                 str_check = nullptr;
                 return INNER_REG; 
             }
-            else if(check_num_int(str_check) == TOKEN_IS_INT)
+            else if(check_is_int(str_check) == TOKEN_IS_INT)
             {   
                 assembly_struct->toks[index].value = atoi(str_check);
                 assembly_struct->toks[index].type  = VAL;
@@ -132,7 +132,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 
             if(position_plus_sing == nullptr)
             {
-                if(check_num_int(str_check) == TOKEN_IS_INT)
+                if(check_is_int(str_check) == TOKEN_IS_INT)
                 {
                     assembly_struct->toks[index].value = atoi(str_check);
                     assembly_struct->toks[index].type  = VAL;
@@ -173,7 +173,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                     strncpy(text_bef_plus_ptr, str_check, text_bef_plus_len);
                     text_bef_plus_ptr[text_bef_plus_len] = '\0';
 
-                    if(check_reg_inner(assembly_struct, position_plus_sing + 1) == INNER_REG && (check_num_int(text_bef_plus_ptr) == TOKEN_IS_INT))
+                    if(check_inner_reg(assembly_struct, position_plus_sing + 1) == INNER_REG && (check_is_int(text_bef_plus_ptr) == TOKEN_IS_INT))
                     {
                         put_inner_values(assembly_struct, index, text_bef_plus_ptr, position_plus_sing + 1);
 
@@ -184,7 +184,7 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
                         return INNER_VAL_REG;
                     }
 
-                    else if(check_reg_inner(assembly_struct, text_bef_plus_ptr) == INNER_REG && (check_num_int(position_plus_sing + 1) == TOKEN_IS_INT))
+                    else if(check_inner_reg(assembly_struct, text_bef_plus_ptr) == INNER_REG && (check_is_int(position_plus_sing + 1) == TOKEN_IS_INT))
                     {
                         put_inner_values(assembly_struct, index, position_plus_sing + 1, text_bef_plus_ptr);
 

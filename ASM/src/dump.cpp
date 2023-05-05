@@ -15,10 +15,10 @@ size_t listing(asm_struct* assembly_struct)
     fprintf(listing_file,"| ID |		%-*s		|    TYPE    |		%-*s		|    STATUS    |\n", assembly_struct->length_listing, "COMMAND", assembly_struct->length_listing - 4, "ASM");
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
-        fprintf(listing_file,"|%03d|		%-*s		|    %s     |		%-*d		|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->length_listing, assembly_struct->toks[i].text, enum_type_to_string(assembly_struct->toks[i].type), assembly_struct->length_listing - 4, assembly_struct->toks[i].value, assembly_struct->toks[i].status);
+        fprintf(listing_file,"|%03d|		%-*s		|    %s     |		%-*d		|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->length_listing, assembly_struct->toks[i].text, get_tok_type_string(assembly_struct->toks[i].type), assembly_struct->length_listing - 4, assembly_struct->toks[i].value, assembly_struct->toks[i].status);
         if(strcmp(assembly_struct->toks[i].status, "--") == 0)
         {
-            fprintf(listing_file, " <----- %s", enum_token_err_to_string(assembly_struct->toks[i].error_code)); 
+            fprintf(listing_file, " <----- %s", get_tok_err_code_string(assembly_struct->toks[i].error_code)); 
         }
         fprintf(listing_file, "\n");
     }
@@ -45,13 +45,13 @@ size_t dump_asm(asm_struct* assembly_struct, const char* func_name, int func_lin
     else
     {
         fprintf(logfile, "\n-------------------STRUCT_DATA-------------------\n");
-        fprintf(logfile, "ERROR CODE: %ld (%s)\n", assembly_struct->err_code, enum_struct_err_to_string(assembly_struct->err_code));
+        fprintf(logfile, "ERROR CODE: %ld (%s)\n", assembly_struct->err_code, get_asm_err_code_string(assembly_struct->err_code));
         fprintf(logfile, "ASM BUFFER ADDRESS: %p\n", assembly_struct->asm_buf);
-        fprintf(logfile, "ASM FILE PTR %p\n", assembly_struct->asm_file);
+        fprintf(logfile, "ASM FILE PTR %p\n", assembly_struct->asm_file_ptr);
         fprintf(logfile, "NUMBER OF TOKENS: %ld\n", assembly_struct->num_toks);
         fprintf(logfile, "SIZE OF THE FILE: %ld\n", assembly_struct->size);
         fprintf(logfile, "TOKENS PTR: %p\n", assembly_struct->toks);
-        fprintf(logfile, "TRANSLATED FILE PTR: %p\n", assembly_struct->translated_file);
+        fprintf(logfile, "TRANSLATED FILE PTR: %p\n", assembly_struct->bin_file_ptr);
         fprintf(logfile, "-------------------STRUCT_DATA-------------------\n");
 
         fprintf(logfile, "\n-------------------DUMP_DATA-------------------\n");
@@ -81,7 +81,7 @@ void print_all_toks(asm_struct* assembly_struct) // CHECKED
         printf("TOKEN_TYPE: %ld\n", assembly_struct->toks[i].type);
         printf("TOKEN_STATUS: %s\n", assembly_struct->toks[i].status);
         printf("TOKEN_NEW_INDEX: %d\n", assembly_struct->toks[i].new_index);
-        printf("TOKEN_ERROR_CODE: %ld (%s)\n", assembly_struct->toks[i].error_code, enum_token_err_to_string(assembly_struct->toks[i].error_code));
+        printf("TOKEN_ERROR_CODE: %ld (%s)\n", assembly_struct->toks[i].error_code, get_tok_type_string(assembly_struct->toks[i].error_code));
         printf("##################################################\n");
     }
 }
@@ -89,8 +89,8 @@ void print_all_toks(asm_struct* assembly_struct) // CHECKED
 void print_struct(asm_struct* assembly_struct) // CHECKED
 {
     printf("\nassembly_struct->asm_buf: %p\n", assembly_struct->asm_buf);
-    printf("assembly_struct->asm_file: %p\n", assembly_struct->asm_file);
-    printf("assembly_struct->translated_file: %p\n", assembly_struct->translated_file);
+    printf("assembly_struct->asm_file_ptr: %p\n", assembly_struct->asm_file_ptr);
+    printf("assembly_struct->bin_file_ptr: %p\n", assembly_struct->bin_file_ptr);
     printf("assembly_struct->toks: %p\n", assembly_struct->toks);
     printf("assembly_struct->err_code: %ld\n", assembly_struct->err_code);
     printf("assembly_struct->size: %ld\n", assembly_struct->size);

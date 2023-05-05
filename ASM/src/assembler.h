@@ -27,7 +27,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "enums.h"
-#include "../graphviz/src/debugger.h"
+#include "../../../graphviz/src/debugger.h"
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -44,6 +44,7 @@ static const char* FILE_ASM_NAME     = "asm_code.txt";    /// \brief Defines the
 static const char* FILE_CODE_NAME    = "bin_code.bin";    /// \brief Defines the name of translated file
 static const char* FILE_LOG_NAME     = "log_file.txt";    /// \brief Defines the name of the log file
 static const char* FILE_LISTING_NAME = "asm_listing.txt"; /// \brief Defines the name of the listing file
+static const int   POSION            = 0xDEAD;
 
 /**
  * @brief The struct of the token
@@ -64,20 +65,20 @@ typedef struct tokens
 typedef struct asm_struct
 {
     char* asm_buf         = nullptr;   /// \brief The pointer to the buffer with commands
-    FILE* asm_file        = nullptr;   /// \brief The pointer to the file with assembly code 
-    FILE* translated_file = nullptr;   /// \brief The pointer to the file with translated code 
+    FILE* asm_file_ptr    = nullptr;   /// \brief The pointer to the file with assembly code 
+    FILE* bin_file_ptr    = nullptr;   /// \brief The pointer to the file with translated code 
     tokens* toks          = nullptr;   /// \brief The pointer to the array with tokens
     int* bin_codes        = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
     size_t err_code       = STRUCT_OK; /// \brief The error code of program
     size_t size           = 0;         /// \brief The size of the assembly file
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)
-    size_t cur_tok_chk    = 0;         /// \brief The index of the current token
+    size_t cur_tok_index  = 0;         /// \brief The index of the current token
     size_t length_listing = 7;         /// \brief The minimum length of the cell in the listing with the names of tokens for pretty log print
 };
 
 /*#####################################################################################################################################################################################*/
 
-size_t file_openning_check(asm_struct* assembly_struct);
+int file_openning_check(asm_struct* assembly_struct);
 size_t dtor_asm(asm_struct* assembly_struct);
 size_t get_size_asm(asm_struct* assembly_struct);
 size_t get_commands_into_buf(asm_struct* assembly_struct); 
@@ -91,27 +92,33 @@ void get_token_value(asm_struct* assembly_struct, size_t i);
 /*#####################################################################################################################################################################################*/
 
 size_t check_is_number(char* num_text);     
-size_t check_next_token(asm_struct* assembly_struct, size_t i);\
+size_t check_next_token(asm_struct* assembly_struct, size_t i);
 size_t check_all_valid(asm_struct* assembly_struct);     
 size_t check_brackets(char* token_text);
-size_t check_num_int(char* num_text); 
+size_t check_is_int(char* num_text); 
 size_t check_flags(asm_struct* assembly_struct);
 size_t check_func(asm_struct* assembly_struct);
 size_t check_fnc_declaration(asm_struct* assembly_struct); 
 size_t check_next_reg(asm_struct* assembly_struct, size_t i);
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index);
-size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text);
+size_t check_inner_reg(asm_struct* assembly_struct, char* inner_text);
 size_t check_flag_declaration(asm_struct* assembly_struct);
-size_t check_is_float(char* num_text) ;
+size_t check_is_float(char* num_text);
+void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr);
 
 /*#####################################################################################################################################################################################*/
 
+const char* get_tok_err_code_string(int code);
+const char* get_asm_err_code_string(int code);
+const char* get_tok_type_string(size_t code);
+const char* get_cmd_string(size_t cmd_code);
+
+/*#####################################################################################################################################################################################*/
 
 size_t dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
-const char* enum_struct_err_to_string(size_t code);
+
 size_t listing(asm_struct* assembly_struct);
-const char* enum_type_to_string(size_t code);
-const char* enum_token_err_to_string(size_t code);
+
 size_t write_asm(asm_struct* assembly_struct);
 
 size_t get_arr_bin_codes(asm_struct* assembly_struct);
@@ -120,7 +127,7 @@ void put_new_index(asm_struct* assembly_struct);
 int  get_new_num_toks(asm_struct* assembly_struct); 
 void max_len_tok(asm_struct* assembly_struct);
 void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr);
-const char* get_cmd_string(size_t cmd_code);
+
 
 /*#####################################################################################################################################################################################*/
 

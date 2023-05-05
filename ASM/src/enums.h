@@ -86,10 +86,10 @@ enum return_codes
     NEXT_TOKEN_CMD   ,
     NEXT_TOKEN_VAL   ,
     NEXT_TOKEN_IS_REG,
-    NEXT_TOKEN_NOT_RE,
+    NEXT_TOKEN_NOT_REG,
 
     ALL_TOKENS_VALID  ,
-    SOME_TOKEN_INVALID1,
+    SOME_TOKEN_INVALID,
 
     BRACKETS_OKEY     ,
     BRACKETS_NOT_OKEY ,
@@ -104,7 +104,7 @@ enum return_codes
     ALL_CALLS_OK      ,
     SOME_CALL_NOT_OKEY,
 
-    ALL_FLAGS_OKEY     ,
+    ALL_FLAGS_OKEY    ,
     SOME_FLAG_NOT_OK  ,
 
     ALL_JMPS_OKEY     ,

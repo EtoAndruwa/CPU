@@ -76,6 +76,7 @@ enum token_error_codes
  */
 enum return_codes
 {
+    RETURN_OK,
     INNER_RAM_INVALID,
     INNER_REG        , 
     INNER_VAL        ,

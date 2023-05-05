@@ -81,12 +81,12 @@ typedef struct asm_struct
 /*#####################################################################################################################################################################################*/
 
 int file_openning_check(asm_struct* assembly_struct);
-size_t dtor_asm(asm_struct* assembly_struct);
-size_t get_size_asm(asm_struct* assembly_struct);
-size_t get_commands_into_buf(asm_struct* assembly_struct); 
+int dtor_asm(asm_struct* assembly_struct);
+int get_size_asm(asm_struct* assembly_struct);
+int get_commands_into_buf(asm_struct* assembly_struct); 
 void print_struct(asm_struct* assembly_struct);
 int get_tokens(asm_struct* assembly_struct);
-size_t realloc_toks(asm_struct* assembly_struct, size_t i); 
+int realloc_toks(asm_struct* assembly_struct, size_t cur_num_toks); 
 void print_all_toks(asm_struct* assembly_struct); 
 void translate_to_asm(asm_struct* assembly_struct);  
 void get_token_value(asm_struct* assembly_struct, size_t i);     

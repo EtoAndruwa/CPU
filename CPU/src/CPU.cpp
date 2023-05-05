@@ -28,6 +28,8 @@ size_t cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
     default:
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_UNKNOWN_CMD);
     }
+
+    return 0;
 }
 
 size_t get_cmd_in_buf(CPU* CPU)

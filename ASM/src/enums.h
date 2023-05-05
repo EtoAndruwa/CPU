@@ -51,22 +51,23 @@ enum type
 enum token_error_codes
 {
     TOKEN_OK                     = 0,  /// \brief Example: 'PUSH 10'
-    ERR_INVALID_TOKEN            = -1,  /// \brief Example: 'asdfadfas'
-    ERR_TOKEN_WITHOUT_VALUE      = -2,  /// \brief Example: 'POP 10'
-    ERR_TOKEN_WITH_VALUE         = -3,  /// \brief Example: 'PUSH ______'
-    ERR_NO_FLAG                  = -4,  /// \brief Example: 'JMP _____'
-    ERR_INVALID_FLAG             = -5,  /// \brief Example: ':abc'
-    ERR_NO_FLAG_TO_JMP           = -6,  
-    ERR_INVALID_REG              = -7,   
-    ERR_CALLS_NON_EXISTEN_FNC    = -8,  
-    ERR_NO_FNC_NAME              = -9,  
-    ERR_DOUBLE_DECL_OF_FNC       = -10, 
-    ERR_FIRST_DECL_OF_FNC        = -11,
-    ERR_TO_CHECK_INNER_RAM       = -12,
-    ERR_INNER_RAM_IF_FLT         = -13,
-    ERR_DOUBLE_DECL_OF_FLAG      = -14,
-    ERR_FIRST_DECL_OF_FLAG       = -15,
-    ERR_INVAL_RAM_ADDRESSING     = -16,
+    ERR_INVALID_TOKEN            = -17,  /// \brief Example: 'asdfadfas'
+    ERR_TOKEN_WITHOUT_VALUE      = -18,  /// \brief Example: 'POP 10'
+    ERR_TOKEN_WITH_VALUE         = -19,  /// \brief Example: 'PUSH ______'
+    ERR_NO_FLAG                  = -20,  /// \brief Example: 'JMP _____'
+    ERR_INVALID_FLAG             = -21,  /// \brief Example: ':abc'
+    ERR_NO_FLAG_TO_JMP           = -22,  
+    ERR_INVALID_REG              = -23,   
+    ERR_CALLS_NON_EXISTEN_FNC    = -24,  
+    ERR_NO_FNC_NAME              = -25,  
+    ERR_DOUBLE_DECL_OF_FNC       = -26, 
+    ERR_FIRST_DECL_OF_FNC        = -27,
+
+    ERR_INNER_RAM_IF_FLT         = -29,
+    ERR_DOUBLE_DECL_OF_FLAG      = -30,
+    ERR_FIRST_DECL_OF_FLAG       = -31,
+    ERR_INVAL_RAM_ADDRESSING     = -32,
+    ERR_TO_CALLOC_INNER_RAM      = -33,
 };  
 #endif
 

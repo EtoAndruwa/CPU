@@ -11,7 +11,7 @@ size_t check_is_int(char* num_text) // CHECKED
     }
     if(num_text[0] != '-' && isdigit(num_text[0]) == 0) // case for negative int
     {    
-        printf("\nTOKEN_IS_NOT_INT 2\n");
+        printf("\nTOKEN_IS_NOT_INT 2 = %s\n", num_text);
         return NOT_ALL_DIGITS;
     }    
     for(size_t i = 1; i < length_text; i++)
@@ -80,11 +80,11 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
         if(strlen_token_check >= 3 && strlen_token_check <= 4)
         {
             size_t length_of_inner = strlen_token_check - 1;
-            char* str_check =(char*)calloc(length_of_inner, sizeof(char));
+            char* str_check = (char*)calloc(length_of_inner, sizeof(char));
 
             if(str_check == nullptr)
             {
-                assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
+                assembly_struct->err_code = ERR_TO_CALLOC_INNER_RAM;
                 dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
                 ERROR_MESSAGE(stderr, assembly_struct->err_code)
                 return assembly_struct->err_code;
@@ -95,6 +95,7 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
 
             if(check_inner_reg(assembly_struct, str_check) == INNER_REG)
             {
+                printf("\nINNER_REG\n");
                 if(strcmp(str_check, "ax") == 0)
                 {
                     assembly_struct->toks[index].value= AX; 
@@ -136,7 +137,8 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             }
             else if(check_is_int(str_check) == TOKEN_IS_INT)
             {   
-                assembly_struct->toks[index].value= atoi(str_check);
+                printf("\n INNER INT \n");
+                assembly_struct->toks[index].value = atof(str_check);
                 assembly_struct->toks[index].type  = VAL;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
 
@@ -151,107 +153,95 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
         }
         else if(strlen_token_check > 5)
         {
-            size_t length_of_inner = strlen_token_check - 1;
-            char* str_check =(char*)calloc(length_of_inner, sizeof(char));
+            size_t length_of_inner = strlen_token_check - 1; 
+            char* str_check = (char*)calloc(length_of_inner, sizeof(char)); // inner text inside []
 
             if(str_check == nullptr)
             {
-                assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
+                assembly_struct->err_code = ERR_TO_CALLOC_INNER_RAM;
                 dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-                dtor_asm(assembly_struct);
-                exit(ERR_TO_CHECK_INNER_RAM);
+                ERROR_MESSAGE(stderr, assembly_struct->err_code)
+                return assembly_struct->err_code;
             }
 
-            strncpy(str_check, (token_text + 1), strlen_token_check - 2);
-            str_check[strlen_token_check - 1] = '\0';
+            strncpy(str_check, (token_text + 1), strlen_token_check - 2); // copy [ax+10] -> ax+10
+            str_check[strlen_token_check - 1] = '\0'; // makes null terminated string
 
-            char* position_plus_sing = strchr(str_check,'+');
+            char* position_plus_sing = strchr(str_check,' +'); // pointer to the +
 
             if(position_plus_sing == nullptr)
             {
                 if(check_is_int(str_check) == TOKEN_IS_INT)
                 {
-                    assembly_struct->toks[index].value= atoi(str_check);
+                    printf("\n INNER_VAL\n");
+                    assembly_struct->toks[index].value = atof(str_check);
                     assembly_struct->toks[index].type  = VAL;
                     strcpy((char*)assembly_struct->toks[index].status, "OK");
 
                     free(str_check);
-                    str_check = nullptr;
                     return INNER_VAL; 
                 }
-                else
-                {
-                    free(str_check);
-                    str_check = nullptr;
-                    assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
-                    dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-                    dtor_asm(assembly_struct);
-                    exit(ERR_INVAL_RAM_ADDRESSING);
-                }
+
+                free(str_check);
+                assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
+                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+                ERROR_MESSAGE(stderr, assembly_struct->err_code)
+                return assembly_struct->err_code;
             }
             else
             {
-                size_t text_bef_plus_len = position_plus_sing - str_check;
+                printf("\n INNER REG VAL\n");
+                size_t text_bef_plus_len = position_plus_sing - str_check; // number of chars before + sign
 
                 if(text_bef_plus_len > 0)
                 {
-                    char* text_bef_plus_ptr =(char*)calloc(text_bef_plus_len + 1, sizeof(char));
+                    printf("text_bef_plus_len>0\n");
+                    char* text_bef_plus_ptr = (char*)calloc(text_bef_plus_len + 1, sizeof(char));
 
                     if(text_bef_plus_ptr == nullptr)
                     {
                         free(str_check);
-                        str_check = nullptr;
-                        assembly_struct->err_code = ERR_TO_CHECK_INNER_RAM;
+                        assembly_struct->err_code = ERR_TO_CALLOC_INNER_RAM;
                         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-                        dtor_asm(assembly_struct);
-                        exit(ERR_TO_CHECK_INNER_RAM);
+                        ERROR_MESSAGE(stderr, assembly_struct->err_code)
+                        return assembly_struct->err_code;
                     }
 
-                    strncpy(text_bef_plus_ptr, str_check, text_bef_plus_len);
-                    text_bef_plus_ptr[text_bef_plus_len] = '\0';
+                    strncpy(text_bef_plus_ptr, str_check, text_bef_plus_len); // copies the text before + sign
+                    text_bef_plus_ptr[text_bef_plus_len] = '\0'; // makes null terminated string
 
-                    if(check_inner_reg(assembly_struct, position_plus_sing + 1) == INNER_REG && (check_is_int(text_bef_plus_ptr) == TOKEN_IS_INT))
+                    printf("text_bef_plus_ptr: %s\n", text_bef_plus_ptr);
+                    if(check_inner_reg(assembly_struct, position_plus_sing + 1) == INNER_IS_REG && (check_is_int(text_bef_plus_ptr) == TOKEN_IS_INT)) // 5+ax
                     {
+                        printf("\n5+ax\n");
                         put_inner_values(assembly_struct, index, text_bef_plus_ptr, position_plus_sing + 1);
 
                         free(str_check);
                         free(text_bef_plus_ptr);
-                        text_bef_plus_ptr = nullptr;
-                        str_check = nullptr;
                         return INNER_VAL_REG;
                     }
-
-                    else if(check_inner_reg(assembly_struct, text_bef_plus_ptr) == INNER_REG && (check_is_int(position_plus_sing + 1) == TOKEN_IS_INT))
+                    else if(check_inner_reg(assembly_struct, text_bef_plus_ptr) == INNER_IS_REG && (check_is_int(position_plus_sing + 1) == TOKEN_IS_INT)) // ax+5
                     {
+                        printf("\nax+5\n");
                         put_inner_values(assembly_struct, index, position_plus_sing + 1, text_bef_plus_ptr);
 
                         free(str_check);
                         free(text_bef_plus_ptr);
-                        text_bef_plus_ptr = nullptr;
-                        str_check = nullptr;
                         return INNER_VAL_REG;
                     }
-                }
-                else
-                {   
-                    free(str_check);
-                    str_check = nullptr;
-                    assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
-                    dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-                    dtor_asm(assembly_struct);
-                    exit(ERR_INVAL_RAM_ADDRESSING);
-                }
+                } 
+
+                printf("SOME ERROR\n");
+                free(str_check);
+                assembly_struct->err_code = ERR_INVAL_RAM_ADDRESSING;
+                dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+                ERROR_MESSAGE(stderr, assembly_struct->err_code)
+                return assembly_struct->err_code;
             }   
         }
-        else
-        {
-            return INNER_RAM_INVALID;
-        }
-    }
-    else
-    {
         return INNER_RAM_INVALID;
     }
+    return INNER_RAM_INVALID;
 }
 
 size_t check_is_number(char* num_text) // CHECKED
@@ -462,10 +452,8 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t cmd_index) // CHECKED
     {
         return NEXT_TOKEN_IS_REG; 
     }
-    else
-    {
-        return NEXT_TOKEN_NOT_REG;
-    }
+
+    return NEXT_TOKEN_NOT_REG;
 }
 
 size_t check_inner_reg(asm_struct* assembly_struct, char* inner_text) // CHECKED 
@@ -520,21 +508,15 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
         return;
     }
 
-    if(check_is_float(value_text_ptr) == TOKEN_IS_FLT)
-    {
-        assembly_struct->toks[index - 1].error_code = ERR_INVAL_RAM_ADDRESSING;
-        ERROR_MESSAGE(stderr, ERR_INVAL_RAM_ADDRESSING)
-        return;
-    }
-
     if(check_is_int(value_text_ptr) != TOKEN_IS_INT)
     {
+        printf("ERR_INVAL_RAM_ADDRESSING 2\n");
         assembly_struct->toks[index - 1].error_code = ERR_INVAL_RAM_ADDRESSING;
         ERROR_MESSAGE(stderr, ERR_INVAL_RAM_ADDRESSING)
         return;
     }
 
-    assembly_struct->toks[index].value= atoi(value_text_ptr);
+    assembly_struct->toks[index].value = atof(value_text_ptr);
     assembly_struct->toks[index].type  = VAL;
     strcpy((char*)assembly_struct->toks[index].status, "OK");
 }

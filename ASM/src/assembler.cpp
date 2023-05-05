@@ -93,7 +93,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // MUST 
                 assembly_struct->toks[cur_tok_index + 1].value = atof(assembly_struct->toks[cur_tok_index + 1].text);                                                                       \
                 assembly_struct->toks[cur_tok_index + 1].type  = VAL;                                                                                                                       \
                 strcpy((char*)assembly_struct->toks[cur_tok_index + 1].status, "OK");                                                                                                       \
-                assembly_struct->cur_tok_index = assembly_struct->cur_tok_index + 2;                                                                                                        \
+                assembly_struct->cur_tok_index += 2;                                                                                                                                        \
                 return;                                                                                                                                                                     \                                                                                               
             }                                                                                                                                                                               \
             else if(((assembly_struct->num_toks - 1) > cur_tok_index) && check_next_reg(assembly_struct, cur_tok_index) == NEXT_TOKEN_IS_REG)                                               \   
@@ -109,7 +109,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // MUST 
                 assembly_struct->toks[cur_tok_index].value = command_id | (5 << 5);                                                                                                         \
                 assembly_struct->toks[cur_tok_index].type  = CMD;                                                                                                                           \
                 strcpy((char*)assembly_struct->toks[cur_tok_index].status, "OK");                                                                                                           \
-                assembly_struct->cur_tok_index = assembly_struct->cur_tok_index + 2;                                                                                                        \
+                assembly_struct->cur_tok_index += 2;                                                                                                                                        \
                 return;                                                                                                                                                                     \
             }                                                                                                                                                                               \
             else if(((assembly_struct->num_toks - 1) > cur_tok_index) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_index + 1].text, cur_tok_index + 1) == INNER_REG))       \
@@ -117,7 +117,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // MUST 
                 assembly_struct->toks[cur_tok_index].value = command_id | (3 << 6);                                                                                                         \
                 assembly_struct->toks[cur_tok_index].type  = CMD;                                                                                                                           \
                 strcpy((char*)assembly_struct->toks[cur_tok_index].status, "OK");                                                                                                           \
-                assembly_struct->cur_tok_index = assembly_struct->cur_tok_index + 2;                                                                                                        \       
+                assembly_struct->cur_tok_index += 2;                                                                                                                                        \       
                 return;                                                                                                                                                                     \
             }                                                                                                                                                                               \               
             else if(((assembly_struct->num_toks - 1) > cur_tok_index) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_index + 1].text, cur_tok_index + 1) == INNER_VAL_REG))   \
@@ -125,7 +125,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // MUST 
                 assembly_struct->toks[cur_tok_index].value += command_id | (7 << 5);                                                                                                        \
                 assembly_struct->toks[cur_tok_index].type  = CMD;                                                                                                                           \
                 strcpy((char*)assembly_struct->toks[cur_tok_index].status, "OK");                                                                                                           \  
-                assembly_struct->cur_tok_index = assembly_struct->cur_tok_index + 2;                                                                                                        \
+                assembly_struct->cur_tok_index += 2;                                                                                                                                        \
                 return;                                                                                                                                                                     \
             }                                                                                                                                                                               \   
             else                                                                                                                                                                            \

@@ -9,7 +9,7 @@ int main()
     get_commands_into_buf(&asm_struct);
     get_tokens(&asm_struct);
 
-    print_all_toks(&asm_struct);
+    // print_all_toks(&asm_struct);
 
     translate_to_asm(&asm_struct);
 

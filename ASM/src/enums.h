@@ -7,7 +7,7 @@
 /**
  * @brief The enum used in order to determine the type of error connected with files
  */
-enum asm_errors 
+enum asm_error_codes
 {
     STRUCT_OK                 = 0,
     ERR_ASM_CODE_BUF_NULL     = 1,
@@ -48,7 +48,7 @@ enum type
 /**
  * @brief The enum is used in order to determine the error connected with token
  */
-enum token_error_code 
+enum token_error_codes
 {
     TOKEN_OK                     = 0,  /// \brief Example: 'PUSH 10'
     ERR_INVALID_TOKEN            = 1,  /// \brief Example: 'asdfadfas'
@@ -74,12 +74,13 @@ enum token_error_code
  * @brief The enum codes for function's returns 
  * 
  */
-enum ret_codes
+enum return_codes
 {
     INNER_RAM_INVALID  = 0,
     INNER_REG          = 1,
     INNER_VAL          = 2,
     INNER_VAL_REG      = 3,
+
     NEXT_TOKEN_CMD     = 4,
     NEXT_TOKEN_VAL     = 5,
     ALL_TOKENS_VALID   = 6,
@@ -99,6 +100,7 @@ enum ret_codes
     ALL_JMPS_OKEY      = 20,
     SOME_JMP_NOT_OK    = 21,
     INNER_NOT_REG      = 22,
+
     ALL_DIGITS         = 23,
     NOT_ALL_DIGITS     = 24
 };
@@ -109,7 +111,7 @@ enum ret_codes
  * @brief The codes of the asm commands
  * 
  */
-enum cmd
+enum cmd_codes
 {  
     HLT  = 0,
     PUSH = 1,
@@ -120,30 +122,66 @@ enum cmd
     DIV  = 6, 
     SQRT = 7, 
     OUT  = 8, 
-    RET  = 10,
-    JMP  = 11, 
+    RET  = 9,
+    JMP  = 10, 
+
+    MOV  = 11, // input value into reg
+
     DEC  = 12,
-    JZ   = 13,
+    INC  = 13,
+
+    JZ   = 14, // jump if zero X == 0
+    JE   = 15, // jump if X == Y
+    JG   = 16, // jump if X > Y
+    JNE  = 17, // jump if X != Y
+    JGE  = 18, // jump if X >= Y
+
+    LOOP = 19, // to declare the loop
+    REP  = 20, // to repeat the loop
+
+
     AX   = 21,
     BX   = 22,
     CX   = 23,
     DX   = 24,
-    CALL = 30,
+    EX   = 25,
+    FX   = 26,
+    HX   = 27, 
+    IX   = 28,
+    CALL = 29,
+
     PUSH_ST       = PUSH | (1 << 5), 
     PUSH_REG      = PUSH | (1 << 6),
     PUSH_RAM_REG  = PUSH | (3 << 6),
     PUSH_RAM_VAL  = PUSH | (5 << 5),
-    PUSH_RAM_V_R_A  = 225,
-    POP_RAM_V_R_A   = 226,
-    PUSH_RAM_V_R_B  = 229,
-    POP_RAM_V_R_B   = 230,
-    PUSH_RAM_V_R_C  = 233,
-    POP_RAM_V_R_C   = 234,
-    PUSH_RAM_V_R_D  = 241,
-    POP_RAM_V_R_D   = 242,
+
     POP_RAM_REG   = POP | (3 << 6),
     POP_RAM_VAL   = POP | (5 << 5),
     POP_REG       = POP | (1 << 6),
+
+    PUSH_RAM_V_R_A  = 225, // RAM REG + VAR AX
+    POP_RAM_V_R_A   = 226,
+
+    PUSH_RAM_V_R_B  = 229, // RAM REG + VAR BX
+    POP_RAM_V_R_B   = 230,
+
+    PUSH_RAM_V_R_C  = 233, // RAM REG + VAR CX
+    POP_RAM_V_R_C   = 234,
+
+    PUSH_RAM_V_R_D  = 241, // RAM REG + VAR DX
+    POP_RAM_V_R_D   = 242,
+
+    PUSH_RAM_V_R_E  = 237, // RAM REG + VAR EX
+    POP_RAM_V_R_E   = 238,
+
+    PUSH_RAM_V_R_F  = 245, // RAM REG + VAR FX
+    POP_RAM_V_R_F   = 246,
+
+    PUSH_RAM_V_R_H  = 249, // RAM REG + VAR HX
+    POP_RAM_V_R_H   = 250,
+    
+    PUSH_RAM_V_R_I  = 253, // RAM REG + VAR IX
+    POP_RAM_V_R_I   = 254,
 };
 #endif
 

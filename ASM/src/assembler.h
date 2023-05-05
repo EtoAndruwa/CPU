@@ -27,6 +27,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "enums.h"
+#include "../graphviz/src/debugger.h"
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -41,7 +42,7 @@
 
 static const char* FILE_ASM_NAME     = "asm_code.txt";    /// \brief Defines the name of assembly file
 static const char* FILE_CODE_NAME    = "bin_code.bin";    /// \brief Defines the name of translated file
-static const char* FILE_LOG_NAME     = "LOG_FILE.txt";    /// \brief Defines the name of the log file
+static const char* FILE_LOG_NAME     = "log_file.txt";    /// \brief Defines the name of the log file
 static const char* FILE_LISTING_NAME = "asm_listing.txt"; /// \brief Defines the name of the listing file
 
 /**
@@ -71,7 +72,7 @@ typedef struct asm_struct
     size_t size           = 0;         /// \brief The size of the assembly file
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)
     size_t cur_tok_chk    = 0;         /// \brief The index of the current token
-    size_t length_listing = 7;         /// \brief The minimum length of the cell in the listing with the names of tokens
+    size_t length_listing = 7;         /// \brief The minimum length of the cell in the listing with the names of tokens for pretty log print
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

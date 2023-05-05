@@ -26,7 +26,7 @@
 #define FUNC_LINE __LINE__                      /// \brief Used in order to get the line from which the error was called
 #define FUNC_FILE __FILE__                      /// \brief Used in order ot get the file from which the error was called
 static const char* LOG_FILE_NAME   ="dump_log.txt";          /// \brief Defines the name of the logfile
-static const char* ACTION_LOG_NAME ="Action_log_stack.txt";  /// \brief Defines the name of the action log file
+static const char* ACTION_LOG_NAME ="action_log_stack.txt";  /// \brief Defines the name of the action log file
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

@@ -1,6 +1,6 @@
 #include "assembler.h"
 
-const char* enum_token_err_to_string(size_t code)  // for token
+const char* get_tok_err_code_string(size_t code)  // for token
 {
     switch(code)
     {
@@ -26,11 +26,11 @@ const char* enum_token_err_to_string(size_t code)  // for token
 
         #undef DEF_CMD_STRING
         default:
-            return "NEW_ERROR_CODE";
+            return "NEW_TOK_ERR_CODE";
     }
 }
 
-const char* enum_struct_err_to_string(size_t code) // for struct
+const char* get_asm_err_code_string(size_t code) // for struct
 {
     switch(code)
     {
@@ -58,11 +58,11 @@ const char* enum_struct_err_to_string(size_t code) // for struct
 
         #undef DEF_CMD_STRING
         default:
-            return "NEW_ERROR_CODE";
+            return "NEW_ASM_ERR_CODE";
     }
 }
 
-const char* enum_type_to_string(size_t code) // for token type
+const char* get_tok_type_string(size_t code) // for token type
 {
     switch(code)
     {
@@ -79,7 +79,7 @@ const char* enum_type_to_string(size_t code) // for token type
 
         #undef DEF_CMD_STRING
         default:
-            return "NEW_ERROR_CODE";
+            return "NEW_TOK_TYPE_CODE";
     }
 }
 
@@ -112,6 +112,6 @@ const char* get_cmd_string(size_t cmd_code)
 
         #undef DEF_CMD_STRING
         default:
-            return "NEW_CMD";
+            return "NEW_CMD_CODE";
     }
 }

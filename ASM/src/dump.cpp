@@ -32,7 +32,7 @@ size_t listing(asm_struct* assembly_struct)
     }
 }
 
-size_t dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) 
+size_t dump_asm(asm_struct* assembly_struct, const char* func_name, int func_line, const char* func_file) 
 {
     FILE* logfile = fopen(FILE_LOG_NAME, "wb");
 
@@ -45,19 +45,19 @@ size_t dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_L
     else
     {
         fprintf(logfile, "\n-------------------STRUCT_DATA-------------------\n");
-        fprintf(logfile, "assembly_struct->err_code: %ld (%s)\n", assembly_struct->err_code, enum_struct_err_to_string(assembly_struct->err_code));
-        fprintf(logfile, "assembly_struct->asm_buf: %p\n", assembly_struct->asm_buf);
-        fprintf(logfile, "assembly_struct->asm_file: %p\n", assembly_struct->asm_file);
-        fprintf(logfile, "assembly_struct->num_toks: %ld\n", assembly_struct->num_toks);
-        fprintf(logfile, "assembly_struct->size: %ld\n", assembly_struct->size);
-        fprintf(logfile, "assembly_struct->toks: %p\n", assembly_struct->toks);
-        fprintf(logfile, "assembly_struct->translated_file: %p\n", assembly_struct->translated_file);
+        fprintf(logfile, "ERROR CODE: %ld (%s)\n", assembly_struct->err_code, enum_struct_err_to_string(assembly_struct->err_code));
+        fprintf(logfile, "ASM BUFFER ADDRESS: %p\n", assembly_struct->asm_buf);
+        fprintf(logfile, "ASM FILE PTR %p\n", assembly_struct->asm_file);
+        fprintf(logfile, "NUMBER OF TOKENS: %ld\n", assembly_struct->num_toks);
+        fprintf(logfile, "SIZE OF THE FILE: %ld\n", assembly_struct->size);
+        fprintf(logfile, "TOKENS PTR: %p\n", assembly_struct->toks);
+        fprintf(logfile, "TRANSLATED FILE PTR: %p\n", assembly_struct->translated_file);
         fprintf(logfile, "-------------------STRUCT_DATA-------------------\n");
 
         fprintf(logfile, "\n-------------------DUMP_DATA-------------------\n");
-        fprintf(logfile, "File name: %s\n", FUNCT_FILE);
-        fprintf(logfile, "Function name: %s\n", FUNCT_NAME);
-        fprintf(logfile, "Line: %d\n", FUNCT_LINE);
+        fprintf(logfile, "File name: %s\n", func_file);
+        fprintf(logfile, "Function name: %s\n", func_name);
+        fprintf(logfile, "Line: %d\n", func_line);
         fprintf(logfile, "Time: %s\n", __TIME__);
         fprintf(logfile, "Date: %s\n", __DATE__);
         fprintf(logfile, "-------------------DUMP_DATA-------------------\n");

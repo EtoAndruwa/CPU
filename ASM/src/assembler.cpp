@@ -9,12 +9,14 @@ size_t file_openning_check(asm_struct* assembly_struct)
     {
         assembly_struct->err_code = ERR_OPEN_ASM_FILE;
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
     if(bin_code == nullptr)
     {   
         assembly_struct->err_code = ERR_OPEN_BIN_FILE;
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
     else
@@ -25,43 +27,9 @@ size_t file_openning_check(asm_struct* assembly_struct)
 }
 
 void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk) 
-{
-    #define DEF_CMD_REGS                                                                                                                                                \                                                                                                                                
-    if((strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0) ||                                  \   
-        (strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0) || (strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0))                                   \                                                       
-    {                                                                                                                                                                   \
-    if((((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_CMD) &&                                        \
-            (check_next_reg(assembly_struct, cur_tok_chk) == NEXT_TOKEN_NOT_REG)) || ((assembly_struct->num_toks - 1) == cur_tok_chk))                                  \
-    {                                                                                                                                                                   \
-        if(strcmp(assembly_struct->toks[cur_tok_chk].text, "ax") == 0)                                                                                                  \
-        {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = AX;                                                                                                              \
-        }                                                                                                                                                               \
-        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "bx") == 0)                                                                                             \
-        {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = BX;                                                                                                              \
-        }                                                                                                                                                               \
-        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "cx") == 0)                                                                                             \
-        {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = CX;                                                                                                              \                                                                                                             
-        }                                                                                                                                                               \
-        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, "dx") == 0)                                                                                             \                                                              
-        {                                                                                                                                                               \
-            assembly_struct->toks[cur_tok_chk].value = DX;                                                                                                              \
-        }                                                                                                                                                               \                                                                                                                                                             
-        assembly_struct->toks[cur_tok_chk].type = REG;                                                                                                                  \
-        strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "OK");                                                                                                 \
-    }                                                                                                                                                                   \
-    else                                                                                                                                                                \
-    {                                                                                                                                                                   \
-        strcpy((char*)assembly_struct->toks[cur_tok_chk].status, "--");                                                                                                 \
-        assembly_struct->toks[cur_tok_chk].error_code = ERR_TOKEN_WITHOUT_VALUE;                                                                                        \
-    }                                                                                                                                                                   \  
-    assembly_struct->cur_tok_chk++;                                                                                                                                     \
-    }                                                                                                                                                                  
-
+{                                                                                                                                                               
     #define DEF_CMD_PUSH_POP(command_id)                                                                                                                                            \
-        else if(strcmp(assembly_struct->toks[cur_tok_chk].text, get_cmd_string(command_id)) == 0)                                                                                   \
+        if(strcmp(assembly_struct->toks[cur_tok_chk].text, get_cmd_string(command_id)) == 0)                                                                                   \
         {                                                                                                                                                                           \
             if(((assembly_struct->num_toks - 1) > cur_tok_chk) && (check_next_token(assembly_struct, cur_tok_chk) == NEXT_TOKEN_VAL) &&                                             \
                 (strcmp(assembly_struct->toks[cur_tok_chk].text, "PUSH") == 0))                                                                                                     \                                                                                            
@@ -235,7 +203,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_chk)
     #undef DEF_CMD_REGS
 }
 
-size_t get_commands_into_buf(asm_struct* assembly_struct) 
+size_t get_commands_into_buf(asm_struct* assembly_struct) // CHECKED
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
     assembly_struct->asm_buf = (char*)calloc(1, sizeof(char) * (assembly_struct->size + 1)); // Allocates enough memmory for the buffer of chars  
@@ -244,7 +212,7 @@ size_t get_commands_into_buf(asm_struct* assembly_struct)
     {
         assembly_struct->err_code = ERR_TO_CALLOC_ASM_BUF;
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        dtor_asm(assembly_struct);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
 
@@ -254,14 +222,14 @@ size_t get_commands_into_buf(asm_struct* assembly_struct)
     {
         assembly_struct->err_code = ERR_READ_TO_ASM_BUF;
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        dtor_asm(assembly_struct);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;       
     }
     assembly_struct->asm_buf[assembly_struct->size] = '\0'; // Makes form the file null-terminated string
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file
 }
 
-size_t get_size_asm(asm_struct* assembly_struct) 
+size_t get_size_asm(asm_struct* assembly_struct) // CHECKED
 {
     rewind(assembly_struct->asm_file); // Puts the pointer inside the file to the start of the file 
 
@@ -272,7 +240,7 @@ size_t get_size_asm(asm_struct* assembly_struct)
     {
         assembly_struct->err_code = ERR_EMPTY_ASM_FILE; 
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        dtor_asm(assembly_struct);  
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     } 
 
@@ -510,11 +478,11 @@ int get_new_num_toks(asm_struct* assembly_struct)
     return (max + 1); // The number of tokens with right indexes
 }
 
-void max_len_tok(asm_struct* assembly_struct)
+void max_len_tok(asm_struct* assembly_struct) // CHECKED
 {
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {
-        size_t length_tok_i = strlen(assembly_struct->toks[i].text);
-        assembly_struct->length_listing = (assembly_struct->length_listing <= length_tok_i)? length_tok_i: assembly_struct->length_listing;
+        size_t length_tok_i = strlen(assembly_struct->toks[i].text); // calculated the new length of the next tok
+        assembly_struct->length_listing = (assembly_struct->length_listing <= length_tok_i)? length_tok_i: assembly_struct->length_listing; // puts the maximum lenght of the token
     }
 }

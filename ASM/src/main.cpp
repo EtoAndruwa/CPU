@@ -10,6 +10,9 @@ int main()
     get_tokens(&asm_struct);
 
     translate_to_asm(&asm_struct);
+
+    print_all_toks(&asm_struct);
+
     max_len_tok(&asm_struct);
     write_asm(&asm_struct);
     listing(&asm_struct);

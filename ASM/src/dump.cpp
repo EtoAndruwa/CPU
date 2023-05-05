@@ -1,6 +1,6 @@
 #include "assembler.h"
 
-size_t listing(asm_struct* assembly_struct)
+size_t listing(asm_struct* assembly_struct) // CHECKED
 {
     FILE* listing_file = fopen(FILE_LISTING_NAME, "wb");
 
@@ -32,7 +32,7 @@ size_t listing(asm_struct* assembly_struct)
     }
 }
 
-size_t dump_asm(asm_struct* assembly_struct, const char* func_name, int func_line, const char* func_file) 
+size_t dump_asm(asm_struct* assembly_struct, const char* func_name, int func_line, const char* func_file)  // CHECKED
 {
     FILE* logfile = fopen(FILE_LOG_NAME, "wb");
 

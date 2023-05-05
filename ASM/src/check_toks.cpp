@@ -23,23 +23,25 @@ size_t check_num_int(char* num_text)
     return is_int; 
 }
 
-size_t check_next_token(asm_struct* assembly_struct, size_t i) 
+size_t check_next_token(asm_struct* assembly_struct, size_t token_index) // HERE NEEDS FLOAT RETURN
 {
-    return ((((assembly_struct->num_toks - 1) > i) && (check_num_int(assembly_struct->toks[i+1].text) == TOKEN_IS_INT))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD);
+    return ((((assembly_struct->num_toks - 1) > token_index) && (check_num_int(assembly_struct->toks[token_index+1].text) == TOKEN_IS_INT))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD);
 }
 
-size_t check_all_valid(asm_struct* assembly_struct) 
+size_t check_all_valid(asm_struct* assembly_struct) // CHECKED
 {
     if(assembly_struct->err_code != STRUCT_OK)
     {   
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
 
-    for(size_t i = 0; i < assembly_struct->num_toks; i++)
+    for(size_t index = 0; index < assembly_struct->num_toks; index++)
     {
-        if(assembly_struct->toks[i].error_code != TOKEN_OK)
+        if(assembly_struct->toks[index].error_code != TOKEN_OK)
         {   
-            printf("%d\n\n", i);
+            printf("\n While check_all_valid found error token\n");
+            ERROR_MESSAGE(stderr, assembly_struct->toks[index].error_code)
             return SOME_TOKEN_INVALID; 
         }
     }
@@ -431,15 +433,16 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i)
     }
 }
 
-size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text)
+size_t check_inner_reg(asm_struct* assembly_struct, char* inner_text) // CHECKED Checks the inner for being register
 {
-    if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0))
+    if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0)
+        || (strcmp(inner_text, "ex") == 0) || (strcmp(inner_text, "fx") == 0) || (strcmp(inner_text, "hx") == 0) || (strcmp(inner_text, "ix") == 0))
     {
-        return INNER_REG; 
+        return INNER_IS_REG; 
     }
     else
     {
-        return INNER_NOT_REG; 
+        return INNER_IS_NOT_REG; 
     }
 }
 
@@ -461,6 +464,24 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
     {   
         assembly_struct->toks[index - 1].value = 1 << 4; 
     }
+    else if(strcmp(register_text_ptr, "ex") == 0)
+    {
+        assembly_struct->toks[index - 1].value = 3 << 2; 
+    }
+    else if(strcmp(register_text_ptr, "fx") == 0)
+    {   
+        assembly_struct->toks[index - 1].value = 5 << 2; 
+    }
+    else if(strcmp(register_text_ptr, "hx") == 0)
+    {
+        assembly_struct->toks[index - 1].value = 6 << 2; 
+    }
+    else if(strcmp(register_text_ptr, "ix") == 0)
+    {   
+        assembly_struct->toks[index - 1].value = 7 << 2; 
+    }
+
+    // here must be check for float and return error code
 
     assembly_struct->toks[index].value = atoi(value_text_ptr);
     assembly_struct->toks[index].type  = REG;

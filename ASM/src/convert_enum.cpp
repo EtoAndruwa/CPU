@@ -1,6 +1,6 @@
 #include "assembler.h"
 
-const char* get_tok_err_code_string(size_t code)  // for token
+const char* get_tok_err_code_string(int code) 
 {
     switch(code)
     {
@@ -30,7 +30,7 @@ const char* get_tok_err_code_string(size_t code)  // for token
     }
 }
 
-const char* get_asm_err_code_string(size_t code) // for struct
+const char* get_asm_err_code_string(int code) 
 {
     switch(code)
     {
@@ -62,7 +62,7 @@ const char* get_asm_err_code_string(size_t code) // for struct
     }
 }
 
-const char* get_tok_type_string(size_t code) // for token type
+const char* get_tok_type_string(size_t code) 
 {
     switch(code)
     {

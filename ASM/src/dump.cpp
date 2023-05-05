@@ -8,7 +8,7 @@ size_t listing(asm_struct* assembly_struct)
     {
         assembly_struct->err_code = ERR_OPEN_LISTING;
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        dtor_asm(assembly_struct);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
 
@@ -27,7 +27,7 @@ size_t listing(asm_struct* assembly_struct)
     {
         assembly_struct->err_code = ERR_CLOSE_LISTING;
         dump_asm(assembly_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        dtor_asm(assembly_struct);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
 }
@@ -39,7 +39,7 @@ size_t dump_asm(asm_struct* assembly_struct, const char* func_name, int func_lin
     if(logfile == nullptr)
     {
         assembly_struct->err_code = ERR_OPEN_LOG_FILE;
-        dtor_asm(assembly_struct);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
     else
@@ -55,36 +55,38 @@ size_t dump_asm(asm_struct* assembly_struct, const char* func_name, int func_lin
         fprintf(logfile, "-------------------STRUCT_DATA-------------------\n");
 
         fprintf(logfile, "\n-------------------DUMP_DATA-------------------\n");
-        fprintf(logfile, "File name: %s\n", func_file);
-        fprintf(logfile, "Function name: %s\n", func_name);
-        fprintf(logfile, "Line: %d\n", func_line);
-        fprintf(logfile, "Time: %s\n", __TIME__);
-        fprintf(logfile, "Date: %s\n", __DATE__);
+        fprintf(logfile, "FILE NAME: %s\n", func_file);
+        fprintf(logfile, "FUNCTION NAME: %s\n", func_name);
+        fprintf(logfile, "LINE: %d\n", func_line);
+        fprintf(logfile, "TIME: %s\n", __TIME__);
+        fprintf(logfile, "DATE: %s\n", __DATE__);
         fprintf(logfile, "-------------------DUMP_DATA-------------------\n");
     }
 
     if(fclose(logfile) == EOF)
     {
         assembly_struct->err_code = ERR_CLOSE_LOG_FILE;
-        dtor_asm(assembly_struct);
+        ERROR_MESSAGE(stderr, assembly_struct->err_code)
         return assembly_struct->err_code;
     }
 }
 
-void print_all_toks(asm_struct* assembly_struct)
+void print_all_toks(asm_struct* assembly_struct) // CHECKED
 {
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {
-        printf("\nTOKEN_TEXT: %s\n", assembly_struct->toks[i].text);
+        printf("\n##################################################\n");
+        printf("TOKEN_TEXT: %s\n", assembly_struct->toks[i].text);
         printf("TOKEN_VALUE: %d\n", assembly_struct->toks[i].value);
         printf("TOKEN_TYPE: %ld\n", assembly_struct->toks[i].type);
         printf("TOKEN_STATUS: %s\n", assembly_struct->toks[i].status);
         printf("TOKEN_NEW_INDEX: %d\n", assembly_struct->toks[i].new_index);
         printf("TOKEN_ERROR_CODE: %ld (%s)\n", assembly_struct->toks[i].error_code, enum_token_err_to_string(assembly_struct->toks[i].error_code));
+        printf("##################################################\n");
     }
 }
 
-void print_struct(asm_struct* assembly_struct) 
+void print_struct(asm_struct* assembly_struct) // CHECKED
 {
     printf("\nassembly_struct->asm_buf: %p\n", assembly_struct->asm_buf);
     printf("assembly_struct->asm_file: %p\n", assembly_struct->asm_file);

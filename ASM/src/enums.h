@@ -10,22 +10,22 @@
 enum asm_error_codes
 {
     STRUCT_OK                 = 0,
-    ERR_ASM_CODE_BUF_NULL     = 1,
-    ERR_OPEN_ASM_FILE         = 2,
-    ERR_OPEN_BIN_FILE         = 3,
-    ERR_CLOSE_ASM_FILE        = 4,
-    ERR_CLOSE_BIN_FILE        = 5,
-    ERR_EMPTY_ASM_FILE        = 6, 
-    ERR_OPEN_LOG_FILE         = 7,
-    ERR_CLOSE_LOG_FILE        = 8,
-    ERR_TO_WRITE_CODE         = 9,
-    ERR_TO_CALLOC_TOKS        = 10,
-    ERR_TO_CALLOC_ASM_BUF     = 11,
-    ERR_READ_TO_ASM_BUF       = 12,
-    ERR_TO_CALLOC_BIN_CODES   = 13,
-    ERR_TO_REALLOC_TOKS       = 14,
-    ERR_OPEN_LISTING          = 15,
-    ERR_CLOSE_LISTING         = 16
+    ERR_ASM_CODE_BUF_NULL     = -1,
+    ERR_OPEN_ASM_FILE         = -2,
+    ERR_OPEN_BIN_FILE         = -3,
+    ERR_CLOSE_ASM_FILE        = -4,
+    ERR_CLOSE_BIN_FILE        = -5,
+    ERR_EMPTY_ASM_FILE        = -6, 
+    ERR_OPEN_LOG_FILE         = -7,
+    ERR_CLOSE_LOG_FILE        = -8,
+    ERR_TO_WRITE_CODE         = -9,
+    ERR_TO_CALLOC_TOKS        = -10,
+    ERR_TO_CALLOC_ASM_BUF     = -11,
+    ERR_READ_TO_ASM_BUF       = -12,
+    ERR_TO_CALLOC_BIN_CODES   = -13,
+    ERR_TO_REALLOC_TOKS       = -14,
+    ERR_OPEN_LISTING          = -15,
+    ERR_CLOSE_LISTING         = -16
 };
 #endif
 
@@ -51,21 +51,21 @@ enum type
 enum token_error_codes
 {
     TOKEN_OK                     = 0,  /// \brief Example: 'PUSH 10'
-    ERR_INVALID_TOKEN            = 1,  /// \brief Example: 'asdfadfas'
-    ERR_TOKEN_WITHOUT_VALUE      = 2,  /// \brief Example: 'POP 10'
-    ERR_TOKEN_WITH_VALUE         = 3,  /// \brief Example: 'PUSH ______'
-    ERR_NO_FLAG                  = 4,  /// \brief Example: 'JMP _____'
-    ERR_INVALID_FLAG             = 5,  /// \brief Example: ':abc'
-    ERR_NO_FLAG_TO_JMP           = 6,  
-    ERR_INVALID_REG              = 7,   
-    ERR_CALLS_NON_EXISTEN_FNC    = 8,  
-    ERR_NO_FNC_NAME              = 9,  
-    ERR_DOUBLE_DECL_OF_FNC       = 10, 
-    ERR_FIRST_DECL_OF_FNC        = 11,
-    ERR_TO_CHECK_INNER_RAM       = 12,
-    ERR_DOUBLE_DECL_OF_FLAG      = 13,
-    ERR_FIRST_DECL_OF_FLAG       = 14,
-    ERR_INVAL_RAM_ADDRESSING     = 15,
+    ERR_INVALID_TOKEN            = -1,  /// \brief Example: 'asdfadfas'
+    ERR_TOKEN_WITHOUT_VALUE      = -2,  /// \brief Example: 'POP 10'
+    ERR_TOKEN_WITH_VALUE         = -3,  /// \brief Example: 'PUSH ______'
+    ERR_NO_FLAG                  = -4,  /// \brief Example: 'JMP _____'
+    ERR_INVALID_FLAG             = -5,  /// \brief Example: ':abc'
+    ERR_NO_FLAG_TO_JMP           = -6,  
+    ERR_INVALID_REG              = -7,   
+    ERR_CALLS_NON_EXISTEN_FNC    = -8,  
+    ERR_NO_FNC_NAME              = -9,  
+    ERR_DOUBLE_DECL_OF_FNC       = -10, 
+    ERR_FIRST_DECL_OF_FNC        = -11,
+    ERR_TO_CHECK_INNER_RAM       = -12,
+    ERR_DOUBLE_DECL_OF_FLAG      = -13,
+    ERR_FIRST_DECL_OF_FLAG       = -14,
+    ERR_INVAL_RAM_ADDRESSING     = -15,
 };  
 #endif
 
@@ -80,29 +80,37 @@ enum return_codes
     INNER_REG          = 1,
     INNER_VAL          = 2,
     INNER_VAL_REG      = 3,
+    INNER_IS_REG       = 4,
+    INNER_IS_NOT_REG   = 5,
 
-    NEXT_TOKEN_CMD     = 4,
-    NEXT_TOKEN_VAL     = 5,
-    ALL_TOKENS_VALID   = 6,
-    SOME_TOKEN_INVALID = 7,
-    BRACKETS_OKEY      = 8,
-    BRACKETS_NOT_OKEY  = 9,
-    ALL_FUNCS_OK       = 10,
-    SOME_FUNC_NOT_OK   = 11, 
-    TOKEN_IS_INT       = 12,
-    TOKEN_IS_NOT_INT   = 13,
-    ALL_CALLS_OK       = 14,
-    SOME_CALL_NOT_OKEY = 15,
-    ALL_FLAGS_OKEY     = 16,
-    SOME_FLAG_NOT_OK   = 17,
-    NEXT_TOKEN_IS_REG  = 18,
-    NEXT_TOKEN_NOT_REG = 19,
-    ALL_JMPS_OKEY      = 20,
-    SOME_JMP_NOT_OK    = 21,
-    INNER_NOT_REG      = 22,
+    NEXT_TOKEN_CMD     = 6,
+    NEXT_TOKEN_VAL     = 7,
+    NEXT_TOKEN_IS_REG  = 8,
+    NEXT_TOKEN_NOT_REG = 9,
 
-    ALL_DIGITS         = 23,
-    NOT_ALL_DIGITS     = 24
+    ALL_TOKENS_VALID   = 10,
+    SOME_TOKEN_INVALID = 11,
+
+    BRACKETS_OKEY      = 12,
+    BRACKETS_NOT_OKEY  = 13,
+
+    ALL_FUNCS_OK       = 14,
+    SOME_FUNC_NOT_OK   = 15, 
+
+    TOKEN_IS_INT       = 16,
+    TOKEN_IS_NOT_INT   = 17,
+
+    ALL_CALLS_OK       = 18,
+    SOME_CALL_NOT_OKEY = 19,
+
+    ALL_FLAGS_OKEY     = 20,
+    SOME_FLAG_NOT_OK   = 21,
+
+    ALL_JMPS_OKEY      = 22,
+    SOME_JMP_NOT_OK    = 23,
+
+    ALL_DIGITS         = 24,
+    NOT_ALL_DIGITS     = 25
 };
 #endif
 

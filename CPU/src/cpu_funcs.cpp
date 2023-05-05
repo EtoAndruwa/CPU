@@ -295,6 +295,19 @@ size_t pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value)
     }
 }
 
+int check_is_positive(double value) // ok
+{
+    if((fabs(value - fabs(value)) < EPS) && (fabs(value) > EPS))
+    {
+        return IS_POSITIVE;
+    }
+    else if(fabs(value) <= EPS)
+    {
+        return IS_ZERO;
+    }
+    
+    return IS_NEGATIVE;
+}
 
 
 

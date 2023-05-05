@@ -76,41 +76,42 @@ enum token_error_codes
  */
 enum return_codes
 {
-    INNER_RAM_INVALID  = 0,
-    INNER_REG          = 1,
-    INNER_VAL          = 2,
-    INNER_VAL_REG      = 3,
-    INNER_IS_REG       = 4,
-    INNER_IS_NOT_REG   = 5,
+    INNER_RAM_INVALID,
+    INNER_REG        , 
+    INNER_VAL        ,
+    INNER_VAL_REG    ,
+    INNER_IS_REG     ,
+    INNER_IS_NOT_REG ,
 
-    NEXT_TOKEN_CMD     = 6,
-    NEXT_TOKEN_VAL     = 7,
-    NEXT_TOKEN_IS_REG  = 8,
-    NEXT_TOKEN_NOT_REG = 9,
+    NEXT_TOKEN_CMD   ,
+    NEXT_TOKEN_VAL   ,
+    NEXT_TOKEN_IS_REG,
+    NEXT_TOKEN_NOT_RE,
 
-    ALL_TOKENS_VALID   = 10,
-    SOME_TOKEN_INVALID = 11,
+    ALL_TOKENS_VALID  ,
+    SOME_TOKEN_INVALID1,
 
-    BRACKETS_OKEY      = 12,
-    BRACKETS_NOT_OKEY  = 13,
+    BRACKETS_OKEY     ,
+    BRACKETS_NOT_OKEY ,
 
-    ALL_FUNCS_OK       = 14,
-    SOME_FUNC_NOT_OK   = 15, 
+    ALL_FUNCS_OK       ,
+    SOME_FUNC_NOT_OK   , 
 
-    TOKEN_IS_INT       = 16,
-    TOKEN_IS_NOT_INT   = 17,
+    TOKEN_IS_INT      ,
+    TOKEN_IS_FLT      ,
+    TOKEN_IS_NOT_INT  ,
 
-    ALL_CALLS_OK       = 18,
-    SOME_CALL_NOT_OKEY = 19,
+    ALL_CALLS_OK      ,
+    SOME_CALL_NOT_OKEY,
 
-    ALL_FLAGS_OKEY     = 20,
-    SOME_FLAG_NOT_OK   = 21,
+    ALL_FLAGS_OKEY     ,
+    SOME_FLAG_NOT_OK  ,
 
-    ALL_JMPS_OKEY      = 22,
-    SOME_JMP_NOT_OK    = 23,
+    ALL_JMPS_OKEY     ,
+    SOME_JMP_NOT_OK   ,
 
-    ALL_DIGITS         = 24,
-    NOT_ALL_DIGITS     = 25
+    ALL_DIGITS        ,
+    NOT_ALL_DIGITS    ,
 };
 #endif
 

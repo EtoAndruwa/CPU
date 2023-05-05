@@ -1,26 +1,27 @@
 #include "assembler.h"
 
-size_t check_num_int(char* num_text) 
+size_t check_is_int(char* num_text) // CHECKED
 {
-    size_t is_int = TOKEN_IS_INT; // Returns 1 if all characters are digit or contain '.'
-
+    size_t int_flag = TOKEN_IS_INT; // Returns TOKEN_IS_INT if all characters are digit
     size_t length_text = strlen(num_text);
-    for(size_t i  = 0; i < length_text; i++)
-    {
-        char check_char = num_text[i];
 
-        if(isdigit(check_char) != 0 || ((check_char == '-') && (i == 0))) // Check does the text contain digits
+    if(num_text[0] == '-' && length_text == 1) // case for '-' minus sign only
+    {
+        return NOT_ALL_DIGITS;
+    }
+    if(num_text[0] != '-' && isdigit(num_text[0]) == 0) // case for negative int
+    {    
+        return NOT_ALL_DIGITS;
+    }    
+    for(size_t index  = 1; index < length_text; index++)
+    {
+        if(isdigit(num_text[index]) == 0) // Check does the text contain digits only
         {
-            is_int = TOKEN_IS_INT;
-        }
-        else
-        {
-            is_int = TOKEN_IS_NOT_INT;
+            int_flag = TOKEN_IS_NOT_INT;
             break;
         }
     }
-
-    return is_int; 
+    return int_flag; 
 }
 
 size_t check_next_token(asm_struct* assembly_struct, size_t token_index) // HERE NEEDS FLOAT RETURN
@@ -419,11 +420,12 @@ size_t check_flag_declaration(asm_struct* assembly_struct)
     }
 }
 
-size_t check_next_reg(asm_struct* assembly_struct, size_t i)
+size_t check_next_reg(asm_struct* assembly_struct, size_t cmd_index) // CHECKED
 {
-    //printf("%s", assembly_struct->toks[i+1].text);
-    if((strcmp(assembly_struct->toks[i+1].text, "ax") == 0) || (strcmp(assembly_struct->toks[i+1].text, "bx") == 0) || (strcmp(assembly_struct->toks[i+1].text, "cx") == 0) || 
-            (strcmp(assembly_struct->toks[i+1].text, "dx") == 0))
+    if((strcmp(assembly_struct->toks[cmd_index + 1].text, "ax") == 0) || (strcmp(assembly_struct->toks[cmd_index + 1].text, "bx") == 0)
+        || (strcmp(assembly_struct->toks[cmd_index + 1].text, "cx") == 0) || (strcmp(assembly_struct->toks[cmd_index + 1].text, "dx") == 0)
+            || (strcmp(assembly_struct->toks[cmd_index + 1].text, "ex") == 0) || (strcmp(assembly_struct->toks[cmd_index + 1].text, "fx") == 0) 
+                || (strcmp(assembly_struct->toks[cmd_index + 1].text, "hx") == 0) || (strcmp(assembly_struct->toks[cmd_index + 1].text, "ix") == 0))
     {
         return NEXT_TOKEN_IS_REG; 
     }
@@ -446,7 +448,7 @@ size_t check_inner_reg(asm_struct* assembly_struct, char* inner_text) // CHECKED
     }
 }
 
-void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr)
+void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr) // CHECKED
 {
     if(strcmp(register_text_ptr, "ax") == 0)
     {
@@ -480,10 +482,77 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
     {   
         assembly_struct->toks[index - 1].value = 7 << 2; 
     }
+    else
+    {   
+        assembly_struct->toks[index - 1].error_code = ERR_INVALID_REG;
+        ERROR_MESSAGE(stderr, ERR_INVALID_REG)
+        return;
+    }
 
-    // here must be check for float and return error code
+    if(check_is_float(value_text_ptr) == TOKEN_IS_FLT)
+    {
+        assembly_struct->toks[index - 1].error_code = ERR_INVAL_RAM_ADDRESSING;
+        ERROR_MESSAGE(stderr, ERR_INVAL_RAM_ADDRESSING)
+        return;
+    }
+
+    if(check_is_int(value_text_ptr) != TOKEN_IS_INT)
+    {
+        assembly_struct->toks[index - 1].error_code = ERR_INVAL_RAM_ADDRESSING;
+        ERROR_MESSAGE(stderr, ERR_INVAL_RAM_ADDRESSING)
+        return;
+    }
 
     assembly_struct->toks[index].value = atoi(value_text_ptr);
-    assembly_struct->toks[index].type  = REG;
+    assembly_struct->toks[index].type  = VAL;
     strcpy((char*)assembly_struct->toks[index].status, "OK");
 }
+
+size_t length_double(char* str_double) 
+{
+    size_t old_length = strlen(str_double) - 1;
+    size_t num_of_zeros = 0;
+    size_t right_end_id = old_length;
+    for(;  right_end_id >= 0; right_end_id--) // from the right to the left in order ot search first non zero digit and calculate the lenght of float
+    {
+        if(str_double[right_end_id] != '0')
+        {
+            break;
+        }
+        num_of_zeros++;
+    }
+
+    if(str_double[right_end_id] == '.' && str_double[right_end_id + 1] == '0')  //shorts the atof value to normal 1.00 -> 1'\0'
+    {
+        str_double[strchr(str_double, '.') - str_double] = '\0'; //shorts the atof value to normal 1.00 -> 1'\0'
+        return strlen(str_double);
+    }
+
+    str_double[old_length + 1 - num_of_zeros] = '\0'; //shorts the atof value to normal 1.230000 -> 1.23'\0'
+    return strlen(str_double);
+}
+
+size_t check_is_float(char* num_text) // CHECKED
+{
+    size_t float_flag = TOKEN_IS_FLT; 
+    size_t length_text = strlen(num_text);
+
+    if(num_text[0] == '-' && length_text == 1) // case for '-' minus sign only
+    {
+        return NOT_ALL_DIGITS;
+    }
+    if(num_text[0] != '-' && isdigit(num_text[0]) == 0) // case for negative float
+    {    
+        return NOT_ALL_DIGITS;
+    }
+    for(size_t index = 1; index < length_text; index++)
+    {
+        if(isdigit(num_text[index]) == 0 && num_text[index] != '.') // If the character is not a digit
+        {
+            float_flag = NOT_ALL_DIGITS;
+            break;
+        }
+    }
+    return float_flag; // Returns INNER_IS_FLOAT if the word if float
+}
+

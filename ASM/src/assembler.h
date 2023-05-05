@@ -102,6 +102,7 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t i);
 size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index);
 size_t check_reg_inner(asm_struct* assembly_struct, char* inner_text);
 size_t check_flag_declaration(asm_struct* assembly_struct);
+size_t check_is_float(char* num_text) ;
 
 /*#####################################################################################################################################################################################*/
 

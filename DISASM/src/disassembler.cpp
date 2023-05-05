@@ -28,7 +28,7 @@ size_t get_cmd_in_buf(disasm_struct* disasm_struct)
         return safe_exit(disasm_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INV_READ_NUM_CMD);
     }
 
-    printf("%d\n\n", disasm_struct->num_bin_cmd[0]);
+    // printf("%d\n\n", disasm_struct->num_bin_cmd[0]);
 
     disasm_struct->bin_codes_buf = (int*)calloc(*disasm_struct->num_bin_cmd, sizeof(int));
 

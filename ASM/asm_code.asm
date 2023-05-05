@@ -1,4 +1,0 @@
-PUSH 10
-PUSH [10+ax]
-POP [bx+20]
-HLT

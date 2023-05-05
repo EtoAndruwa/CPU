@@ -10,4 +10,5 @@ logs/
 *.log
 *.pdf
 *.tex
+*.bin
 *.asm

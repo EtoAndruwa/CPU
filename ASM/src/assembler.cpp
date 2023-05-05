@@ -2,7 +2,7 @@
 
 size_t file_openning_check(asm_struct* assembly_struct) 
 {   
-    FILE* asm_code = fopen(FILE_ASM_NAME, "rb"); // Opens the file with text
+    FILE* asm_code = fopen(FILE_ASM_NAME, "r"); // Opens the file with text
     FILE* bin_code = fopen(FILE_CODE_NAME, "wb"); // Opens an empty file
 
     if(asm_code == nullptr)

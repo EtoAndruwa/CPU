@@ -15,7 +15,14 @@ size_t listing(asm_struct* assembly_struct)
     fprintf(listing_file,"| ID |		%-*s		|    TYPE    |		%-*s		|    STATUS    |\n", assembly_struct->length_listing, "COMMAND", assembly_struct->length_listing - 4, "ASM");
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
-        fprintf(listing_file,"|%03d|		%-*s		|    %s     |		%-*d		|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->length_listing, assembly_struct->toks[i].text, get_tok_type_string(assembly_struct->toks[i].type), assembly_struct->length_listing - 4, assembly_struct->toks[i].value, assembly_struct->toks[i].status);
+        if(check_is_float(assembly_struct->toks[i].text) == TOKEN_IS_FLT)
+        {
+            fprintf(listing_file,"|%03d|		%-*s		|    %s     |		%-*lf		|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->length_listing, assembly_struct->toks[i].text, get_tok_type_string(assembly_struct->toks[i].type), assembly_struct->length_listing - 4, assembly_struct->toks[i].value.flt_val, assembly_struct->toks[i].status);
+        }
+        else
+        {
+            fprintf(listing_file,"|%03d|		%-*s		|    %s     |		%-*d		|      %s      |", assembly_struct->toks[i].new_index, assembly_struct->length_listing, assembly_struct->toks[i].text, get_tok_type_string(assembly_struct->toks[i].type), assembly_struct->length_listing - 4, assembly_struct->toks[i].value.int_val, assembly_struct->toks[i].status);
+        }
         if(strcmp(assembly_struct->toks[i].status, "--") == 0)
         {
             fprintf(listing_file, " <----- %s", get_tok_err_code_string(assembly_struct->toks[i].error_code)); 
@@ -77,7 +84,15 @@ void print_all_toks(asm_struct* assembly_struct) // CHECKED
     {
         printf("\n##################################################\n");
         printf("TOKEN_TEXT: %s\n", assembly_struct->toks[i].text);
-        printf("TOKEN_VALUE: %d\n", assembly_struct->toks[i].value);
+
+        if(check_is_float(assembly_struct->toks[i].text) == TOKEN_IS_FLT)
+        {
+            printf("TOKEN_VALUE: %f\n", assembly_struct->toks[i].value.flt_val);
+        }
+        else
+        {
+            printf("TOKEN_VALUE: %d\n", assembly_struct->toks[i].value.int_val);
+        }
         printf("TOKEN_TYPE: %ld\n", assembly_struct->toks[i].type);
         printf("TOKEN_STATUS: %s\n", assembly_struct->toks[i].status);
         printf("TOKEN_NEW_INDEX: %d\n", assembly_struct->toks[i].new_index);

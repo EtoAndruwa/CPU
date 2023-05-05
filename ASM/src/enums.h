@@ -63,9 +63,10 @@ enum token_error_codes
     ERR_DOUBLE_DECL_OF_FNC       = -10, 
     ERR_FIRST_DECL_OF_FNC        = -11,
     ERR_TO_CHECK_INNER_RAM       = -12,
-    ERR_DOUBLE_DECL_OF_FLAG      = -13,
-    ERR_FIRST_DECL_OF_FLAG       = -14,
-    ERR_INVAL_RAM_ADDRESSING     = -15,
+    ERR_INNER_RAM_IF_FLT         = -13,
+    ERR_DOUBLE_DECL_OF_FLAG      = -14,
+    ERR_FIRST_DECL_OF_FLAG       = -15,
+    ERR_INVAL_RAM_ADDRESSING     = -16,
 };  
 #endif
 

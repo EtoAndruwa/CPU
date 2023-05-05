@@ -1,4 +1,4 @@
 | ID |		COMMAND		|    TYPE    |		ASM		|    STATUS    |
 |000|		PUSH   		|    CMD     |		33 		|      OK      |
-|001|		10     		|    VAL     |		10 		|      OK      |
+|001|		2.3    		|    VAL     |		2.300000		|      OK      |
 |002|		HLT    		|    CMD     |		0  		|      OK      |

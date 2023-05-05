@@ -74,6 +74,8 @@ typedef struct asm_struct
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)
     size_t cur_tok_index  = 0;         /// \brief The index of the current token
     size_t length_listing = 7;         /// \brief The minimum length of the cell in the listing with the names of tokens for pretty log print
+    size_t num_of_ints    = 0;         /// \brief The number of cmd values and int arguments
+    size_t num_of_flts    = 0;         /// \breif The number of flt values as arguments
 };
 
 /*#####################################################################################################################################################################################*/
@@ -83,7 +85,7 @@ size_t dtor_asm(asm_struct* assembly_struct);
 size_t get_size_asm(asm_struct* assembly_struct);
 size_t get_commands_into_buf(asm_struct* assembly_struct); 
 void print_struct(asm_struct* assembly_struct);
-size_t get_tokens(asm_struct* assembly_struct);
+int get_tokens(asm_struct* assembly_struct);
 size_t realloc_toks(asm_struct* assembly_struct, size_t i); 
 void print_all_toks(asm_struct* assembly_struct); 
 void translate_to_asm(asm_struct* assembly_struct);  
@@ -119,13 +121,13 @@ size_t dump_asm(asm_struct* assembly_struct, const char* FUNCT_NAME, int FUNCT_L
 
 size_t listing(asm_struct* assembly_struct);
 
-size_t write_asm(asm_struct* assembly_struct);
+int write_asm(asm_struct* assembly_struct);
 
 size_t get_arr_bin_codes(asm_struct* assembly_struct);
-void new_index_tok(asm_struct* assembly_struct, size_t index_cmd);
-void put_new_index(asm_struct* assembly_struct);
+void get_new_index_tok(asm_struct* assembly_struct, size_t index_cmd);
+void put_new_index_tok(asm_struct* assembly_struct);
 int  get_new_num_toks(asm_struct* assembly_struct); 
-void max_len_tok(asm_struct* assembly_struct);
+void get_max_len_tok(asm_struct* assembly_struct);
 void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_text_ptr, char* register_text_ptr);
 
 

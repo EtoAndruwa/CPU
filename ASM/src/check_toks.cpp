@@ -2,31 +2,34 @@
 
 size_t check_is_int(char* num_text) // CHECKED
 {
-    size_t int_flag = TOKEN_IS_INT; // Returns TOKEN_IS_INT if all characters are digit
     size_t length_text = strlen(num_text);
 
     if(num_text[0] == '-' && length_text == 1) // case for '-' minus sign only
     {
+        printf("\nTOKEN_IS_NOT_INT 1\n");
         return NOT_ALL_DIGITS;
     }
     if(num_text[0] != '-' && isdigit(num_text[0]) == 0) // case for negative int
     {    
+        printf("\nTOKEN_IS_NOT_INT 2\n");
         return NOT_ALL_DIGITS;
     }    
-    for(size_t index  = 1; index < length_text; index++)
+    for(size_t i = 1; i < length_text; i++)
     {
-        if(isdigit(num_text[index]) == 0) // Check does the text contain digits only
+        if(isdigit(num_text[i]) == 0) // Check does the text contain digits only
         {
-            int_flag = TOKEN_IS_NOT_INT;
-            break;
+            printf("\nTOKEN_IS_NOT_INT 3\n");
+            return TOKEN_IS_NOT_INT;
         }
     }
-    return int_flag; 
+
+    printf("\nTOKEN_IS_INT\n");
+    return TOKEN_IS_INT; 
 }
 
 size_t check_next_token(asm_struct* assembly_struct, size_t token_index) // HERE NEEDS FLOAT RETURN
 {
-    return ((((assembly_struct->num_toks - 1) > token_index) && (check_is_int(assembly_struct->toks[token_index+1].text) == TOKEN_IS_INT))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD);
+    return ((((assembly_struct->num_toks - 1) > token_index) && (check_is_int(assembly_struct->toks[token_index + 1].text) == TOKEN_IS_INT))? NEXT_TOKEN_VAL: NEXT_TOKEN_CMD);
 }
 
 size_t check_all_valid(asm_struct* assembly_struct) // CHECKED
@@ -50,7 +53,7 @@ size_t check_all_valid(asm_struct* assembly_struct) // CHECKED
     return ALL_TOKENS_VALID; 
 }
 
-size_t check_brackets(char* token_text) 
+size_t check_brackets(char* token_text) // CHECKED
 {
     return (((token_text[0] == '[') && (token_text[strlen(token_text) - 1] == ']'))? BRACKETS_OKEY: BRACKETS_NOT_OKEY);
 }
@@ -217,20 +220,16 @@ size_t check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
     }
 }
 
-size_t check_is_number(char* num_text) 
+size_t check_is_number(char* num_text) // CHECKED
 {
-    size_t is_digits = ALL_DIGITS; 
-
-    size_t length_text = strlen(num_text);
-    for(size_t i  = 0; i < length_text; i++)
+    for(size_t i = 0; i < strlen(num_text); i++)
     {
         if(isdigit(num_text[i]) == 0) // If the character is not a digit
         {
-            is_digits = NOT_ALL_DIGITS;
+            return NOT_ALL_DIGITS;
         }
     }
-
-    return is_digits; // Returns 1 if all characters are digits (word is an integer)
+    return ALL_DIGITS; // Returns ALL_DIGITS if all characters are digits (word is an integer)
 }
 
 size_t check_flags(asm_struct* assembly_struct) 
@@ -435,7 +434,7 @@ size_t check_next_reg(asm_struct* assembly_struct, size_t cmd_index) // CHECKED
     }
 }
 
-size_t check_inner_reg(asm_struct* assembly_struct, char* inner_text) // CHECKED Checks the inner for being register
+size_t check_inner_reg(asm_struct* assembly_struct, char* inner_text) // CHECKED 
 {
     if((strcmp(inner_text, "ax") == 0) || (strcmp(inner_text, "bx") == 0) || (strcmp(inner_text, "cx") == 0) || (strcmp(inner_text, "dx") == 0)
         || (strcmp(inner_text, "ex") == 0) || (strcmp(inner_text, "fx") == 0) || (strcmp(inner_text, "hx") == 0) || (strcmp(inner_text, "ix") == 0))
@@ -534,8 +533,8 @@ size_t length_double(char* str_double)
 
 size_t check_is_float(char* num_text) // CHECKED
 {
-    size_t float_flag = TOKEN_IS_FLT; 
     size_t length_text = strlen(num_text);
+    size_t num_of_points = 0;
 
     if(num_text[0] == '-' && length_text == 1) // case for '-' minus sign only
     {
@@ -545,14 +544,21 @@ size_t check_is_float(char* num_text) // CHECKED
     {    
         return NOT_ALL_DIGITS;
     }
-    for(size_t index = 1; index < length_text; index++)
+    for(size_t i = 1; i < length_text; i++)
     {
-        if(isdigit(num_text[index]) == 0 && num_text[index] != '.') // If the character is not a digit
+        if(num_text[i] == '.')
+        {   
+            num_of_points++;
+        }
+        if(num_of_points > 1)
         {
-            float_flag = NOT_ALL_DIGITS;
-            break;
+            return NOT_ALL_DIGITS;
+        }
+        if(isdigit(num_text[i]) == 0) // If the character is not a digit
+        {
+            return NOT_ALL_DIGITS;
         }
     }
-    return float_flag; // Returns INNER_IS_FLOAT if the word if float
+    return TOKEN_IS_FLT; // Returns INNER_IS_FLT if the word if float
 }
 

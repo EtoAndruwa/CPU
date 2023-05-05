@@ -81,7 +81,7 @@ void print_all_toks(asm_struct* assembly_struct) // CHECKED
         printf("TOKEN_TYPE: %ld\n", assembly_struct->toks[i].type);
         printf("TOKEN_STATUS: %s\n", assembly_struct->toks[i].status);
         printf("TOKEN_NEW_INDEX: %d\n", assembly_struct->toks[i].new_index);
-        printf("TOKEN_ERROR_CODE: %ld (%s)\n", assembly_struct->toks[i].error_code, get_tok_type_string(assembly_struct->toks[i].error_code));
+        printf("TOKEN_ERROR_CODE: %d (%s)\n", assembly_struct->toks[i].error_code, get_tok_err_code_string(assembly_struct->toks[i].error_code));
         printf("##################################################\n");
     }
 }

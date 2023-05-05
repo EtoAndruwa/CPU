@@ -1,4 +1,17 @@
-| ID |		COMMAND		|    TYPE    |		ASM		|    STATUS    |
-|000|		PUSH   		|    CMD     |		33 		|      OK      |
-|001|		2.3    		|    VAL     |		2.300000		|      OK      |
-|002|		HLT    		|    CMD     |		0  		|      OK      |
+| ID |		COMMAND		|    TYPE    |		ASM       		|    STATUS    |
+|000|		PUSH   		|    CMD     |		33.000000		|      OK      |
+|001|		10.2   		|    VAL     |		10.200000		|      OK      |
+|-01|		:2     		|    FLG     |		0.000000		|      OK      |
+|002|		PUSH   		|    CMD     |		33.000000		|      OK      |
+|003|		20     		|    VAL     |		20.000000		|      OK      |
+|004|		JMP    		|    CMD     |		10.000000		|      OK      |
+|005|		:2     		|    FLG     |		2.000000		|      OK      |
+|006|		CALL   		|    CMD     |		29.000000		|      OK      |
+|007|		FUNC:  		|    FNC     |		11.000000		|      OK      |
+|008|		PUSH   		|    CMD     |		33.000000		|      OK      |
+|009|		10     		|    VAL     |		10.000000		|      OK      |
+|010|		HLT    		|    CMD     |		0.000000		|      OK      |
+|-01|		FUNC:  		|    FNC     |		0.000000		|      OK      |
+|011|		PUSH   		|    CMD     |		33.000000		|      OK      |
+|012|		20     		|    VAL     |		20.000000		|      OK      |
+|013|		RET    		|    CMD     |		9.000000		|      OK      |

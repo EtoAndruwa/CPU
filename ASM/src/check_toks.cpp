@@ -97,35 +97,35 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             {
                 if(strcmp(str_check, "ax") == 0)
                 {
-                    assembly_struct->toks[index].value.int_val = AX; 
+                    assembly_struct->toks[index].value= AX; 
                 }
                 else if(strcmp(str_check, "bx") == 0)
                 {
-                    assembly_struct->toks[index].value.int_val  = BX;
+                    assembly_struct->toks[index].value = BX;
                 }
                 else if(strcmp(str_check, "cx") == 0)
                 {
-                    assembly_struct->toks[index].value.int_val  = CX;
+                    assembly_struct->toks[index].value = CX;
                 }
                 else if(strcmp(str_check, "dx") == 0)
                 {   
-                    assembly_struct->toks[index].value.int_val  = DX;
+                    assembly_struct->toks[index].value = DX;
                 }
                 else if(strcmp(str_check, "ex") == 0)
                 {
-                    assembly_struct->toks[index].value.int_val  = EX;
+                    assembly_struct->toks[index].value = EX;
                 }
                 else if(strcmp(str_check, "fx") == 0)
                 {   
-                    assembly_struct->toks[index].value.int_val  = FX;
+                    assembly_struct->toks[index].value = FX;
                 }                
                 else if(strcmp(str_check, "hx") == 0)
                 {
-                    assembly_struct->toks[index].value.int_val  = HX;
+                    assembly_struct->toks[index].value = HX;
                 }
                 else if(strcmp(str_check, "ix") == 0)
                 {   
-                    assembly_struct->toks[index].value.int_val  = IX;
+                    assembly_struct->toks[index].value = IX;
                 }
 
                 assembly_struct->toks[index].type = REG;
@@ -136,7 +136,7 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             }
             else if(check_is_int(str_check) == TOKEN_IS_INT)
             {   
-                assembly_struct->toks[index].value.int_val = atoi(str_check);
+                assembly_struct->toks[index].value= atoi(str_check);
                 assembly_struct->toks[index].type  = VAL;
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
 
@@ -171,7 +171,7 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index)
             {
                 if(check_is_int(str_check) == TOKEN_IS_INT)
                 {
-                    assembly_struct->toks[index].value.int_val = atoi(str_check);
+                    assembly_struct->toks[index].value= atoi(str_check);
                     assembly_struct->toks[index].type  = VAL;
                     strcpy((char*)assembly_struct->toks[index].status, "OK");
 
@@ -285,7 +285,7 @@ size_t check_flags(asm_struct* assembly_struct)
                         {
                             if(assembly_struct->toks[q].new_index != -1)
                             {
-                                assembly_struct->toks[i + 1].value.int_val = assembly_struct->toks[q].new_index;
+                                assembly_struct->toks[i + 1].value= assembly_struct->toks[q].new_index;
                                 break;
                             }
                         }
@@ -332,7 +332,7 @@ size_t check_func(asm_struct* assembly_struct)
                             {
                                 if(assembly_struct->toks[q].new_index != -1)
                                 {
-                                    assembly_struct->toks[i + 1].value.int_val = assembly_struct->toks[q].new_index;
+                                    assembly_struct->toks[i + 1].value= assembly_struct->toks[q].new_index;
                                     break;
                                 }
                             }
@@ -483,35 +483,35 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
 {
     if(strcmp(register_text_ptr, "ax") == 0)
     {
-        assembly_struct->toks[index - 1].value.int_val  = 0; 
+        assembly_struct->toks[index - 1].value = 0; 
     }
     else if(strcmp(register_text_ptr, "bx") == 0)
     {
-        assembly_struct->toks[index - 1].value.int_val  = 1 << 2; 
+        assembly_struct->toks[index - 1].value = 1 << 2; 
     }
     else if(strcmp(register_text_ptr, "cx") == 0)
     {
-        assembly_struct->toks[index - 1].value.int_val  = 1 << 3; 
+        assembly_struct->toks[index - 1].value = 1 << 3; 
     }
     else if(strcmp(register_text_ptr, "dx") == 0)
     {   
-        assembly_struct->toks[index - 1].value.int_val  = 1 << 4; 
+        assembly_struct->toks[index - 1].value = 1 << 4; 
     }
     else if(strcmp(register_text_ptr, "ex") == 0)
     {
-        assembly_struct->toks[index - 1].value.int_val  = 3 << 2; 
+        assembly_struct->toks[index - 1].value = 3 << 2; 
     }
     else if(strcmp(register_text_ptr, "fx") == 0)
     {   
-        assembly_struct->toks[index - 1].value.int_val  = 5 << 2; 
+        assembly_struct->toks[index - 1].value = 5 << 2; 
     }
     else if(strcmp(register_text_ptr, "hx") == 0)
     {
-        assembly_struct->toks[index - 1].value.int_val  = 6 << 2; 
+        assembly_struct->toks[index - 1].value = 6 << 2; 
     }
     else if(strcmp(register_text_ptr, "ix") == 0)
     {   
-        assembly_struct->toks[index - 1].value.int_val  = 7 << 2; 
+        assembly_struct->toks[index - 1].value = 7 << 2; 
     }
     else
     {   
@@ -534,7 +534,7 @@ void put_inner_values(asm_struct* assembly_struct, size_t index, char* value_tex
         return;
     }
 
-    assembly_struct->toks[index].value.int_val = atoi(value_text_ptr);
+    assembly_struct->toks[index].value= atoi(value_text_ptr);
     assembly_struct->toks[index].type  = VAL;
     strcpy((char*)assembly_struct->toks[index].status, "OK");
 }

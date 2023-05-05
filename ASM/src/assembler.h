@@ -46,20 +46,13 @@ static const char* FILE_LOG_NAME     = "log_file.txt";    /// \brief Defines the
 static const char* FILE_LISTING_NAME = "asm_listing.txt"; /// \brief Defines the name of the listing file
 static const int   POSION            = 0xDEAD;
 
-typedef union token_value
-{
-    int   int_val;
-    float flt_val;
-};
-
-
 /**
  * @brief The struct of the token
  */
 typedef struct tokens
 {
     char* text           = nullptr;   /// \brief The pointer to the string containing text of the token
-    token_value value;         /// \brief The value reponsible for asm code of the token
+    float value          = 0.0;   /// \brief The value reponsible for asm code of the token
     size_t type          = 0;         /// \brief The value responsible for type of token ('cmd','reg', 'val', 'flg')
     const char status[3] = {};        /// \brief The value responsible for status (valid/invalid) of token ('OK', '---')
     size_t error_code    = TOKEN_OK;  /// \brief The value responsible for error code of the token
@@ -75,14 +68,12 @@ typedef struct asm_struct
     FILE* asm_file_ptr    = nullptr;   /// \brief The pointer to the file with assembly code 
     FILE* bin_file_ptr    = nullptr;   /// \brief The pointer to the file with translated code 
     tokens* toks          = nullptr;   /// \brief The pointer to the array with tokens
-    void* bin_codes        = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
+    float* bin_codes       = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
     size_t err_code       = STRUCT_OK; /// \brief The error code of program
     size_t size           = 0;         /// \brief The size of the assembly file
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)
     size_t cur_tok_index  = 0;         /// \brief The index of the current token
     size_t length_listing = 7;         /// \brief The minimum length of the cell in the listing with the names of tokens for pretty log print
-    size_t num_of_ints    = 0;         /// \brief The number of cmd values and int arguments
-    size_t num_of_flts    = 0;         /// \breif The number of flt values as arguments
 };
 
 /*#####################################################################################################################################################################################*/
@@ -130,7 +121,7 @@ size_t listing(asm_struct* assembly_struct);
 
 int write_asm(asm_struct* assembly_struct);
 
-size_t get_arr_bin_codes(asm_struct* assembly_struct);
+int get_arr_bin_codes(asm_struct* assembly_struct);
 void get_new_index_tok(asm_struct* assembly_struct, size_t index_cmd);
 void put_new_index_tok(asm_struct* assembly_struct);
 int  get_new_num_toks(asm_struct* assembly_struct); 

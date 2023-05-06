@@ -499,7 +499,11 @@ void get_new_index_tok(asm_struct* assembly_struct, size_t old_index_cmd) // MUS
     else if(assembly_struct->toks[old_index_cmd].type == CMD || assembly_struct->toks[old_index_cmd].type == VAL || assembly_struct->toks[old_index_cmd].type == REG || 
         ((assembly_struct->toks[old_index_cmd].type == FNC) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "CALL") == 0)) || 
             ((assembly_struct->toks[old_index_cmd].type == FLG) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "JMP") == 0)) || 
-                ((assembly_struct->toks[old_index_cmd].type == FLG) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "JZ") == 0)))
+                ((assembly_struct->toks[old_index_cmd].type == FLG) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "JZ") == 0)) ||
+                    ((assembly_struct->toks[old_index_cmd].type == FLG) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "JE") == 0)) || 
+                        ((assembly_struct->toks[old_index_cmd].type == FLG) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "JNE") == 0)) ||
+                            ((assembly_struct->toks[old_index_cmd].type == FLG) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "JGE") == 0)) ||
+                                ((assembly_struct->toks[old_index_cmd].type == FLG) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "JG") == 0)))
     {
         for(size_t i = 0; i < old_index_cmd; i++)
         {
@@ -512,8 +516,10 @@ void get_new_index_tok(asm_struct* assembly_struct, size_t old_index_cmd) // MUS
             }  
             else if(assembly_struct->toks[i].type == CMD || assembly_struct->toks[i].type == VAL || assembly_struct->toks[i].type == REG || 
                 ((assembly_struct->toks[i].type == FNC) && (strcmp(assembly_struct->toks[i - 1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == FLG) && 
-                    (strcmp(assembly_struct->toks[i - 1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == FLG) && 
-                        (strcmp(assembly_struct->toks[i - 1].text, "JZ") == 0)))
+                    (strcmp(assembly_struct->toks[i - 1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JZ") == 0))
+                        || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JE") == 0)) || ((assembly_struct->toks[i].type == FLG) && 
+                            (strcmp(assembly_struct->toks[i - 1].text, "JGE") == 0)) || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JG") == 0))
+                                || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JGE") == 0)))
             {
                 new_cmd_index++;
             }

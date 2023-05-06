@@ -1,15 +1,14 @@
 #include "stack.h"
 
-size_t StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and initializes stack
+int StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and initializes stack
 {   
     stack_struct->capacity = stack_size;
     stack_struct->stack_pointer = calloc(1, 2 * sizeof(size_t) + stack_struct->capacity * sizeof(stack_type)); 
 
     if(stack_struct->stack_pointer == nullptr)
     {
-        stack_struct->error_code = ERR_TO_CALLOC_STACK;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
 
@@ -17,11 +16,17 @@ size_t StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and ini
     stack_struct->data = (stack_type*)(stack_struct->left_canary_position + 1);
     stack_struct->right_canary_position = (size_t*)(stack_struct->data + stack_struct->capacity);
 
-    stack_struct->left_canary_position[0] = CANARY;
+    stack_struct->left_canary_position[0]  = CANARY;
     stack_struct->right_canary_position[0] = CANARY;
     stack_struct->hash = 0;   
 
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    if(stack_struct->error_code != STACK_IS_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
 
     for(size_t i = 0; i < stack_struct->capacity ; i++)
     {
@@ -29,8 +34,13 @@ size_t StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and ini
     }
 
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-
-    return 0;
+    if(stack_struct->error_code != STACK_IS_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
+    return RETURN_OK;
 }
 
 void StackDtor(Stack* stack_struct) // (OK) Deletes the stack and spoils all stack's data with the poison value
@@ -59,6 +69,7 @@ int StackSqrt(Stack* stack_struct) // (OK) Gets the root of the value
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -72,6 +83,7 @@ int StackSqrt(Stack* stack_struct) // (OK) Gets the root of the value
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -93,6 +105,7 @@ int StackAdd(Stack* stack_struct) // (OK) Adds the entered value to next empty m
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -105,6 +118,7 @@ int StackAdd(Stack* stack_struct) // (OK) Adds the entered value to next empty m
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -116,6 +130,7 @@ int StackMul(Stack* stack_struct) // (OK) Multiplies two values of the stack
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -128,6 +143,7 @@ int StackMul(Stack* stack_struct) // (OK) Multiplies two values of the stack
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -139,6 +155,7 @@ int StackSub(Stack* stack_struct) // (OK) Substracts one value of the stack from
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -151,6 +168,7 @@ int StackSub(Stack* stack_struct) // (OK) Substracts one value of the stack from
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -162,6 +180,7 @@ int StackDiv(Stack* stack_struct) // (OK) Divides the preceding element by the l
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -182,6 +201,7 @@ int StackDiv(Stack* stack_struct) // (OK) Divides the preceding element by the l
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -193,6 +213,7 @@ int StackPush(Stack* stack_struct, stack_type push_value) // (OK) Gets the value
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -203,6 +224,7 @@ int StackPush(Stack* stack_struct, stack_type push_value) // (OK) Gets the value
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return stack_struct->error_code;
     }
@@ -244,3 +266,97 @@ int check_is_positive(double value) // CHECKED
     }
     return IS_NEGATIVE;
 }
+
+int StackRealocUp(Stack* stack_struct) // (CHECKED) Increases the capacity of the stack, reallocs data
+{   
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    if(stack_struct->error_code != STACK_IS_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
+
+    if(stack_struct->next_empty_cell == stack_struct->capacity)
+    {   
+        stack_struct->capacity *= 2;
+        stack_struct->stack_pointer = realloc(stack_struct->stack_pointer, stack_struct->capacity * sizeof(stack_type) + 2 * sizeof(size_t)); 
+
+        if(stack_struct->stack_pointer == nullptr)
+        {
+            stack_struct->error_code = ERR_TO_REALLOC_UP;
+            StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        stack_struct->left_canary_position = (size_t*)stack_struct->stack_pointer;
+        stack_struct->data = (stack_type*)(stack_struct->left_canary_position + 1);
+        stack_struct->right_canary_position = (size_t*)(stack_struct->data + stack_struct->capacity);
+
+        for(size_t i = stack_struct->next_empty_cell; i < stack_struct->capacity ; i++)
+        {
+            stack_struct->data[i] = POISON_VALUE;
+        }
+
+        stack_struct->left_canary_position[0]  = CANARY;
+        stack_struct->right_canary_position[0] = CANARY;
+    }
+
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    if(stack_struct->error_code != STACK_IS_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
+    return RETURN_OK;
+}
+
+int StackRealocDown(Stack* stack_struct) // (CHECKED) Decreases the capacity of the stack, reallocs data
+{   
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    if(stack_struct->error_code != STACK_IS_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
+
+    if((stack_struct->next_empty_cell <= (stack_struct->capacity - 2) / 2) && (stack_struct->capacity > 3))
+    {   
+        stack_struct->capacity = stack_struct->capacity - ((stack_struct->capacity - 1)/2); // Decreases the capacity of the array
+        stack_struct->stack_pointer = realloc(stack_struct->stack_pointer, stack_struct->capacity * sizeof(stack_type) + 2 * sizeof(size_t)); // Realocs the memory 
+
+        if(stack_struct->stack_pointer == nullptr)
+        {
+            stack_struct->error_code = ERR_TO_REALLOC_DOWN;
+            StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+            StackDtor(stack_struct);
+            exit(ERR_TO_REALLOC_DOWN);
+        }
+
+        stack_struct->left_canary_position = (size_t*)stack_struct->stack_pointer;  
+        stack_struct->data = (stack_type*)(stack_struct->left_canary_position + 1);
+        stack_struct->right_canary_position = (size_t*)(stack_struct->data + stack_struct->capacity);
+
+        for(size_t i = stack_struct->next_empty_cell; i < stack_struct->capacity ; i++)
+        {
+            stack_struct->data[i] = POISON_VALUE;
+        }
+
+        stack_struct->left_canary_position[0]  = CANARY;
+        stack_struct->right_canary_position[0] = CANARY;
+    }
+
+    StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    if(stack_struct->error_code != STACK_IS_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
+    return RETURN_OK;
+}
+
+

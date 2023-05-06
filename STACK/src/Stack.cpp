@@ -1,46 +1,47 @@
 #include  "stack.h"
 
-void StackLogic(Stack* stack_struct, char* command, stack_type push_value) // (OK) Calls other functions depending on the entered command 
+int StackLogic(Stack* stack_struct, char* command, stack_type push_value) // (OK) Calls other functions depending on the entered command 
 {
     if(strcmp(command, "PUSH") == 0)
     {   
         StackRealocUp(stack_struct);
-        StackPush(stack_struct, push_value);
+        return StackPush(stack_struct, push_value);
     }
     else if(strcmp(command, "POP") == 0)
     {   
         StackRealocDown(stack_struct);
-        StackPop(stack_struct);
+        return StackPop(stack_struct);
     }
     else if(strcmp(command, "ADD") == 0)
     {   
         StackRealocDown(stack_struct);
-        StackAdd(stack_struct);
+        return StackAdd(stack_struct);
     }
     else if(strcmp(command, "SUB") == 0)
     {   
         StackRealocDown(stack_struct);
-        StackSub(stack_struct);
+        return StackSub(stack_struct);
     }
     else if(strcmp(command, "MUL") == 0)
     {   
         StackRealocDown(stack_struct);
-        StackMul(stack_struct);
+        return StackMul(stack_struct);
     }
     else if(strcmp(command, "DIV") == 0)
     {   
         StackRealocDown(stack_struct);
-        StackDiv(stack_struct);
+        return StackDiv(stack_struct);
     }
     else if(strcmp(command, "SQRT") == 0)
     {   
         StackRealocDown(stack_struct);
-        StackSqrt(stack_struct);
+        return StackSqrt(stack_struct);
     }
     else
     {
-        stack_struct->error_code = ERR_UNKNOWN_STACK_CMD;
-        ERROR_MESSAGE(stderr, ERR_UNKNOWN_STACK_CMD)
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
     }
 }
 

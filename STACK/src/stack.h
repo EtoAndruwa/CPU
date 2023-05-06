@@ -31,7 +31,7 @@ static const char* ACTION_LOG_NAME ="action_log_stack.txt";  /// \brief Defines 
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-typedef int stack_type;
+typedef float stack_type;
 
 typedef struct
 {   
@@ -133,7 +133,7 @@ stack_type Get_cur_value_of_hash(Stack* stack_struct);
  * @param stack_size The total number of elements in the stack
  * @return size_t The error code of the function
  */
-size_t StackCtor(Stack* stack_struct, size_t stack_size);                        
+int StackCtor(Stack* stack_struct, size_t stack_size);                        
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -223,7 +223,7 @@ void StackPrint(Stack* stack_struct);
  * @param command The text of the command
  * @param push_value The value that must be pushed into the stack
  */
-void StackLogic(Stack* stack_struct, char* command, stack_type push_value);    
+int StackLogic(Stack* stack_struct, char* command, stack_type push_value);    
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -250,7 +250,7 @@ void StackConsoleWork(Stack* stack_struct);
  * 
  * @param stack_struct The main struct which is containing all data about the stack
  */
-void StackRealocUp(Stack* stack_struct);                                        
+int StackRealocUp(Stack* stack_struct);                                        
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -259,7 +259,7 @@ void StackRealocUp(Stack* stack_struct);
  * 
  * @param stack_struct The main struct which is containing all data about the stack
  */
-void StackRealocDown(Stack* stack_struct);                                    
+int StackRealocDown(Stack* stack_struct);                                    
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

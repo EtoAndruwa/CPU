@@ -39,11 +39,12 @@ void StackLogic(Stack* stack_struct, char* command, stack_type push_value) // (O
     }
     else
     {
-        printf("\nInvalid command, try again!\n");
+        stack_struct->error_code = ERR_UNKNOWN_STACK_CMD;
+        ERROR_MESSAGE(stderr, ERR_UNKNOWN_STACK_CMD)
     }
 }
 
-void StackConsoleWork(Stack* stack_struct) // (OK) Supports the work of the program until 'HLT' will be entered 
+void StackConsoleWork(Stack* stack_struct) // (OLD COMMAND)
 {
     char* command = (char*)calloc(MAX_LINE_COMMAND, sizeof(char));
 
@@ -76,57 +77,49 @@ void StackConsoleWork(Stack* stack_struct) // (OK) Supports the work of the prog
     }
 
     free(command);
-    command = nullptr;
 }
 
-void StackCheck(Stack* stack_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) // (OK) Checks the stack for the possible errors
+void StackCheck(Stack* stack_struct, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE) // (CHECKED) Checks the stack for the possible errors
 {   
     if(stack_struct->data == nullptr)
     {
         stack_struct->error_code = ERR_NULL_DATA;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
-        exit(ERR_NULL_DATA);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
     }
     else if(stack_struct->next_empty_cell > stack_struct->capacity)
     {
         stack_struct->error_code = ERR_OUT_OF_STACK_RIGHT;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
-        exit(ERR_OUT_OF_STACK_RIGHT);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
     }
     else if(stack_struct->next_empty_cell < 0)
     {   
         stack_struct->error_code = ERR_OUT_OF_STACK_LEFT;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
-        exit(ERR_OUT_OF_STACK_LEFT);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
     }
     else if(stack_struct->left_canary_position[0] != CANARY)
     {   
         stack_struct->error_code = ERR_LEFT_CANARY_DEAD;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
-        exit(ERR_LEFT_CANARY_DEAD);
+        ERROR_MESSAGE(stderr, stack_struct->error_code) 
     }
     else if(stack_struct->right_canary_position[0] != CANARY)
     {   
         stack_struct->error_code = ERR_RIGHT_CANARY_DEAD;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
-        exit(ERR_RIGHT_CANARY_DEAD);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
     }
     else if(stack_struct->hash != Get_cur_value_of_hash(stack_struct))   
     {
         stack_struct->error_code = ERR_HASH_CHANGED;
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
-        exit(ERR_HASH_CHANGED);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
     }
     else if(stack_struct->error_code != STACK_IS_OK)
     {
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        StackDtor(stack_struct);
-        exit(ERR_HASH_CHANGED);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
     }
 }

@@ -7,7 +7,7 @@ void Calculate_hash(Stack* stack_struct) // (OK) Recalculates the value of hash 
     {   
         if(stack_struct->data[i] != POISON_VALUE)
         {
-            stack_struct->hash = stack_struct->hash + stack_struct->data[i];
+            stack_struct->hash += stack_struct->data[i];
         }
     }
 }
@@ -19,6 +19,5 @@ stack_type Get_cur_value_of_hash(Stack* stack_struct) // (OK) Calculates the cur
     {
         cur_value_of_hash += stack_struct->data[i]; 
     }    
-
     return cur_value_of_hash;
 }

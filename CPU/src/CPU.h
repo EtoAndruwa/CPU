@@ -89,7 +89,7 @@ typedef struct
     float* bin_code             = nullptr ;      /// \brief The pointer to the array with binary codes 
     stack_type reg[REG_NUM]     = {};      /// \brief The array registers for values
     size_t curr_cmd             = 0;       /// \brief The index of the current command in the array with binary codes  
-    size_t error_code           = CPU_OK;       /// \brief The error code of the struct
+    int error_code              = CPU_OK;       /// \brief The error code of the struct
 }CPU; 
 
 /**
@@ -104,14 +104,14 @@ typedef struct
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-int pop_reg(CPU* CPU, size_t reg_code);
-int push_reg(CPU* CPU, size_t reg_code);
-int push_ram_val(CPU* CPU, size_t ram_index); 
-int push_ram_reg(CPU* CPU, size_t reg_id); 
-int pop_ram_reg(CPU* CPU, size_t reg_id); 
-int pop_ram_val(CPU* CPU, size_t ram_index); 
+int pop_reg(CPU* CPU, float reg_code);
+int push_reg(CPU* CPU, float reg_code);
+int push_ram_val(CPU* CPU, float ram_index); 
+int push_ram_reg(CPU* CPU, float reg_id); 
+int pop_ram_reg(CPU* CPU, float reg_id); 
+int pop_ram_val(CPU* CPU, float ram_index); 
 int cpu_ctor(CPU* CPU, Stack* Stack);
-char* convert_enum_cpu(size_t error_code);
+char* convert_enum_cpu(int error_code);
 void print_cpu_data(CPU* CPU);
 void print_ram(CPU* CPU);
 void cpu_dtor(CPU* CPU);
@@ -119,17 +119,17 @@ int get_cmd_in_buf(CPU* CPU);
 int cpu_work(CPU* CPU, Call_stack* Call_stack);
 void call_stack_ctor_dtor(Call_stack* Call_stack);
 void print_call_stack(Call_stack* Call_stack);
-int push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
+int push_ret(CPU* CPU, Call_stack* Call_stack, float index_to_jmp);
 int jmp_ret(CPU* CPU, Call_stack* Call_stack);
 void fill_with_poison(stack_type* arr_ptr, size_t size_arr);
-void jmp_flag(CPU* CPU, size_t index_to_jmp);
+void jmp_flag(CPU* CPU, float index_to_jmp);
 void print_ram_screen(CPU* CPU);
-int dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
+int dump_cpu(CPU* CPU, const char* func_name, int func_line, const char* func_file);
 int safe_exit(CPU* CPU, const char* func_name, int func_line, const char* func_file, int error_code);
-void jmp_flag_jz(CPU* CPU, size_t index_to_jmp);
-int dec(CPU* CPU, size_t reg_code);
-int push_ram_reg_val(CPU* CPU, int push_id, size_t shift_value);
-int pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value);
+void jmp_flag_jz(CPU* CPU, float index_to_jmp);
+int dec(CPU* CPU, float reg_code);
+int push_ram_reg_val(CPU* CPU, float push_id, float shift_value);
+int pop_ram_reg_val(CPU* CPU, float pop_id, float shift_value);
 int cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack);
 int inc(CPU* CPU, float reg_code);
 

@@ -432,19 +432,5 @@ int pop_ram_reg_val(CPU* CPU, float pop_id, float shift_value) // CHECKED
     return RETURN_OK;
 }
 
-int check_is_positive(double value) // CHECKED
-{
-    if((fabs(value - fabs(value)) < EPS) && (fabs(value) > EPS))
-    {
-        return IS_POSITIVE;
-    }
-    else if(fabs(value) <= EPS)
-    {
-        return IS_ZERO;
-    }
-    
-    return IS_NEGATIVE;
-}
-
 
 

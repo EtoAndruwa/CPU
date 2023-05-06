@@ -7,7 +7,7 @@
 #define DIV()            StackDiv(CPU->stack); CPU->curr_cmd++
 #define SQRT()           StackSqrt(CPU->stack); CPU->curr_cmd++
 #define SUB()            StackSub(CPU->stack); CPU->curr_cmd++
-#define PUSH_ST()        StackPush(CPU->stack, (int)CPU->bin_code[CPU->curr_cmd + 1] * MUL_CONST); CPU->curr_cmd += 2
+#define PUSH_ST()        StackPush(CPU->stack, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define PUSH_REG()       push_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define POP_REG()        pop_reg(CPU, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define CALL()           push_ret(CPU, Call_stack, CPU->curr_cmd + 2); CPU->curr_cmd = CPU->bin_code[CPU->curr_cmd + 1]
@@ -23,7 +23,6 @@
 #define PUSH_RAM_V_R_B() push_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define PUSH_RAM_V_R_C() push_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define PUSH_RAM_V_R_D() push_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
-
 
 #define POP_RAM_V_R_A()  pop_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define POP_RAM_V_R_B()  pop_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2

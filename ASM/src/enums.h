@@ -80,7 +80,6 @@ enum return_codes
 {
     RETURN_OK,
     INNER_RAM_INVALID,
-    INNER_REG        , 
     INNER_VAL        ,
     INNER_VAL_REG    ,
     INNER_IS_REG     ,

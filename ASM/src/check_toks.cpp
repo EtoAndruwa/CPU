@@ -85,7 +85,7 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index) // CH
             strncpy(str_check, (token_text + 1), strlen_token_check - 2); // copies inner test [ax] -> ax
             str_check[strlen_token_check - 1] = '\0'; // makes null terminated string
 
-            if(check_inner_reg(assembly_struct, str_check) == INNER_REG)
+            if(check_inner_reg(assembly_struct, str_check) == INNER_IS_REG)
             {
                 if(strcmp(str_check, "ax") == 0)
                 {
@@ -124,7 +124,7 @@ int check_ram(asm_struct* assembly_struct, char* token_text, size_t index) // CH
                 strcpy((char*)assembly_struct->toks[index].status, "OK");
 
                 free(str_check); // frees inner reg text
-                return INNER_REG; 
+                return INNER_IS_REG; 
             }
             else if(check_is_int(str_check) == TOKEN_IS_INT)
             {   

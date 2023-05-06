@@ -113,7 +113,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // CHECK
                 assembly_struct->cur_tok_index += 2;                                                                                                                                        \
                 return;                                                                                                                                                                     \
             }                                                                                                                                                                               \
-            else if(((assembly_struct->num_toks - 1) > cur_tok_index) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_index + 1].text, cur_tok_index + 1) == INNER_REG))       \
+            else if(((assembly_struct->num_toks - 1) > cur_tok_index) && (check_ram(assembly_struct, assembly_struct->toks[cur_tok_index + 1].text, cur_tok_index + 1) == INNER_IS_REG))       \
             {                                                                                                                                                                               \
                 assembly_struct->toks[cur_tok_index].value = command_id | (3 << 6);                                                                                                         \
                 assembly_struct->toks[cur_tok_index].type  = CMD;                                                                                                                           \

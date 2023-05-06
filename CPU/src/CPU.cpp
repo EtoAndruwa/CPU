@@ -99,8 +99,9 @@ int get_cmd_in_buf(CPU* CPU) // CHECKED
         ERROR_MESSAGE(stderr, ERR_INV_READ_NUM_CMD)
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INV_READ_NUM_CMD);
     }
+    printf("\nCMD GET: %d\n", (int)CPU->num_bin_cmd[0]);
 
-    CPU->bin_code = (float*)calloc((int)CPU->num_bin_cmd[0], sizeof(float));
+    CPU->bin_code = (float*)calloc(((int)CPU->num_bin_cmd[0]), sizeof(float));
     if(CPU->bin_code == nullptr)    
     {
         ERROR_MESSAGE(stderr, ERR_CALLOC_BIN_CODE)

@@ -1,27 +1,30 @@
 #include "CPU.h"
 
-#include "CPU.h"
-
-size_t cpu_ctor(CPU* CPU, Stack* Stack)
+int cpu_ctor(CPU* CPU, Stack* Stack) // CHECKED
 {
-    size_t error_code = StackCtor(Stack, STACK_SIZE);
-    if(error_code != 0)
+    int error_code = StackCtor(Stack, STACK_SIZE);
+    if(error_code != RETURN_OK)
     {
+        ERROR_MESSAGE(stderr, error_code)
         return error_code;
     }
 
     CPU->stack = Stack;
     CPU->error_code = CPU_OK;
+    CPU->bin_code = nullptr;
+    CPU->bin_file = nullptr;
+    CPU->num_bin_cmd[0] = 0;
+    CPU->curr_cmd = 0;
 
     fill_with_poison(CPU->reg, REG_NUM);
 
     for(size_t i = 0; i < RAM_SIZE; i++)
     {
-        CPU->ram[i] = 'O' * 100;
+        CPU->ram[i] = 'O';
     }
 }
 
-void cpu_dtor(CPU* CPU)
+void cpu_dtor(CPU* CPU) // CHECKED
 {
     dump_cpu(CPU,FUNC_NAME, FUNC_LINE, FUNC_FILE);
 
@@ -34,6 +37,9 @@ void cpu_dtor(CPU* CPU)
     free(CPU->bin_code);
     CPU->bin_code = nullptr;
 
+    CPU->bin_file = nullptr;
+    CPU->curr_cmd = POISON_VALUE;
+    CPU->num_bin_cmd[0] = POISON_VALUE;
     CPU->error_code = POISON_VALUE;
 }
 
@@ -51,19 +57,19 @@ void fill_with_poison(stack_type* arr_ptr, size_t size_arr) // CHECKED
     }
 }
 
-
-int check_code_file(CPU* CPU)
+int check_code_file(CPU* CPU) // CHECKED
 {
     FILE* bin_file_ptr = fopen("../ASM/bin_code.bin", "rb"); // Opens an empty file
     if(bin_file_ptr == nullptr)
     {
+        ERROR_MESSAGE(stderr, ERR_OPEN_BIN_FILE)
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_OPEN_BIN_FILE);
     }
     CPU->bin_file = bin_file_ptr;
     return RETURN_OK;
 }
 
-size_t cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
+int cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack) // CHECKED
 {
     #define DEF_CMD(name, body) case name: body; break;
 
@@ -74,10 +80,11 @@ size_t cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack)
     #undef DEF_CMD
 
     default:
+        ERROR_MESSAGE(stderr, ERR_UNKNOWN_CMD)
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_UNKNOWN_CMD);
     }
 
-    return 0;
+    return RETURN_OK;
 }
 
 int get_cmd_in_buf(CPU* CPU) // CHECKED

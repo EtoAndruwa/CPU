@@ -1,30 +1,33 @@
 #include "CPU.h"
 
-size_t push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) 
+int push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp) // CHECKED
 {
     if((Call_stack->cur_index >= 0) && (Call_stack->cur_index < CALL_STACK_SIZE))
     {
-        Call_stack->call_stack[Call_stack->cur_index] = index_to_jmp;
+        Call_stack->call_stack[Call_stack->cur_index] = (int)index_to_jmp;
         Call_stack->cur_index++;
-    }
-    return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALL_STACK_FULL);
-}
-
-void jmp_flag(CPU* CPU, size_t index_to_jmp)
-{
-    CPU->curr_cmd = CPU->bin_code[index_to_jmp];
-} 
-
-void jmp_flag_jz(CPU* CPU, size_t index_to_jmp)
-{
-    if((CPU->reg[CX] / MUL_CONST) == 0)
-    {
-        CPU->curr_cmd = CPU->bin_code[index_to_jmp];
     }
     else
     {
-        CPU->curr_cmd += 2; 
+        ERROR_MESSAGE(stderr, ERR_CALL_STACK_FULL)
+        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALL_STACK_FULL);
     }
+    return RETURN_OK;
+}
+
+void jmp_flag(CPU* CPU, size_t index_to_jmp) // CHECKED
+{
+    CPU->curr_cmd = (int)(CPU->bin_code[index_to_jmp]);
+} 
+
+void jmp_flag_jz(CPU* CPU, size_t index_to_jmp) // CHECKED
+{
+    if(check_is_positive(CPU->reg[CX]) == IS_ZERO)
+    {
+        CPU->curr_cmd = (int)CPU->bin_code[index_to_jmp];
+        return;
+    }
+    CPU->curr_cmd += 2; 
 }
 
 size_t dec(CPU* CPU, size_t reg_code)
@@ -67,7 +70,7 @@ size_t jmp_ret(CPU* CPU, Call_stack* Call_stack)
     }
 }
 
-size_t push_reg(CPU* CPU, size_t reg_code) // From reg to stack
+int push_reg(CPU* CPU, int reg_code) // CHECKED From reg to stack
 {   
     #define DEF_CMD_PUSH_REG(reg_code)                      \
         case reg_code:                                      \
@@ -76,37 +79,55 @@ size_t push_reg(CPU* CPU, size_t reg_code) // From reg to stack
 
     switch (reg_code)
     {
+        DEF_CMD_PUSH_REG(AX)
+        DEF_CMD_PUSH_REG(CX)
+        DEF_CMD_PUSH_REG(BX)
+        DEF_CMD_PUSH_REG(DX)
+        DEF_CMD_PUSH_REG(EX)
+        DEF_CMD_PUSH_REG(FX)
+        DEF_CMD_PUSH_REG(HX)
+        DEF_CMD_PUSH_REG(IX)
+        #undef DEF_CMD_PUSH_REG
 
-    DEF_CMD_PUSH_REG(AX)
-    DEF_CMD_PUSH_REG(CX)
-    DEF_CMD_PUSH_REG(BX)
-    DEF_CMD_PUSH_REG(DX)
-    #undef DEF_CMD_PUSH_REG
-
-    default:
-        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
     }
+    return RETURN_OK;
 }
 
-size_t pop_reg(CPU* CPU, size_t reg_code) // From Stack to reg
+int pop_reg(CPU* CPU, int reg_code) // CHECKED From Stack to reg
 {
     #define DEF_CMD_POP_REG(reg_code)                       \
         case reg_code:                                      \
-            CPU->reg[reg_code - 21] = StackPop(CPU->stack); \
+            stack_type val = StackPop(CPU->stack);          \
+            if(val == POISON_VALUE)                         \
+            {                                               \
+                CPU->error_code = ERR_POP_VALUE_ERROR;      \
+                ERROR_MESSAGE(stderr, CPU->error_code)      \
+                return CPU->error_code;                     \
+            }                                               \
+            CPU->reg[reg_code - 21] = val;                  \
             break;                                          \
 
     switch (reg_code)
     {
 
-    DEF_CMD_POP_REG(AX)
-    DEF_CMD_POP_REG(BX)
-    DEF_CMD_POP_REG(CX)
-    DEF_CMD_POP_REG(DX)
-    #undef DEF_CMD_POP_REG
+        DEF_CMD_POP_REG(AX)
+        DEF_CMD_POP_REG(BX)
+        DEF_CMD_POP_REG(CX)
+        DEF_CMD_POP_REG(DX)
+        DEF_CMD_POP_REG(EX)
+        DEF_CMD_POP_REG(FX)
+        DEF_CMD_POP_REG(HX)
+        DEF_CMD_POP_REG(IX)
+        #undef DEF_CMD_POP_REG
 
-    default:
-        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
     }
+    return RETURN_OK;
 }
 
 size_t push_ram_val(CPU* CPU, size_t ram_index) // From RAM to Stack
@@ -292,7 +313,7 @@ size_t pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value)
     }
 }
 
-int check_is_positive(double value) // ok
+int check_is_positive(double value) // CHECKED
 {
     if((fabs(value - fabs(value)) < EPS) && (fabs(value) > EPS))
     {

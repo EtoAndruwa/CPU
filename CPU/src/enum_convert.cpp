@@ -1,6 +1,6 @@
 #include "CPU.h"
 
-char* convert_enum_cpu(size_t error_code)
+char* convert_enum_cpu(int error_code) // CHECKED
 {
     switch(error_code)
     {

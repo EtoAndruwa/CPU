@@ -36,10 +36,10 @@
 
 static const size_t RAM_SIZE        = 400;            /// \brief The size of the RAM
 static const size_t SCREEN_SIZE     = 20;             /// \brief The resolution of the screen   
-static const size_t REG_NUM         = 4;              /// \brief The number of general purpose registers
+static const size_t REG_NUM         = 8;              /// \brief The number of general purpose registers
 static const size_t STACK_SIZE      = 10;             /// \brief The capacity of the stack 
 static const size_t CALL_STACK_SIZE = 20;             /// \brief The capacity of the call stack 
-static const size_t MUL_CONST       = 100;            /// \brief Constant used in order to calculate with precision of 2 digits after the floating point
+// static const size_t MUL_CONST       = 100;            /// \brief Constant used in order to calculate with precision of 2 digits after the floating point
 static const char* BIN_NAME         = "bin_code.bin"; /// \brief The name of the file with binary code 
 static const char* DUMP_NAME        = "dump_log.txt"; /// \brief The name of the dump log file 
 
@@ -57,20 +57,21 @@ static const char* DUMP_NAME        = "dump_log.txt"; /// \brief The name of the
 enum error_code
 {
     CPU_OK                = 0,
-    ERR_NULLPTR_RAM       = 1,
-    ERR_RAM_ADDRESSING    = 2,
-    ERR_OPEN_BIN_FILE     = 3,
-    ERR_CALL_STACK_FULL   = 4,
-    ERR_CALL_STACK_EMPT   = 5,
-    ERR_OPEN_DMP_FILE     = 6,
-    ERR_CLOSE_DMP_FILE    = 7,
-    ERR_INVALID_REG       = 8,
-    ERR_UNKNOWN_CMD       = 9,
-    ERR_INV_READ_NUM_CMD  = 10,
-    ERR_CANNOT_READ_CMD   = 11,
-    ERR_CALLOC_BIN_CODE   = 12,
-    ERR_CLOSE_BIN_FILE    = 13,
-    ERR_BIN_NULL_BEF_DTOR = 14,
+    ERR_NULLPTR_RAM       = -1,
+    ERR_RAM_ADDRESSING    = -2,
+    ERR_OPEN_BIN_FILE     = -3,
+    ERR_CALL_STACK_FULL   = -4,
+    ERR_CALL_STACK_EMPT   = -5,
+    ERR_OPEN_DMP_FILE     = -6,
+    ERR_CLOSE_DMP_FILE    = -7,
+    ERR_NEW_REG           = -8,
+    ERR_UNKNOWN_CMD       = -9,
+    ERR_INV_READ_NUM_CMD  = -10,
+    ERR_CANNOT_READ_CMD   = -11,
+    ERR_CALLOC_BIN_CODE   = -12,
+    ERR_CLOSE_BIN_FILE    = -13,
+    ERR_BIN_NULL_BEF_DTOR = -14,
+    ERR_POP_VALUE_ERROR   = -15,
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
@@ -83,12 +84,12 @@ typedef struct
 {
     Stack* stack                = nullptr; /// \brief The pointer to the stack
     FILE* bin_file              = nullptr; /// \breif 
-    float num_bin_cmd[1]         = {}; /// \brief The number of the commands in the array of the binary codes
+    float num_bin_cmd[1]        = {}; /// \brief The number of the commands in the array of the binary codes
     stack_type ram[RAM_SIZE]    = {};      /// \brief The array with cells of RAM
-    float* bin_code             = {};      /// \brief The pointer to the array with binary codes 
-    stack_type reg [REG_NUM]    = {};      /// \brief The array registers for values
+    float* bin_code             = nullptr ;      /// \brief The pointer to the array with binary codes 
+    stack_type reg[REG_NUM]     = {};      /// \brief The array registers for values
     size_t curr_cmd             = 0;       /// \brief The index of the current command in the array with binary codes  
-    size_t error_code           = 0;       /// \brief The error code of the struct
+    size_t error_code           = CPU_OK;       /// \brief The error code of the struct
 }CPU; 
 
 /**
@@ -103,13 +104,13 @@ typedef struct
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-size_t pop_reg(CPU* CPU, size_t reg_code);
-size_t push_reg(CPU* CPU, size_t reg_code);
+int pop_reg(CPU* CPU, size_t reg_code);
+int push_reg(CPU* CPU, size_t reg_code);
 size_t push_ram_val(CPU* CPU, size_t ram_index); 
 size_t push_ram_reg(CPU* CPU, size_t reg_id); 
 size_t pop_ram_reg(CPU* CPU, size_t reg_id); 
 size_t pop_ram_val(CPU* CPU, size_t ram_index); 
-size_t cpu_ctor(CPU* CPU, Stack* Stack);
+int cpu_ctor(CPU* CPU, Stack* Stack);
 char* convert_enum_cpu(size_t error_code);
 void print_cpu_data(CPU* CPU);
 void print_ram(CPU* CPU);
@@ -118,7 +119,7 @@ int get_cmd_in_buf(CPU* CPU);
 int cpu_work(CPU* CPU, Call_stack* Call_stack);
 void call_stack_ctor_dtor(Call_stack* Call_stack);
 void print_call_stack(Call_stack* Call_stack);
-size_t push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
+int push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
 size_t jmp_ret(CPU* CPU, Call_stack* Call_stack);
 void fill_with_poison(stack_type* arr_ptr, size_t size_arr);
 void jmp_flag(CPU* CPU, size_t index_to_jmp);
@@ -129,5 +130,6 @@ void jmp_flag_jz(CPU* CPU, size_t index_to_jmp);
 size_t dec(CPU* CPU, size_t reg_code);
 size_t push_ram_reg_val(CPU* CPU, int push_id, size_t shift_value);
 size_t pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value);
+int cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack);
 
 #endif

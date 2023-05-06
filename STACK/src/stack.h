@@ -26,8 +26,8 @@
 #define FUNC_NAME __func__                                   /// \brief Used in order to get name of the function which called the error
 #define FUNC_LINE __LINE__                                   /// \brief Used in order to get the line from which the error was called
 #define FUNC_FILE __FILE__                                   /// \brief Used in order ot get the file from which the error was called
-static const char* LOG_FILE_NAME   ="dump_log.txt";          /// \brief Defines the name of the logfile
-static const char* ACTION_LOG_NAME ="action_log_stack.txt";  /// \brief Defines the name of the action log file
+static const char* LOG_FILE_NAME   = "dump_log.txt";          /// \brief Defines the name of the logfile
+static const char* ACTION_LOG_NAME = "action_log_stack.txt";  /// \brief Defines the name of the action log file
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -73,7 +73,8 @@ enum error_codes_stack
     ERR_OPEN_ACTION_LOG    = -13,
     ERR_CLOSE_ACTION_LOG   = -14,
     ERR_DIV_TO_ZERO        = -15,
-    ERR_UNKNOWN_STACK_CMD  = -16, 
+    ERR_UNKNOWN_STACK_CMD  = -16,
+    ERR_SQRT_FROM_NEGATIVE = -17, 
 };
 
 enum return_codes_stack
@@ -86,209 +87,26 @@ enum return_codes_stack
 
 };
 
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Converts an enum's int value to the enum's string value
- * 
- * @param code Error code of the stack struct
- * @return const char* The enum's code converted into the string value
- */
-const char* Enum_to_string(size_t code);                              
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Deletes the value from the stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @return stack_type Returns the popped value from the stack
- */
+const char* Enum_to_string(int code);                              
 stack_type StackPop(Stack* stack_struct);                                      
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Calculates the current value of the hash 
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @return stack_type Returns the current value of the stack's hash
- */
 stack_type Get_cur_value_of_hash(Stack* stack_struct);                         
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Creates and initializes stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @param stack_size The total number of elements in the stack
- */
-
-
-/**
- * @brief Creates and initializes stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @param stack_size The total number of elements in the stack
- * @return size_t The error code of the function
- */
 int StackCtor(Stack* stack_struct, size_t stack_size);                        
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Gets the value and pushes in to the stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @param push_value The value that must be pushed into the stack
- */
 int StackPush(Stack* stack_struct, stack_type push_value);                     
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Checks the stack for the possible errors
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @param FUNCT_NAME The function name which called the check
- * @param FUNCT_LINE The line of the file, from which the check was called
- * @param FUNCT_FILE The name of the file, from which the check was called 
- */
 void StackCheck(Stack* stack_struct,  const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE); 
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Deletes the stack and spoils all stack's data with the poison value
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 void StackDtor(Stack* stack_struct);                                            
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Outputs the data to the LOG.txt about the stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @param FUNCT_NAME The function name which called the check
- * @param FUNCT_LINE The line of the file, from which the check was called
- * @param FUNCT_FILE The name of the file, from which the check was called 
- */
 void StackDump(Stack* stack_struct,  const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);  
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Multiplies two values of the stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 int StackMul(Stack* stack_struct);                                             
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Substracts one value of the stack from another one
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 int StackSub(Stack* stack_struct);                                             
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Divides the preceding element by the last element of the stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
-int StackDiv(Stack* stack_struct);                                             
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief (DEBUG ONLY) Prints the stack's current structure in the console
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
+int StackDiv(Stack* stack_struct);                                            
 void StackPrint(Stack* stack_struct);                                          
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Calls other functions depending on the entered command
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- * @param command The text of the command
- * @param push_value The value that must be pushed into the stack
- */
 int StackLogic(Stack* stack_struct, char* command, stack_type push_value);    
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Adds the entered value to next empty memory cell of the stack
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 int StackAdd(Stack* stack_struct);                                             
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Supports the work of program until 'HLT' was entered in the console
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 void StackConsoleWork(Stack* stack_struct);                                     
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Increases the capacity of the stack, reallocs data
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 int StackRealocUp(Stack* stack_struct);                                        
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Decreases the capacity of the stack, reallocs data
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 int StackRealocDown(Stack* stack_struct);                                    
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Recalculates the value of hash everytime when called
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 void Calculate_hash(Stack* stack_struct);                                      
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Prints the stack's current structure in the console
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 void StackOut(Stack* stack_struct);                                           
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * @brief Gets the root of the value 
- * 
- * @param stack_struct The main struct which is containing all data about the stack
- */
 int StackSqrt(Stack* stack_struct);                                           
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
 int check_is_positive(double value);
 
 #endif 

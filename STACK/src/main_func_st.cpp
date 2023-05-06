@@ -1,6 +1,6 @@
 #include "stack.h"
 
-int StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and initializes stack
+int StackCtor(Stack* stack_struct, size_t stack_size) // (CHECKED) Creates and initializes stack
 {   
     stack_struct->capacity = stack_size;
     stack_struct->stack_pointer = calloc(1, 2 * sizeof(size_t) + stack_struct->capacity * sizeof(stack_type)); 
@@ -43,7 +43,7 @@ int StackCtor(Stack* stack_struct, size_t stack_size) // (OK) Creates and initia
     return RETURN_OK;
 }
 
-void StackDtor(Stack* stack_struct) // (OK) Deletes the stack and spoils all stack's data with the poison value
+void StackDtor(Stack* stack_struct) // (CHECKED) Deletes the stack and spoils all stack's data with the poison value
 {
     for(size_t i = 0; i < stack_struct->capacity; i++)
     {
@@ -64,7 +64,7 @@ void StackDtor(Stack* stack_struct) // (OK) Deletes the stack and spoils all sta
     stack_struct->stack_pointer = nullptr;
 }
 
-int StackSqrt(Stack* stack_struct) // (OK) Gets the root of the value
+int StackSqrt(Stack* stack_struct) // (CHECKED) Gets the root of the value
 {
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
@@ -74,9 +74,17 @@ int StackSqrt(Stack* stack_struct) // (OK) Gets the root of the value
         return stack_struct->error_code;
     }
 
-
-
-
+    if(check_is_positive(stack_struct->data[stack_struct->next_empty_cell - 1]) == IS_ZERO)
+    {
+        stack_struct->data[stack_struct->next_empty_cell - 1] = 0;
+    }
+    else if(check_is_positive(stack_struct->data[stack_struct->next_empty_cell - 1]) == IS_NEGATIVE)
+    {
+        stack_struct->error_code = ERR_SQRT_FROM_NEGATIVE;
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
     stack_struct->data[stack_struct->next_empty_cell - 1] = sqrt(stack_struct->data[stack_struct->next_empty_cell - 1]);
     Calculate_hash(stack_struct);
 
@@ -90,7 +98,7 @@ int StackSqrt(Stack* stack_struct) // (OK) Gets the root of the value
     return RETURN_OK;
 }
 
-void StackOut(Stack * stack_struct) // (OK) Prints the stack's current structure in the console
+void StackOut(Stack * stack_struct) // (CHECKED) Prints the stack's current structure in the console
 {   
     printf("\nLEFT_CANARY: = %ld\n", *(stack_struct->left_canary_position));
     for(size_t i = 0; i < stack_struct->capacity; i++) 
@@ -100,7 +108,7 @@ void StackOut(Stack * stack_struct) // (OK) Prints the stack's current structure
     printf("RIGHT_CANARY: = %ld\n\n", *(stack_struct->right_canary_position));
 }
 
-int StackAdd(Stack* stack_struct) // (OK) Adds the entered value to next empty memory cell of the stack
+int StackAdd(Stack* stack_struct) // (CHECKED) Adds the entered value to next empty memory cell of the stack
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
@@ -110,7 +118,7 @@ int StackAdd(Stack* stack_struct) // (OK) Adds the entered value to next empty m
         return stack_struct->error_code;
     }
 
-    stack_struct->data[stack_struct->next_empty_cell - 2] = (stack_struct->data[stack_struct->next_empty_cell - 2]) + (stack_struct->data[stack_struct->next_empty_cell - 1]);
+    stack_struct->data[stack_struct->next_empty_cell - 2] = stack_struct->data[stack_struct->next_empty_cell - 2] + stack_struct->data[stack_struct->next_empty_cell - 1];
     stack_struct->data[stack_struct->next_empty_cell - 1] = POISON_VALUE;
     stack_struct->next_empty_cell--;
     Calculate_hash(stack_struct);
@@ -125,7 +133,7 @@ int StackAdd(Stack* stack_struct) // (OK) Adds the entered value to next empty m
     return RETURN_OK;
 }
 
-int StackMul(Stack* stack_struct) // (OK) Multiplies two values of the stack
+int StackMul(Stack* stack_struct) // (CHECKED) Multiplies two values of the stack
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
@@ -150,7 +158,7 @@ int StackMul(Stack* stack_struct) // (OK) Multiplies two values of the stack
     return RETURN_OK;
 }
 
-int StackSub(Stack* stack_struct) // (OK) Substracts one value of the stack from another one
+int StackSub(Stack* stack_struct) // (CHECKED) Substracts one value of the stack from another one
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
@@ -175,7 +183,7 @@ int StackSub(Stack* stack_struct) // (OK) Substracts one value of the stack from
     return RETURN_OK;
 }
 
-int StackDiv(Stack* stack_struct) // (OK) Divides the preceding element by the last elemcapacityent of the stack
+int StackDiv(Stack* stack_struct) // (CHECKED) Divides the preceding element by the last elemcapacityent of the stack
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
@@ -185,18 +193,17 @@ int StackDiv(Stack* stack_struct) // (OK) Divides the preceding element by the l
         return stack_struct->error_code;
     }
 
-    // if(stack_struct->data[stack_struct->next_empty_cell - 1] == 0)
-    // {
-    //     stack_struct->error_code = ERR_DIV_TO_ZERO;
-    //     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-    // }
-    // else    
-    // {
-    //     stack_struct->data[stack_struct->next_empty_cell - 2] = ((float)(stack_struct->data[stack_struct->next_empty_cell - 2]) / (float)(stack_struct->data[stack_struct->next_empty_cell - 1])) * 100;
-    //     stack_struct->data[stack_struct->next_empty_cell - 1] = POISON_VALUE;
-    //     stack_struct->next_empty_cell--;
-    //     Calculate_hash(stack_struct);
-    // }
+    if(check_is_positive(stack_struct->data[stack_struct->next_empty_cell - 1]) == IS_ZERO)
+    {
+        stack_struct->error_code = ERR_DIV_TO_ZERO;
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
+    stack_struct->data[stack_struct->next_empty_cell - 2] = stack_struct->data[stack_struct->next_empty_cell - 2] / stack_struct->data[stack_struct->next_empty_cell - 1];
+    stack_struct->data[stack_struct->next_empty_cell - 1] = POISON_VALUE;
+    stack_struct->next_empty_cell--;
+    Calculate_hash(stack_struct);
 
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
@@ -208,7 +215,7 @@ int StackDiv(Stack* stack_struct) // (OK) Divides the preceding element by the l
     return RETURN_OK;
 }
 
-int StackPush(Stack* stack_struct, stack_type push_value) // (OK) Gets the value and pushes in to the stack
+int StackPush(Stack* stack_struct, stack_type push_value) // (CHECKED) Gets the value and pushes in to the stack
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
@@ -231,11 +238,12 @@ int StackPush(Stack* stack_struct, stack_type push_value) // (OK) Gets the value
     return RETURN_OK;
 }
 
-stack_type StackPop(Stack* stack_struct) // (OK) Deletes the value from the stack
+stack_type StackPop(Stack* stack_struct) // (CHECKED) Deletes the value from the stack
 {   
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return POISON_VALUE;
     }
@@ -248,6 +256,7 @@ stack_type StackPop(Stack* stack_struct) // (OK) Deletes the value from the stac
     StackCheck(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
     if(stack_struct->error_code != STACK_IS_OK)
     {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return POISON_VALUE;
     }

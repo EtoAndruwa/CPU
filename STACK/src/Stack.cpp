@@ -1,48 +1,131 @@
 #include  "stack.h"
 
-int StackLogic(Stack* stack_struct, char* command, stack_type push_value) // (OK) Calls other functions depending on the entered command 
+int StackLogic(Stack* stack_struct, char* command, stack_type push_value) // (CHECKED) Calls other functions depending on the entered command 
 {
+    int error_code = RETURN_OK;
     if(strcmp(command, "PUSH") == 0)
     {   
-        StackRealocUp(stack_struct);
-        return StackPush(stack_struct, push_value);
+        error_code = StackRealocUp(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+        
+        error_code = StackPush(stack_struct, push_value);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+        return RETURN_OK;
     }
     else if(strcmp(command, "POP") == 0)
     {   
-        StackRealocDown(stack_struct);
-        return StackPop(stack_struct);
+        error_code = StackRealocDown(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        error_code = StackPop(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+        return RETURN_OK;
     }
     else if(strcmp(command, "ADD") == 0)
     {   
-        StackRealocDown(stack_struct);
-        return StackAdd(stack_struct);
+        error_code = StackRealocDown(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        error_code = StackAdd(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+        return RETURN_OK;
     }
     else if(strcmp(command, "SUB") == 0)
     {   
-        StackRealocDown(stack_struct);
-        return StackSub(stack_struct);
+        error_code = StackRealocDown(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        error_code = StackSub(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+        return RETURN_OK;
     }
     else if(strcmp(command, "MUL") == 0)
     {   
-        StackRealocDown(stack_struct);
-        return StackMul(stack_struct);
+        error_code = StackRealocDown(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        error_code = StackMul(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        return RETURN_OK;
     }
     else if(strcmp(command, "DIV") == 0)
     {   
-        StackRealocDown(stack_struct);
-        return StackDiv(stack_struct);
+        error_code = StackRealocDown(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        error_code = StackDiv(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+        return RETURN_OK;
     }
     else if(strcmp(command, "SQRT") == 0)
     {   
-        StackRealocDown(stack_struct);
-        return StackSqrt(stack_struct);
+        error_code = StackRealocDown(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+
+        error_code = StackSqrt(stack_struct);
+        if(error_code != RETURN_OK)
+        {
+            ERROR_MESSAGE(stderr, stack_struct->error_code)
+            return stack_struct->error_code;
+        }
+        return RETURN_OK;
     }
-    else
-    {
-        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
-        ERROR_MESSAGE(stderr, stack_struct->error_code)
-        return stack_struct->error_code;
-    }
+    StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+    ERROR_MESSAGE(stderr, stack_struct->error_code)
+    return stack_struct->error_code;
 }
 
 void StackConsoleWork(Stack* stack_struct) // (OLD COMMAND)

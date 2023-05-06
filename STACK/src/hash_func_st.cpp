@@ -1,6 +1,6 @@
 #include "stack.h"
 
-void Calculate_hash(Stack* stack_struct) // (OK) Recalculates the value of hash everytime when called
+void Calculate_hash(Stack* stack_struct) // (CHECKED) Recalculates the value of hash everytime when called
 {
     stack_struct->hash = 0; // Calculating new hash
     for(size_t i = 0; i < stack_struct->next_empty_cell; i++)
@@ -12,7 +12,7 @@ void Calculate_hash(Stack* stack_struct) // (OK) Recalculates the value of hash 
     }
 }
 
-stack_type Get_cur_value_of_hash(Stack* stack_struct) // (OK) Calculates the current value of the hash
+stack_type Get_cur_value_of_hash(Stack* stack_struct) // (CHECKED) Calculates the current value of the hash
 {   
     stack_type cur_value_of_hash = 0;
     for(size_t i = 0; i < stack_struct->next_empty_cell; i++) 

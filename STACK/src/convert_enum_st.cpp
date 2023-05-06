@@ -1,6 +1,6 @@
 #include "stack.h"
 
-const char* Enum_to_string(size_t code) // (OK) Сonverts an enum's int value to the enum's string value
+const char* Enum_to_string(int code) // (CHECKED) Сonverts an enum's int value to the enum's string value
 {
     switch(code)
     {
@@ -21,6 +21,8 @@ const char* Enum_to_string(size_t code) // (OK) Сonverts an enum's int value to
         DEF_CMD_STRING(ERR_CLOSE_DUMP_FILE)
         DEF_CMD_STRING(ERR_OPEN_ACTION_LOG)
         DEF_CMD_STRING(ERR_DIV_TO_ZERO)
+        DEF_CMD_STRING(ERR_UNKNOWN_STACK_CMD)
+        DEF_CMD_STRING(ERR_SQRT_FROM_NEGATIVE)
 
         #undef DEF_CMD_STRING
         default:

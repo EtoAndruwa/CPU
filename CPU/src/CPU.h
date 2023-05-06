@@ -56,22 +56,22 @@ static const char* DUMP_NAME        = "dump_log.txt"; /// \brief The name of the
 
 enum error_code
 {
-    CPU_OK                = 0,
-    ERR_NULLPTR_RAM       = -1,
-    ERR_RAM_ADDRESSING    = -2,
-    ERR_OPEN_BIN_FILE     = -3,
-    ERR_CALL_STACK_FULL   = -4,
-    ERR_CALL_STACK_EMPT   = -5,
-    ERR_OPEN_DMP_FILE     = -6,
-    ERR_CLOSE_DMP_FILE    = -7,
-    ERR_NEW_REG           = -8,
-    ERR_UNKNOWN_CMD       = -9,
-    ERR_INV_READ_NUM_CMD  = -10,
-    ERR_CANNOT_READ_CMD   = -11,
-    ERR_CALLOC_BIN_CODE   = -12,
-    ERR_CLOSE_BIN_FILE    = -13,
-    ERR_BIN_NULL_BEF_DTOR = -14,
-    ERR_POP_VALUE_ERROR   = -15,
+    CPU_OK                  = 0,
+    ERR_NULLPTR_RAM         = -1,
+    ERR_RAM_ADDRESSING      = -2,
+    ERR_OPEN_BIN_FILE       = -3,
+    ERR_CALL_STACK_FULL     = -4,
+    ERR_CALL_STACK_EMPT     = -5,
+    ERR_OPEN_DMP_FILE       = -6,
+    ERR_CLOSE_DMP_FILE      = -7,
+    ERR_NEW_REG             = -8,
+    ERR_UNKNOWN_CMD         = -9,
+    ERR_INV_READ_NUM_CMD    = -10,
+    ERR_CANNOT_READ_CMD     = -11,
+    ERR_CALLOC_BIN_CODE     = -12,
+    ERR_CLOSE_BIN_FILE      = -13,
+    ERR_BIN_NULL_BEF_DTOR   = -14,
+    ERR_POP_VALUE_ERROR     = -15,
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
@@ -106,10 +106,10 @@ typedef struct
 
 int pop_reg(CPU* CPU, size_t reg_code);
 int push_reg(CPU* CPU, size_t reg_code);
-size_t push_ram_val(CPU* CPU, size_t ram_index); 
-size_t push_ram_reg(CPU* CPU, size_t reg_id); 
-size_t pop_ram_reg(CPU* CPU, size_t reg_id); 
-size_t pop_ram_val(CPU* CPU, size_t ram_index); 
+int push_ram_val(CPU* CPU, size_t ram_index); 
+int push_ram_reg(CPU* CPU, size_t reg_id); 
+int pop_ram_reg(CPU* CPU, size_t reg_id); 
+int pop_ram_val(CPU* CPU, size_t ram_index); 
 int cpu_ctor(CPU* CPU, Stack* Stack);
 char* convert_enum_cpu(size_t error_code);
 void print_cpu_data(CPU* CPU);
@@ -120,16 +120,17 @@ int cpu_work(CPU* CPU, Call_stack* Call_stack);
 void call_stack_ctor_dtor(Call_stack* Call_stack);
 void print_call_stack(Call_stack* Call_stack);
 int push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp);
-size_t jmp_ret(CPU* CPU, Call_stack* Call_stack);
+int jmp_ret(CPU* CPU, Call_stack* Call_stack);
 void fill_with_poison(stack_type* arr_ptr, size_t size_arr);
 void jmp_flag(CPU* CPU, size_t index_to_jmp);
 void print_ram_screen(CPU* CPU);
 int dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT_FILE);
 int safe_exit(CPU* CPU, const char* func_name, int func_line, const char* func_file, int error_code);
 void jmp_flag_jz(CPU* CPU, size_t index_to_jmp);
-size_t dec(CPU* CPU, size_t reg_code);
+int dec(CPU* CPU, size_t reg_code);
 size_t push_ram_reg_val(CPU* CPU, int push_id, size_t shift_value);
 size_t pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value);
 int cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack);
+int inc(CPU* CPU, float reg_code);
 
 #endif

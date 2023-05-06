@@ -7,10 +7,7 @@ size_t push_ret(CPU* CPU, Call_stack* Call_stack, size_t index_to_jmp)
         Call_stack->call_stack[Call_stack->cur_index] = index_to_jmp;
         Call_stack->cur_index++;
     }
-    else
-    {
-        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALL_STACK_FULL);
-    }
+    return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALL_STACK_FULL);
 }
 
 void jmp_flag(CPU* CPU, size_t index_to_jmp)

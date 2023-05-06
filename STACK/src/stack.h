@@ -83,8 +83,6 @@ enum return_codes_stack
     IS_POSITIVE,
     IS_ZERO,
     IS_NEGATIVE,
-
-
 };
 
 const char* Enum_to_string(int code);                              

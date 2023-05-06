@@ -26,6 +26,6 @@ char* convert_enum_cpu(size_t error_code)
 
         #undef DEF_CMD_STRING
         default:
-            return "NEW_ERROR_CODE";
+            return "NEW_ERROR_CODE_CPU";
     }
 }

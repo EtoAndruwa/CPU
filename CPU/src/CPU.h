@@ -128,8 +128,8 @@ int dump_cpu(CPU* CPU, const char* FUNCT_NAME, int FUNCT_LINE, const char* FUNCT
 int safe_exit(CPU* CPU, const char* func_name, int func_line, const char* func_file, int error_code);
 void jmp_flag_jz(CPU* CPU, size_t index_to_jmp);
 int dec(CPU* CPU, size_t reg_code);
-size_t push_ram_reg_val(CPU* CPU, int push_id, size_t shift_value);
-size_t pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value);
+int push_ram_reg_val(CPU* CPU, int push_id, size_t shift_value);
+int pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value);
 int cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack);
 int inc(CPU* CPU, float reg_code);
 

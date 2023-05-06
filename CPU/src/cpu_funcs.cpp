@@ -248,16 +248,25 @@ int push_ram_reg(CPU* CPU, float reg_id) // CHECKED From RAM to stack
     return RETURN_OK;
 }
 
-int pop_ram_reg(CPU* CPU, float reg_id) // From Stack to RAM
+int pop_ram_reg(CPU* CPU, float reg_id) // CHECKED From Stack to RAM
 {
     #define DEF_CMD_POP_RAM_REG(reg_index)                                                  \
         case reg_index:                                                                     \
+        {                                                                                   \
             if((int)(CPU->reg[reg_index - 21]) >= RAM_SIZE)                                 \
             {                                                                               \
+                ERROR_MESSAGE(stderr, ERR_RAM_ADDRESSING)                                   \
                 return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING); \
             }                                                                               \                                                                             
-            CPU->ram[(int)CPU->reg[reg_index - 21]] = StackPop(CPU->stack);                 \                                                                                 
+            stack_type val = StackPop(CPU->stack);                                          \
+            if(CPU->stack->error_code != STACK_IS_OK)                                       \
+            {                                                                               \
+                ERROR_MESSAGE(stderr, CPU->stack->error_code)                               \
+                return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_POP_VALUE_ERROR);\
+            }                                                                               \
+            CPU->ram[(int)CPU->reg[reg_index - 21]] = val;                                  \                                                                                   
             break;                                                                          \
+        }                                                                                   \
 
     switch((int)reg_id)
     {
@@ -265,6 +274,10 @@ int pop_ram_reg(CPU* CPU, float reg_id) // From Stack to RAM
         DEF_CMD_POP_RAM_REG(BX)
         DEF_CMD_POP_RAM_REG(CX)
         DEF_CMD_POP_RAM_REG(DX)
+        DEF_CMD_POP_RAM_REG(EX)
+        DEF_CMD_POP_RAM_REG(FX)
+        DEF_CMD_POP_RAM_REG(HX)
+        DEF_CMD_POP_RAM_REG(IX)
         #undef DEF_CMD_POP_RAM_REG
 
         default:
@@ -274,104 +287,149 @@ int pop_ram_reg(CPU* CPU, float reg_id) // From Stack to RAM
     return RETURN_OK;
 }
 
-size_t push_ram_reg_val(CPU* CPU, int push_id, size_t shift_value)
+int push_ram_reg_val(CPU* CPU, float push_id, float shift_value) // CHECKED
 {
-    size_t register_id = push_id & (3 << 2);    
+    int register_id = ((int)push_id) & (7 << 2);    
 
-    switch (register_id)
+    switch(register_id)
     {
-    case 0:
-        register_id = AX;
-        break;
-    case 2:
-        register_id = BX;
-        break;
-    case 4:
-        register_id = CX;
-        break;
-    case 8:
-        register_id = DX;
-        break;
-    default:
-        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        case 0:
+            register_id = AX;
+            break;
+        case 4:
+            register_id = BX;
+            break;
+        case 8:
+            register_id = CX;
+            break;
+        case 16:
+            register_id = DX;
+            break;
+        case 12:
+            register_id = EX;
+            break;
+        case 20:
+            register_id = FX;
+            break;
+        case 24:
+            register_id = HX;
+            break;
+        case 28:
+            register_id = IX;
+            break;
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
     }
 
-    #define DEF_CMD_PUSH_RAM_REG_VAL(register_id)                                           \
-    case register_id:                                                                       \
-        new_ram_id = (CPU->reg[register_id - 21] / MUL_CONST) + shift_value;                \
-        if(new_ram_id >= RAM_SIZE || new_ram_id < 0)                                        \
-        {                                                                                   \
-            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);     \
-        }                                                                                   \
-        else                                                                                \
-        {                                                                                   \
-            StackPush(CPU->stack,  CPU->ram[new_ram_id]);                                   \
-        }                                                                                   \
-        break;  
+    #define DEF_CMD_PUSH_RAM_REG_VAL(register_id)                                               \
+        case register_id:                                                                       \
+        {                                                                                       \
+            int new_ram_id = CPU->reg[register_id - 21] + shift_value;                          \
+            if(new_ram_id >= RAM_SIZE || new_ram_id < 0)                                        \
+            {                                                                                   \
+                ERROR_MESSAGE(stderr, ERR_RAM_ADDRESSING)                                       \
+                return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);     \
+            }                                                                                   \                                                                                   
+            StackPush(CPU->stack, CPU->ram[new_ram_id]);                                        \
+            if(CPU->stack->error_code != STACK_IS_OK)                                           \   
+            {                                                                                   \
+                ERROR_MESSAGE(stderr, ERR_RAM_ADDRESSING)                                       \   
+                return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);     \
+            }                                                                                   \
+            break;                                                                              \
+        }                                                                                       \
 
-    size_t new_ram_id = 0;
-    switch (register_id)
+    switch(register_id)
     {
+        DEF_CMD_PUSH_RAM_REG_VAL(AX)
+        DEF_CMD_PUSH_RAM_REG_VAL(BX)
+        DEF_CMD_PUSH_RAM_REG_VAL(CX)
+        DEF_CMD_PUSH_RAM_REG_VAL(DX)
+        DEF_CMD_PUSH_RAM_REG_VAL(EX)
+        DEF_CMD_PUSH_RAM_REG_VAL(FX)
+        DEF_CMD_PUSH_RAM_REG_VAL(HX)
+        DEF_CMD_PUSH_RAM_REG_VAL(IX)
+        #undef DEF_CMD_PUSH_RAM_REG_VAL
 
-    DEF_CMD_PUSH_RAM_REG_VAL(AX)
-    DEF_CMD_PUSH_RAM_REG_VAL(BX)
-    DEF_CMD_PUSH_RAM_REG_VAL(CX)
-    DEF_CMD_PUSH_RAM_REG_VAL(DX)
-    #undef DEF_CMD_PUSH_RAM_REG_VAL
-
-    default:
-        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
     }
+    return RETURN_OK;
 }
 
-size_t pop_ram_reg_val(CPU* CPU, int pop_id, size_t shift_value)
+int pop_ram_reg_val(CPU* CPU, float pop_id, float shift_value) // CHECKED
 {
-    int register_id = pop_id & (3 << 2);    
+    int register_id = ((int)pop_id) & (7 << 2);    
 
-    switch (register_id)
+    switch(register_id)
     {
-    case 0:
-        register_id = AX;
-        break;
-    case 2:
-        register_id = BX;
-        break;
-    case 4:
-        register_id = CX;
-        break;
-    case 8:
-        register_id = DX;
-        break;
-    default:
-        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        case 0:
+            register_id = AX;
+            break;
+        case 4:
+            register_id = BX;
+            break;
+        case 8:
+            register_id = CX;
+            break;
+        case 16:
+            register_id = DX;
+            break;
+        case 12:
+            register_id = EX;
+            break;
+        case 20:
+            register_id = FX;
+            break;
+        case 24:
+            register_id = HX;
+            break;
+        case 28:
+            register_id = IX;
+            break;
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
     }
 
     #define DEF_CMD_POP_RAM_REG_VAL(register_id)                                                \
         case register_id:                                                                       \
-            new_ram_id = (CPU->reg[register_id - 21] / MUL_CONST) + shift_value;                \
+        {                                                                                       \
+            int new_ram_id = CPU->reg[register_id - 21] + shift_value;                          \
             if(new_ram_id >= RAM_SIZE || new_ram_id < 0)                                        \
             {                                                                                   \
+                ERROR_MESSAGE(stderr, ERR_RAM_ADDRESSING)                                       \
+                return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);     \
+            }                                                                                   \                                                                                 
+            stack_type val = StackPop(CPU->stack);                                              \
+            if(CPU->stack->error_code != STACK_IS_OK)                                           \
+            {                                                                                   \
+                ERROR_MESSAGE(stderr, ERR_RAM_ADDRESSING)                                       \
                 return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_RAM_ADDRESSING);     \
             }                                                                                   \
-            else                                                                                \
-            {                                                                                   \
-                CPU->ram[new_ram_id] = StackPop(CPU->stack);                                    \
-            }                                                                                   \
-            break;  
+            CPU->ram[new_ram_id] = val;                                                         \
+            break;                                                                              \
+        }                                                                                       \
 
-    int new_ram_id = 0;
-    switch (register_id)
+    switch(register_id)
     {
+        DEF_CMD_POP_RAM_REG_VAL(AX)
+        DEF_CMD_POP_RAM_REG_VAL(BX)
+        DEF_CMD_POP_RAM_REG_VAL(CX)
+        DEF_CMD_POP_RAM_REG_VAL(DX)
+        DEF_CMD_POP_RAM_REG_VAL(EX)
+        DEF_CMD_POP_RAM_REG_VAL(FX)
+        DEF_CMD_POP_RAM_REG_VAL(HX)
+        DEF_CMD_POP_RAM_REG_VAL(IX)
+        #undef DEF_CMD_POP_RAM_REG_VAL
 
-    DEF_CMD_POP_RAM_REG_VAL(AX)
-    DEF_CMD_POP_RAM_REG_VAL(BX)
-    DEF_CMD_POP_RAM_REG_VAL(CX)
-    DEF_CMD_POP_RAM_REG_VAL(DX)
-    #undef DEF_CMD_POP_RAM_REG_VAL
-
-    default:
-        return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INVALID_REG);
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
     }
+    return RETURN_OK;
 }
 
 int check_is_positive(double value) // CHECKED

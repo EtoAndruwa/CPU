@@ -23,6 +23,8 @@
 #define PUSH_RAM_V_R_B() push_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define PUSH_RAM_V_R_C() push_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define PUSH_RAM_V_R_D() push_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
+
+
 #define POP_RAM_V_R_A()  pop_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define POP_RAM_V_R_B()  pop_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define POP_RAM_V_R_C()  pop_ram_reg_val(CPU, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2

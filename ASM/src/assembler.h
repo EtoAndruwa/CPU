@@ -68,7 +68,7 @@ typedef struct asm_struct
     FILE* asm_file_ptr    = nullptr;   /// \brief The pointer to the file with assembly code 
     FILE* bin_file_ptr    = nullptr;   /// \brief The pointer to the file with translated code 
     tokens* toks          = nullptr;   /// \brief The pointer to the array with tokens
-    float* bin_codes       = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
+    float* bin_codes      = nullptr;   /// \brief Contains ready to be written binary codes of the tokens
     size_t err_code       = STRUCT_OK; /// \brief The error code of program
     size_t size           = 0;         /// \brief The size of the assembly file
     size_t num_toks       = 1;         /// \brief The total number of tokens (1 for initializing, then will be realloced)

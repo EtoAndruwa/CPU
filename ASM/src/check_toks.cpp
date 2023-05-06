@@ -373,7 +373,7 @@ size_t check_fnc_declaration(asm_struct* assembly_struct) // CHECKED
     return func_decl_ok; 
 }
 
-size_t check_flag_declaration(asm_struct* assembly_struct) // MUST CHANGED
+size_t check_flag_declaration(asm_struct* assembly_struct) // CHECKED
 {
     size_t  flag_decl_ok = ALL_FLAGS_OKEY; // Returns 1 if all declarations of flag are uniqe
 

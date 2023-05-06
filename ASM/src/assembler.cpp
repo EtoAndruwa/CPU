@@ -25,7 +25,7 @@ int file_openning_check(asm_struct* assembly_struct) // CHECKED
     return RETURN_OK;
 }
 
-void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // MUST BE CHANGED
+void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // CHECKED
 {              
     #define DEF_CMD_REGS                                                                                                                                                        \                                                                                                                                
         if((strcmp(assembly_struct->toks[cur_tok_index].text, "ax") == 0) || (strcmp(assembly_struct->toks[cur_tok_index].text, "bx") == 0) ||                                  \   
@@ -480,7 +480,7 @@ int get_arr_bin_codes(asm_struct* assembly_struct) // CHECKED
     return RETURN_OK;
 }
 
-void get_new_index_tok(asm_struct* assembly_struct, size_t old_index_cmd) // MUST BE CHANGED
+void get_new_index_tok(asm_struct* assembly_struct, size_t old_index_cmd) // CHECKED
 {
     size_t new_cmd_index = 0;
     if(old_index_cmd == 0)
@@ -490,11 +490,8 @@ void get_new_index_tok(asm_struct* assembly_struct, size_t old_index_cmd) // MUS
             assembly_struct->toks[old_index_cmd].new_index = -1;
             return;
         }
-        else
-        {
-            assembly_struct->toks[old_index_cmd].new_index = 0;
-            return;
-        }
+        assembly_struct->toks[old_index_cmd].new_index = 0;
+        return;
     }   
     else if(assembly_struct->toks[old_index_cmd].type == CMD || assembly_struct->toks[old_index_cmd].type == VAL || assembly_struct->toks[old_index_cmd].type == REG || 
         ((assembly_struct->toks[old_index_cmd].type == FNC) && (strcmp(assembly_struct->toks[old_index_cmd - 1].text, "CALL") == 0)) || 
@@ -534,7 +531,6 @@ void get_new_index_tok(asm_struct* assembly_struct, size_t old_index_cmd) // MUS
         assembly_struct->toks[old_index_cmd].new_index = - 1;
         return;
     }
-
     assembly_struct->toks[old_index_cmd].new_index = new_cmd_index;
 }
 

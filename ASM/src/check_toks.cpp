@@ -239,21 +239,25 @@ size_t check_is_number(char* num_text) // CHECKED
     return ALL_DIGITS; // Returns ALL_DIGITS if all characters are digits (word is an integer)
 }
 
-size_t check_flags(asm_struct* assembly_struct) // MUST BE CHANGED
+size_t check_flags(asm_struct* assembly_struct) // CHECKED
 {
     size_t flags_ok = ALL_JMPS_OKEY;    
 
     for(size_t i = 0; i < assembly_struct->num_toks; i++)
     {   
-        if(strcmp(assembly_struct->toks[i].text, "JMP") == 0 || strcmp(assembly_struct->toks[i].text, "JZ") == 0) // If the function is JMP
+        if(strcmp(assembly_struct->toks[i].text, "JMP") == 0 || strcmp(assembly_struct->toks[i].text, "JZ") == 0
+            || strcmp(assembly_struct->toks[i].text, "JE") == 0 || strcmp(assembly_struct->toks[i].text, "JG") == 0
+                || strcmp(assembly_struct->toks[i].text, "JNE") == 0 || strcmp(assembly_struct->toks[i].text, "JGE") == 0) // If the function is JMP
         {
             char* flag_name = assembly_struct->toks[i + 1].text;
             for(size_t j = 0; j < assembly_struct->num_toks ; j++) // Checks all tokens
             {   
                 if(assembly_struct->toks[j].type == FLG) // If the command is flag
                 {   
-                    if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && ((strcmp(assembly_struct->toks[j-1].text, "JMP") != 0) && 
-                        (strcmp(assembly_struct->toks[j - 1].text, "JZ") != 0))) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
+                    if(((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j != 0) && ((strcmp(assembly_struct->toks[j - 1].text, "JMP") != 0) && 
+                        (strcmp(assembly_struct->toks[j - 1].text, "JZ") != 0) && (strcmp(assembly_struct->toks[j - 1].text, "JE") != 0)&& 
+                            (strcmp(assembly_struct->toks[j - 1].text, "JG") != 0) && (strcmp(assembly_struct->toks[j - 1].text, "JNE") != 0) && 
+                                (strcmp(assembly_struct->toks[j - 1].text, "JGE") != 0))) || ((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (j == 0))) // Except flags after JMP or if the flag is the first command in the asm code                 
                     {   
                         for(size_t q = j + 1; q < assembly_struct->num_toks; q++)
                         {
@@ -379,15 +383,19 @@ size_t check_flag_declaration(asm_struct* assembly_struct) // MUST CHANGED
         {   
             size_t positon_of_first_decl = i; // This value stores the first position of the flag declaration
             if(((strlen(assembly_struct->toks[i].text) > 1) && (assembly_struct->toks[i].text[0] == ':') &&  (i > 0) && 
-                (strcmp(assembly_struct->toks[i - 1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[i - 1].text, "JZ") != 0)) || 
-                    (assembly_struct->toks[i].text[0] == ':') &&  (i == 0)) // If the token is the fist declaration of the function and is not a call of the function 
+                (strcmp(assembly_struct->toks[i - 1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[i - 1].text, "JZ") != 0)
+                    && (strcmp(assembly_struct->toks[i - 1].text, "JE") != 0) && (strcmp(assembly_struct->toks[i - 1].text, "JG") != 0)
+                        && (strcmp(assembly_struct->toks[i - 1].text, "JNE") != 0) && (strcmp(assembly_struct->toks[i - 1].text, "JGE") != 0)) || 
+                            (assembly_struct->toks[i].text[0] == ':') &&  (i == 0)) // If the token is the fist declaration of the function and is not a call of the function 
             {
                 char* flag_name = assembly_struct->toks[i].text; // The flag name that is used in order to search another declarations of the flag with the same name
                 for(size_t j = i + 1; j < assembly_struct->num_toks; j++) // Check the tokens after the firts flag declaration
                 {   
                     if(assembly_struct->toks[j].type == FLG) // If the token is a flag
                     {   
-                        if((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (strcmp(assembly_struct->toks[j - 1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[j-1].text, "JZ") != 0)) // If the token is a function declaration and is not a call of the function
+                        if((strcmp(assembly_struct->toks[j].text, flag_name) == 0) && (strcmp(assembly_struct->toks[j - 1].text, "JMP") != 0) && (strcmp(assembly_struct->toks[j - 1].text, "JZ") != 0)
+                            && (strcmp(assembly_struct->toks[j - 1].text, "JE") != 0) && (strcmp(assembly_struct->toks[j - 1].text, "JNE") != 0)
+                             && (strcmp(assembly_struct->toks[j - 1].text, "JG") != 0) && (strcmp(assembly_struct->toks[j - 1].text, "JGE") != 0)) // If the token is a function declaration and is not a call of the function
                         {   
                             i = j; // Check all tokens after found one (prevents upper search)
                             flag_decl_ok = SOME_FLAG_NOT_OK;

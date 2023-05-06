@@ -135,21 +135,20 @@ enum cmd_codes
     SQRT = 7, 
     OUT  = 8, 
     RET  = 9,
-    JMP  = 10, 
 
-    MOV  = 11, // input value into reg
-
+    INP  = 11, // input value into reg
     DEC  = 12,
     INC  = 13,
 
+    JMP  = 10, 
     JZ   = 14, // jump if zero X == 0
     JE   = 15, // jump if X == Y
     JG   = 16, // jump if X > Y
     JNE  = 17, // jump if X != Y
     JGE  = 18, // jump if X >= Y
 
-    LOOP = 19, // to declare the loop
-    REP  = 20, // to repeat the loop
+    // LOOP = 19, // to declare the loop
+    // REP  = 20, // to repeat the loop
 
 
     AX   = 21,

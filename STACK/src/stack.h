@@ -103,7 +103,7 @@ void StackConsoleWork(Stack* stack_struct);
 int StackRealocUp(Stack* stack_struct);                                        
 int StackRealocDown(Stack* stack_struct);                                    
 void Calculate_hash(Stack* stack_struct);                                      
-void StackOut(Stack* stack_struct);                                           
+int StackOut(Stack* stack_struct);                                           
 int StackSqrt(Stack* stack_struct);                                           
 int check_is_positive(double value);
 

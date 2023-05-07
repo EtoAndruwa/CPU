@@ -122,15 +122,21 @@ void print_call_stack(Call_stack* Call_stack);
 int push_ret(CPU* CPU, Call_stack* Call_stack, float index_to_jmp);
 int jmp_ret(CPU* CPU, Call_stack* Call_stack);
 void fill_with_poison(stack_type* arr_ptr, size_t size_arr);
-void jmp_flag(CPU* CPU, float index_to_jmp);
+int jmp_flag(CPU* CPU, float index_to_jmp);
 void print_ram_screen(CPU* CPU);
 int dump_cpu(CPU* CPU, const char* func_name, int func_line, const char* func_file);
 int safe_exit(CPU* CPU, const char* func_name, int func_line, const char* func_file, int error_code);
-void jmp_flag_jz(CPU* CPU, float index_to_jmp);
+int jmp_flag_jz(CPU* CPU, float index_to_jmp);
 int dec(CPU* CPU, float reg_code);
 int push_ram_reg_val(CPU* CPU, float push_id, float shift_value);
 int pop_ram_reg_val(CPU* CPU, float pop_id, float shift_value);
-int cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack);
+int cpu_logic(float cmd_code, CPU* CPU, Call_stack* Call_stack);
 int inc(CPU* CPU, float reg_code);
+int inp(CPU* CPU, float reg_code);
+int jmp_flag_je(CPU* CPU, float index_to_jmp);
+int jmp_flag_jge(CPU* CPU, float index_to_jmp);
+int jmp_flag_jne(CPU* CPU, float index_to_jmp);
+int jmp_flag_jg(CPU* CPU, float index_to_jmp);
+
 
 #endif

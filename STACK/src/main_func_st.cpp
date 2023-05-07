@@ -98,7 +98,7 @@ int StackSqrt(Stack* stack_struct) // (CHECKED) Gets the root of the value
     return RETURN_OK;
 }
 
-void StackOut(Stack * stack_struct) // (CHECKED) Prints the stack's current structure in the console
+int StackOut(Stack * stack_struct) // (CHECKED) Prints the stack's current structure in the console
 {   
     printf("\nLEFT_CANARY: = %ld\n", *(stack_struct->left_canary_position));
     for(size_t i = 0; i < stack_struct->capacity; i++) 
@@ -106,6 +106,7 @@ void StackOut(Stack * stack_struct) // (CHECKED) Prints the stack's current stru
         printf("data[%ld] = %f\n", i, stack_struct->data[i]);
     }
     printf("RIGHT_CANARY: = %ld\n\n", *(stack_struct->right_canary_position));
+    return RETURN_OK;
 }
 
 int StackAdd(Stack* stack_struct) // (CHECKED) Adds the entered value to next empty memory cell of the stack

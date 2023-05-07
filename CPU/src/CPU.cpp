@@ -69,17 +69,18 @@ int check_code_file(CPU* CPU) // CHECKED
     return RETURN_OK;
 }
 
-int cpu_logic(size_t cmd_code, CPU* CPU, Call_stack* Call_stack) // CHECKED
+int cpu_logic(float cmd_code, CPU* CPU, Call_stack* Call_stack) // CHECKED
 {
     #define DEF_CMD(name, body) case name: body; break;
 
-    switch (cmd_code)
+    switch((int)cmd_code)
     {
-
         #include "gen_cmd.h"
         #undef DEF_CMD
 
         default:
+            printf("\nERROR CMD code %f\n", cmd_code);
+            printf("ERROR CUR CMD %ld\n", CPU->curr_cmd);
             ERROR_MESSAGE(stderr, ERR_UNKNOWN_CMD)
             return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_UNKNOWN_CMD);
     }
@@ -126,9 +127,12 @@ int get_cmd_in_buf(CPU* CPU) // CHECKED
 
 int cpu_work(CPU* CPU, Call_stack* Call_stack) // CHECKED
 {
-    while(CPU->bin_code[CPU->curr_cmd] != HLT)
+    while((int)CPU->bin_code[CPU->curr_cmd] != HLT)
     {
+        printf("CPU->num_bin_cmd %f\n", *CPU->num_bin_cmd);
+        printf("BEFORE CPU->cur_cmd %ld\n", CPU->curr_cmd);
         int error_code = cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU, Call_stack);
+        printf("AFTER CPU->cur_cmd %ld\n\n", CPU->curr_cmd);
         if(error_code != RETURN_OK)
         {   
             ERROR_MESSAGE(stderr, error_code)

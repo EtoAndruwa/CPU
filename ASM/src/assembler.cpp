@@ -60,7 +60,7 @@ void get_token_value(asm_struct* assembly_struct, size_t cur_tok_index) // CHECK
                 {                                                                                                                                                               \
                     assembly_struct->toks[cur_tok_index].value = FX;                                                                                                            \
                 }                                                                                                                                                               \
-                else if(strcmp(assembly_struct->toks[cur_tok_index].text, "hz") == 0)                                                                                           \                                                                 
+                else if(strcmp(assembly_struct->toks[cur_tok_index].text, "hx") == 0)                                                                                           \                                                                 
                 {                                                                                                                                                               \
                     assembly_struct->toks[cur_tok_index].value = HX;                                                                                                            \
                 }                                                                                                                                                               \
@@ -428,7 +428,7 @@ int write_asm(asm_struct* assembly_struct) // CHECKED
         int tokens_wrote = fwrite(assembly_struct->bin_codes, sizeof(float), new_num_cmd + 1, assembly_struct->bin_file_ptr);
 
         printf("\n");
-        for(size_t i = 0; i < new_num_cmd + 1; i++)
+        for(size_t i = 0; i <= new_num_cmd + 1; i++)
         {
             printf("%f ", assembly_struct->bin_codes[i]);
         }

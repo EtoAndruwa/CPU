@@ -15,19 +15,131 @@ int push_ret(CPU* CPU, Call_stack* Call_stack, float index_to_jmp) // CHECKED
     return RETURN_OK;
 }
 
-void jmp_flag(CPU* CPU, float index_to_jmp) // CHECKED
+int jmp_flag(CPU* CPU, float index_to_jmp) // CHECKED
 {
     CPU->curr_cmd = (int)(CPU->bin_code[(int)index_to_jmp]);
+    return RETURN_OK;
 } 
 
-void jmp_flag_jz(CPU* CPU, float index_to_jmp) // CHECKED
+int jmp_flag_jz(CPU* CPU, float index_to_jmp) // CHECKED
 {
-    if(check_is_positive(CPU->reg[CX]) == IS_ZERO)
+    if(check_is_positive(CPU->reg[IX - AX]) == IS_ZERO)
     {
         CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
-        return;
+        return RETURN_OK;
     }
     CPU->curr_cmd += 2; 
+    return RETURN_OK;
+}
+
+int jmp_flag_je(CPU* CPU, float index_to_jmp) // CHECKED
+{
+    if(fabs(CPU->reg[IX - AX] - CPU->reg[HX - AX]) <= EPS)
+    {
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
+        return RETURN_OK;
+    }
+    CPU->curr_cmd += 2; 
+    return RETURN_OK;
+}
+
+int jmp_flag_jge(CPU* CPU, float index_to_jmp) // CHECKED
+{
+    if(fabs(CPU->reg[IX - AX] - CPU->reg[HX - AX]) <= EPS)
+    {
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
+        return RETURN_OK;
+    }
+    else if(check_is_positive(CPU->reg[IX - AX]) == IS_POSITIVE && (check_is_positive(CPU->reg[HX - AX]) == IS_NEGATIVE || 
+        check_is_positive(CPU->reg[IX - AX] - CPU->reg[HX - AX]) == IS_POSITIVE))
+    {
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
+        return RETURN_OK;
+    }
+    else if(check_is_positive(CPU->reg[IX - AX]) == IS_NEGATIVE && check_is_positive(CPU->reg[HX - AX]) == IS_NEGATIVE &&
+         check_is_positive(fabs(CPU->reg[IX - AX]) - fabs(CPU->reg[HX - AX])) == IS_NEGATIVE)
+    {
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
+        return RETURN_OK;
+    }
+
+    CPU->curr_cmd += 2; 
+    return RETURN_OK;
+}
+
+int jmp_flag_jne(CPU* CPU, float index_to_jmp) // CHECKED
+{
+    if(fabs(CPU->reg[IX - AX] - CPU->reg[HX - AX]) > EPS)
+    {
+        printf("OLD cur - %ld\n", CPU->curr_cmd);
+        printf("index_to_jmp %f\n", index_to_jmp);
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp] + 1;
+        printf("CPU->num_bin_cmd %f\n", *CPU->num_bin_cmd);
+        printf("Cur index after jne %ld and command now %f and pref cmd %f %f %f %f %f %f\n", CPU->curr_cmd, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd - 1], CPU->bin_code[CPU->curr_cmd - 2], CPU->bin_code[CPU->curr_cmd - 3], CPU->bin_code[CPU->curr_cmd - 4], CPU->bin_code[CPU->curr_cmd - 5], CPU->bin_code[CPU->curr_cmd - 6], CPU->bin_code[CPU->curr_cmd - 7]);
+        return RETURN_OK;
+    }
+
+    CPU->curr_cmd += 2; 
+    printf("Cur index after jne %ld and command now %f\n", CPU->curr_cmd, CPU->bin_code[CPU->curr_cmd]);
+    return RETURN_OK;
+}
+
+int jmp_flag_jg(CPU* CPU, float index_to_jmp) // CHECKED
+{
+    if(check_is_positive(CPU->reg[IX - AX]) == IS_POSITIVE && check_is_positive(CPU->reg[HX - AX]) == IS_POSITIVE && 
+        check_is_positive(CPU->reg[IX - AX] - CPU->reg[HX - AX]) == IS_POSITIVE)
+    {   
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
+        return RETURN_OK;
+    }
+    else if(check_is_positive(CPU->reg[IX - AX]) == IS_POSITIVE && check_is_positive(CPU->reg[HX - AX]) == IS_NEGATIVE)
+    {
+        printf("\n2\n");
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
+        return RETURN_OK;
+    }
+    else if(check_is_positive(CPU->reg[IX - AX]) == IS_NEGATIVE && check_is_positive(CPU->reg[HX - AX]) == IS_NEGATIVE && 
+        check_is_positive(fabs(CPU->reg[IX - AX]) - fabs(CPU->reg[HX - AX])) == IS_NEGATIVE)
+    {
+        printf("\n3\n");
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
+        return RETURN_OK;
+    }
+
+    printf("\n4\n");
+    CPU->curr_cmd += 2; 
+    return RETURN_OK;
+}
+
+int inp(CPU* CPU, float reg_code) // CHECKED
+{
+    #define DEF_CMD_INP(reg_code)                               \
+        case reg_code:                                          \
+        {                                                       \
+            printf("Enter the value of reg %s = ", #reg_code);  \
+            float val = 0;                                      \
+            scanf("%f", &val);                                  \
+            CPU->reg[reg_code - 21] = val;                      \
+            break;                                              \
+        }                                                       \
+
+    switch((int)reg_code)
+    { 
+        DEF_CMD_INP(AX)
+        DEF_CMD_INP(BX)
+        DEF_CMD_INP(CX)
+        DEF_CMD_INP(DX)
+        DEF_CMD_INP(EX)
+        DEF_CMD_INP(FX)
+        DEF_CMD_INP(HX)
+        DEF_CMD_INP(IX)
+        #undef DEF_CMD_INP
+
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
+    }
+    return RETURN_OK;
 }
 
 int dec(CPU* CPU, float reg_code) // CHECKED
@@ -47,7 +159,7 @@ int dec(CPU* CPU, float reg_code) // CHECKED
         DEF_CMD_DEC(FX)
         DEF_CMD_DEC(HX)
         DEF_CMD_DEC(IX)
-        #undef CMD_DEC
+        #undef DEF_CMD_DEC
 
         default:
             ERROR_MESSAGE(stderr, ERR_NEW_REG)

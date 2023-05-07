@@ -79,8 +79,6 @@ int cpu_logic(float cmd_code, CPU* CPU, Call_stack* Call_stack) // CHECKED
         #undef DEF_CMD
 
         default:
-            printf("\nERROR CMD code %f\n", cmd_code);
-            printf("ERROR CUR CMD %ld\n", CPU->curr_cmd);
             ERROR_MESSAGE(stderr, ERR_UNKNOWN_CMD)
             return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_UNKNOWN_CMD);
     }
@@ -100,7 +98,6 @@ int get_cmd_in_buf(CPU* CPU) // CHECKED
         ERROR_MESSAGE(stderr, ERR_INV_READ_NUM_CMD)
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_INV_READ_NUM_CMD);
     }
-    printf("\nCMD GET: %d\n", (int)CPU->num_bin_cmd[0]);
 
     CPU->bin_code = (float*)calloc(((int)CPU->num_bin_cmd[0]), sizeof(float));
     if(CPU->bin_code == nullptr)    
@@ -114,6 +111,13 @@ int get_cmd_in_buf(CPU* CPU) // CHECKED
         ERROR_MESSAGE(stderr, ERR_CANNOT_READ_CMD)
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CANNOT_READ_CMD);
     }
+
+    // printf("Codes from ASM\n");
+    // for(size_t i = 0; i <= (int)CPU->num_bin_cmd[0]; i++)
+    // {
+    //     printf("%f ", CPU->bin_code[i]);
+    // }
+    // printf("\nCodes from ASM\n");
 
     if(fclose(CPU->bin_file) == EOF)
     {
@@ -129,10 +133,7 @@ int cpu_work(CPU* CPU, Call_stack* Call_stack) // CHECKED
 {
     while((int)CPU->bin_code[CPU->curr_cmd] != HLT)
     {
-        printf("CPU->num_bin_cmd %f\n", *CPU->num_bin_cmd);
-        printf("BEFORE CPU->cur_cmd %ld\n", CPU->curr_cmd);
         int error_code = cpu_logic(CPU->bin_code[CPU->curr_cmd], CPU, Call_stack);
-        printf("AFTER CPU->cur_cmd %ld\n\n", CPU->curr_cmd);
         if(error_code != RETURN_OK)
         {   
             ERROR_MESSAGE(stderr, error_code)

@@ -515,7 +515,7 @@ void get_new_index_tok(asm_struct* assembly_struct, size_t old_index_cmd) // CHE
                 ((assembly_struct->toks[i].type == FNC) && (strcmp(assembly_struct->toks[i - 1].text, "CALL") == 0)) || ((assembly_struct->toks[i].type == FLG) && 
                     (strcmp(assembly_struct->toks[i - 1].text, "JMP") == 0)) || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JZ") == 0))
                         || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JE") == 0)) || ((assembly_struct->toks[i].type == FLG) && 
-                            (strcmp(assembly_struct->toks[i - 1].text, "JGE") == 0)) || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JG") == 0))
+                            (strcmp(assembly_struct->toks[i - 1].text, "JNE") == 0)) || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JG") == 0))
                                 || ((assembly_struct->toks[i].type == FLG) && (strcmp(assembly_struct->toks[i - 1].text, "JGE") == 0)))
             {
                 new_cmd_index++;

@@ -71,16 +71,11 @@ int jmp_flag_jne(CPU* CPU, float index_to_jmp) // CHECKED
 {
     if(fabs(CPU->reg[IX - AX] - CPU->reg[HX - AX]) > EPS)
     {
-        printf("OLD cur - %ld\n", CPU->curr_cmd);
-        printf("index_to_jmp %f\n", index_to_jmp);
-        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp] + 1;
-        printf("CPU->num_bin_cmd %f\n", *CPU->num_bin_cmd);
-        printf("Cur index after jne %ld and command now %f and pref cmd %f %f %f %f %f %f\n", CPU->curr_cmd, CPU->bin_code[CPU->curr_cmd], CPU->bin_code[CPU->curr_cmd - 1], CPU->bin_code[CPU->curr_cmd - 2], CPU->bin_code[CPU->curr_cmd - 3], CPU->bin_code[CPU->curr_cmd - 4], CPU->bin_code[CPU->curr_cmd - 5], CPU->bin_code[CPU->curr_cmd - 6], CPU->bin_code[CPU->curr_cmd - 7]);
+        CPU->curr_cmd = (int)CPU->bin_code[(int)index_to_jmp];
         return RETURN_OK;
     }
 
     CPU->curr_cmd += 2; 
-    printf("Cur index after jne %ld and command now %f\n", CPU->curr_cmd, CPU->bin_code[CPU->curr_cmd]);
     return RETURN_OK;
 }
 

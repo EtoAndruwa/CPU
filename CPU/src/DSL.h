@@ -17,7 +17,7 @@
 #define JMP()             jmp_flag(CPU, CPU->curr_cmd + 1)
 #define JZ()              jmp_flag_jz(CPU, CPU->curr_cmd + 1)
 #define JE()              jmp_flag_je(CPU, CPU->curr_cmd + 1)
-#define JG()              jmp_flag_jg(CPU, CPU->curr_cmd + 1)
+#define JG()              jmp_flag_jg(CPU, CPU->curr_cmd + 1) 
 #define JNE()             jmp_flag_jne(CPU, CPU->curr_cmd + 1)
 #define JGE()             jmp_flag_jge(CPU, CPU->curr_cmd + 1)
 #define INP()             inp(CPU, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2

@@ -40,7 +40,7 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-static const char* FILE_ASM_NAME     = "asm_code.asm";    /// \brief Defines the name of assembly file
+static const char* FILE_ASM_NAME     = "../../language/asm_code.asm";    /// \brief Defines the name of assembly file
 static const char* FILE_CODE_NAME    = "bin_code.bin";    /// \brief Defines the name of translated file
 static const char* FILE_LOG_NAME     = "log_file.txt";    /// \brief Defines the name of the log file
 static const char* FILE_LISTING_NAME = "asm_listing.txt"; /// \brief Defines the name of the listing file

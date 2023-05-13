@@ -13,7 +13,7 @@ int main()
 
     translate_to_asm(&asm_struct);
 
-    print_all_toks(&asm_struct);
+    // print_all_toks(&asm_struct);
 
     get_max_len_tok(&asm_struct);
     write_asm(&asm_struct);

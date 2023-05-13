@@ -226,6 +226,13 @@ int StackPush(Stack* stack_struct, stack_type push_value) // (CHECKED) Gets the 
         return stack_struct->error_code;
     }
 
+    if(StackRealocUp(stack_struct) != RETURN_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
+    }
+
     stack_struct->data[stack_struct->next_empty_cell++] = push_value; 
     stack_struct->hash += push_value; // Сalculating new hash value
 
@@ -247,6 +254,13 @@ stack_type StackPop(Stack* stack_struct) // (CHECKED) Deletes the value from the
         StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
         ERROR_MESSAGE(stderr, stack_struct->error_code)
         return POISON_VALUE;
+    }
+
+    if(StackRealocDown(stack_struct) != RETURN_OK)
+    {
+        StackDump(stack_struct, FUNC_NAME, FUNC_LINE, FUNC_FILE);
+        ERROR_MESSAGE(stderr, stack_struct->error_code)
+        return stack_struct->error_code;
     }
 
     stack_type poped_value = stack_struct->data[stack_struct->next_empty_cell - 1];

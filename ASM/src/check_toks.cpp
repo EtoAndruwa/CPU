@@ -308,12 +308,15 @@ size_t check_func(asm_struct* assembly_struct) // CHECKED
                             {
                                 if(assembly_struct->toks[q].new_index != -1)
                                 {
-                                    assembly_struct->toks[i + 1].value= assembly_struct->toks[q].new_index;
+                                    assembly_struct->toks[i + 1].value = assembly_struct->toks[q].new_index;
                                     break;
                                 }
                             }
                         }
-                        funcs_ok = SOME_CALL_NOT_OKEY; // Calls undeclared function
+                        else
+                        {
+                            funcs_ok = SOME_CALL_NOT_OKEY; // Calls undeclared function
+                        }
                     }
                 }
                 if(funcs_ok == SOME_CALL_NOT_OKEY)

@@ -9,6 +9,7 @@ int push_ret(CPU* CPU, Call_stack* Call_stack, float index_to_jmp) // CHECKED
     }
     else
     {
+        printf("Call_stack->cur_index %ld\n", Call_stack->cur_index);
         ERROR_MESSAGE(stderr, ERR_CALL_STACK_FULL)
         return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_CALL_STACK_FULL);
     }

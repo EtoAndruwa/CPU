@@ -1,219 +1,219 @@
-==8318== Memcheck, a memory error detector
-==8318== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==8318== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==8318== Command: ./ASM.exe
-==8318== Parent PID: 8317
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Use of uninitialised value of size 8
-==8318==    at 0x48C633B: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48C634C: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x110816: get_tok_err_code_string(int) (convert_enum.cpp:5)
-==8318==    by 0x11133F: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Use of uninitialised value of size 8
-==8318==    at 0x11082D: get_tok_err_code_string(int) (convert_enum.cpp:5)
-==8318==    by 0x11133F: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Use of uninitialised value of size 8
-==8318==    at 0x48C633B: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48C634C: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x10E271: check_all_valid(asm_struct*) (check_toks.cpp:51)
-==8318==    by 0x10D284: write_asm(asm_struct*) (assembler.cpp:417)
-==8318==    by 0x11155C: main (main.cpp:19)
-==8318== 
-==8318== Invalid read of size 4
-==8318==    at 0x10D3E6: write_asm(asm_struct*) (assembler.cpp:433)
-==8318==    by 0x11155C: main (main.cpp:19)
-==8318==  Address 0x4a9b65c is 0 bytes after a block of size 60 alloc'd
-==8318==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8318==    by 0x10D59C: get_arr_bin_codes(asm_struct*) (assembler.cpp:458)
-==8318==    by 0x10D2F2: write_asm(asm_struct*) (assembler.cpp:420)
-==8318==    by 0x11155C: main (main.cpp:19)
-==8318== 
-==8318== 
-==8318== HEAP SUMMARY:
-==8318==     in use at exit: 0 bytes in 0 blocks
-==8318==   total heap usage: 26 allocs, 26 frees, 25,175 bytes allocated
-==8318== 
-==8318== All heap blocks were freed -- no leaks are possible
-==8318== 
-==8318== ERROR SUMMARY: 183 errors from 14 contexts (suppressed: 0 from 0)
-==8318== 
-==8318== 1 errors in context 1 of 14:
-==8318== Invalid read of size 4
-==8318==    at 0x10D3E6: write_asm(asm_struct*) (assembler.cpp:433)
-==8318==    by 0x11155C: main (main.cpp:19)
-==8318==  Address 0x4a9b65c is 0 bytes after a block of size 60 alloc'd
-==8318==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8318==    by 0x10D59C: get_arr_bin_codes(asm_struct*) (assembler.cpp:458)
-==8318==    by 0x10D2F2: write_asm(asm_struct*) (assembler.cpp:420)
-==8318==    by 0x11155C: main (main.cpp:19)
-==8318== 
-==8318== 
-==8318== 14 errors in context 2 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x10E271: check_all_valid(asm_struct*) (check_toks.cpp:51)
-==8318==    by 0x10D284: write_asm(asm_struct*) (assembler.cpp:417)
-==8318==    by 0x11155C: main (main.cpp:19)
-==8318== 
-==8318== 
-==8318== 14 errors in context 3 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 4 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 5 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48C634C: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 6 of 14:
-==8318== Use of uninitialised value of size 8
-==8318==    at 0x48C633B: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 7 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x11137C: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 8 of 14:
-==8318== Use of uninitialised value of size 8
-==8318==    at 0x11082D: get_tok_err_code_string(int) (convert_enum.cpp:5)
-==8318==    by 0x11133F: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 9 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x110816: get_tok_err_code_string(int) (convert_enum.cpp:5)
-==8318==    by 0x11133F: print_all_toks(asm_struct*) (dump.cpp:84)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 10 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 11 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 12 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48C634C: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 13 of 14:
-==8318== Use of uninitialised value of size 8
-==8318==    at 0x48C633B: _itoa_word (_itoa.c:177)
-==8318==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== 
-==8318== 14 errors in context 14 of 14:
-==8318== Conditional jump or move depends on uninitialised value(s)
-==8318==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
-==8318==    by 0x48CC81E: printf (printf.c:33)
-==8318==    by 0x111318: print_all_toks(asm_struct*) (dump.cpp:83)
-==8318==    by 0x111544: main (main.cpp:16)
-==8318== 
-==8318== ERROR SUMMARY: 183 errors from 14 contexts (suppressed: 0 from 0)
+==53144== Memcheck, a memory error detector
+==53144== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==53144== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==53144== Command: ./ASM.exe
+==53144== Parent PID: 53143
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Use of uninitialised value of size 8
+==53144==    at 0x48C633B: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48C634C: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x110819: get_tok_err_code_string(int) (convert_enum.cpp:5)
+==53144==    by 0x111342: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Use of uninitialised value of size 8
+==53144==    at 0x110830: get_tok_err_code_string(int) (convert_enum.cpp:5)
+==53144==    by 0x111342: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Use of uninitialised value of size 8
+==53144==    at 0x48C633B: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48C634C: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x10E271: check_all_valid(asm_struct*) (check_toks.cpp:51)
+==53144==    by 0x10D284: write_asm(asm_struct*) (assembler.cpp:417)
+==53144==    by 0x11155F: main (main.cpp:19)
+==53144== 
+==53144== Invalid read of size 4
+==53144==    at 0x10D3E6: write_asm(asm_struct*) (assembler.cpp:433)
+==53144==    by 0x11155F: main (main.cpp:19)
+==53144==  Address 0x4a9a8d8 is 0 bytes after a block of size 40 alloc'd
+==53144==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==53144==    by 0x10D59C: get_arr_bin_codes(asm_struct*) (assembler.cpp:458)
+==53144==    by 0x10D2F2: write_asm(asm_struct*) (assembler.cpp:420)
+==53144==    by 0x11155F: main (main.cpp:19)
+==53144== 
+==53144== 
+==53144== HEAP SUMMARY:
+==53144==     in use at exit: 0 bytes in 0 blocks
+==53144==   total heap usage: 21 allocs, 21 frees, 22,030 bytes allocated
+==53144== 
+==53144== All heap blocks were freed -- no leaks are possible
+==53144== 
+==53144== ERROR SUMMARY: 118 errors from 14 contexts (suppressed: 0 from 0)
+==53144== 
+==53144== 1 errors in context 1 of 14:
+==53144== Invalid read of size 4
+==53144==    at 0x10D3E6: write_asm(asm_struct*) (assembler.cpp:433)
+==53144==    by 0x11155F: main (main.cpp:19)
+==53144==  Address 0x4a9a8d8 is 0 bytes after a block of size 40 alloc'd
+==53144==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==53144==    by 0x10D59C: get_arr_bin_codes(asm_struct*) (assembler.cpp:458)
+==53144==    by 0x10D2F2: write_asm(asm_struct*) (assembler.cpp:420)
+==53144==    by 0x11155F: main (main.cpp:19)
+==53144== 
+==53144== 
+==53144== 9 errors in context 2 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x10E271: check_all_valid(asm_struct*) (check_toks.cpp:51)
+==53144==    by 0x10D284: write_asm(asm_struct*) (assembler.cpp:417)
+==53144==    by 0x11155F: main (main.cpp:19)
+==53144== 
+==53144== 
+==53144== 9 errors in context 3 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 4 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 5 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48C634C: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 6 of 14:
+==53144== Use of uninitialised value of size 8
+==53144==    at 0x48C633B: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 7 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11137F: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 8 of 14:
+==53144== Use of uninitialised value of size 8
+==53144==    at 0x110830: get_tok_err_code_string(int) (convert_enum.cpp:5)
+==53144==    by 0x111342: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 9 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x110819: get_tok_err_code_string(int) (convert_enum.cpp:5)
+==53144==    by 0x111342: print_all_toks(asm_struct*) (dump.cpp:84)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 10 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E1C85: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 11 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2643: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 12 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48C634C: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 13 of 14:
+==53144== Use of uninitialised value of size 8
+==53144==    at 0x48C633B: _itoa_word (_itoa.c:177)
+==53144==    by 0x48E1B3D: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== 
+==53144== 9 errors in context 14 of 14:
+==53144== Conditional jump or move depends on uninitialised value(s)
+==53144==    at 0x48E2B56: __vfprintf_internal (vfprintf-internal.c:1516)
+==53144==    by 0x48CC81E: printf (printf.c:33)
+==53144==    by 0x11131B: print_all_toks(asm_struct*) (dump.cpp:83)
+==53144==    by 0x111547: main (main.cpp:16)
+==53144== 
+==53144== ERROR SUMMARY: 118 errors from 14 contexts (suppressed: 0 from 0)

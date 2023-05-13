@@ -46,7 +46,7 @@ void cpu_dtor(CPU* CPU) // CHECKED
 void call_stack_ctor_dtor(Call_stack* Call_stack) // CHECKED
 {
     fill_with_poison(Call_stack->call_stack, CALL_STACK_SIZE);
-    Call_stack->cur_index = POISON_VALUE;
+    Call_stack->cur_index = 0;
 }
 
 void fill_with_poison(stack_type* arr_ptr, size_t size_arr) // CHECKED

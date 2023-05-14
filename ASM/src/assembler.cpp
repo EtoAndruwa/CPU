@@ -427,12 +427,12 @@ int write_asm(asm_struct* assembly_struct) // CHECKED
         int new_num_cmd = get_new_num_toks(assembly_struct);
         int tokens_wrote = fwrite(assembly_struct->bin_codes, sizeof(float), new_num_cmd + 1, assembly_struct->bin_file_ptr);
 
-        printf("\n");
-        for(size_t i = 0; i <= new_num_cmd + 1; i++)
-        {
-            printf("%f ", assembly_struct->bin_codes[i]);
-        }
-        printf("\n");
+        // printf("\n");
+        // for(size_t i = 0; i <= new_num_cmd + 1; i++)
+        // {
+        //     printf("%f ", assembly_struct->bin_codes[i]);
+        // }
+        // printf("\n");
 
         if(tokens_wrote != (new_num_cmd + 1))
         {

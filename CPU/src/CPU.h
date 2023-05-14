@@ -137,6 +137,7 @@ int jmp_flag_je(CPU* CPU, float index_to_jmp);
 int jmp_flag_jge(CPU* CPU, float index_to_jmp);
 int jmp_flag_jne(CPU* CPU, float index_to_jmp);
 int jmp_flag_jg(CPU* CPU, float index_to_jmp);
+int prt(CPU* CPU, float reg_code);
 
 
 #endif

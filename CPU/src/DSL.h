@@ -21,6 +21,7 @@
 #define JNE()             jmp_flag_jne(CPU, CPU->curr_cmd + 1)
 #define JGE()             jmp_flag_jge(CPU, CPU->curr_cmd + 1)
 #define INP()             inp(CPU, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
+#define PRT()             prt(CPU, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 
 #define DEC()             dec(CPU, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2
 #define INC()             inc(CPU, CPU->bin_code[CPU->curr_cmd + 1]); CPU->curr_cmd += 2

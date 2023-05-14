@@ -112,7 +112,7 @@ int inp(CPU* CPU, float reg_code) // CHECKED
     #define DEF_CMD_INP(reg_code)                               \
         case reg_code:                                          \
         {                                                       \
-            printf("Enter the value of reg %s = ", #reg_code);  \
+            printf("\nEnter the value of reg %s = ", #reg_code);\
             float val = 0;                                      \
             scanf("%f", &val);                                  \
             CPU->reg[reg_code - 21] = val;                      \
@@ -130,6 +130,35 @@ int inp(CPU* CPU, float reg_code) // CHECKED
         DEF_CMD_INP(HX)
         DEF_CMD_INP(IX)
         #undef DEF_CMD_INP
+
+        default:
+            ERROR_MESSAGE(stderr, ERR_NEW_REG)
+            return safe_exit(CPU, FUNC_NAME, FUNC_LINE, FUNC_FILE, ERR_NEW_REG);
+    }
+    return RETURN_OK;
+}
+
+int prt(CPU* CPU, float reg_code) // CHECKED
+{
+    #define DEF_CMD_PRT(reg_code)                              \
+        case reg_code:                                         \
+        {                                                      \
+            printf("\nThe value of reg %s = ", #reg_code);     \
+            printf("%f\n", CPU->reg[reg_code - 21]);           \
+            break;                                             \
+        }                                                      \
+
+    switch((int)reg_code)
+    { 
+        DEF_CMD_PRT(AX)
+        DEF_CMD_PRT(BX)
+        DEF_CMD_PRT(CX)
+        DEF_CMD_PRT(DX)
+        DEF_CMD_PRT(EX)
+        DEF_CMD_PRT(FX)
+        DEF_CMD_PRT(HX)
+        DEF_CMD_PRT(IX)
+        #undef DEF_CMD_PRT
 
         default:
             ERROR_MESSAGE(stderr, ERR_NEW_REG)

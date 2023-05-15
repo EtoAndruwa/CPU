@@ -295,11 +295,15 @@ size_t check_func(asm_struct* assembly_struct) // CHECKED
         {   
             if(strcmp(assembly_struct->toks[i].text, "CALL") == 0) // Checks all tokens after CALL
             {
+
                 char* func_name = assembly_struct->toks[i + 1].text; // Gets the name of the function which is called
-                for(size_t j = 0; j < assembly_struct->num_toks ; j++) // Searches through the ALL tokens!
+                // printf("Call id = %ld\n", i);
+                // printf("func_name = %s, token id = %ld\n\n", func_name, i + 1);
+                for(size_t j = 0; j < assembly_struct->num_toks; j++) // Searches through the ALL tokens!
                 {   
                     if(assembly_struct->toks[j].type == FNC) // If the token is a function
                     {   
+                        // printf("FOUND! func_name = %s, token id = %ld\n\n", assembly_struct->toks[j].text, j);
                         if(((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j != 0) && (strcmp(assembly_struct->toks[j - 1].text, "CALL") != 0)) ||
                              ((strcmp(assembly_struct->toks[j].text, func_name) == 0) && (j == 0))) // The token is not a call of the function or is the firts command in the assembly code
                         {   
@@ -308,19 +312,23 @@ size_t check_func(asm_struct* assembly_struct) // CHECKED
                             {
                                 if(assembly_struct->toks[q].new_index != -1)
                                 {
+                                    // printf("break on token: %s, token id %ld\n", assembly_struct->toks[q].text, q, assembly_struct->toks[q].new_index);
                                     assembly_struct->toks[i + 1].value = assembly_struct->toks[q].new_index;
                                     break;
                                 }
                             }
                         }
-                        else
-                        {
-                            funcs_ok = SOME_CALL_NOT_OKEY; // Calls undeclared function
-                        }
+                        // HERE MAY BE ERROR IN THE FUTURE HZ
+                        // else
+                        // {
+                        //     printf("ELSE on token: %s, token id %ld\n", assembly_struct->toks[j].text, j, assembly_struct->toks[j].new_index);
+                        //     funcs_ok = SOME_CALL_NOT_OKEY; // Calls undeclared function
+                        // }
                     }
                 }
                 if(funcs_ok == SOME_CALL_NOT_OKEY)
                 {   
+
                     assembly_struct->toks[i].error_code = ERR_CALLS_NON_EXISTEN_FNC;
                     ERROR_MESSAGE(stderr, ERR_CALLS_NON_EXISTEN_FNC)
                     strcpy((char*)assembly_struct->toks[i].status, "---");

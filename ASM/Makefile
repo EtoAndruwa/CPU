@@ -26,7 +26,7 @@ $(PREF_OBJ)%.o : $(PREF_SRC)%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run_program :
-	$(EXE_FLAG_VALGRIND) ./$(TARGET).exe 
+	 ./$(TARGET).exe 
 
 open_files : 
 	code ./test_code.txt ./test.asm ./valgrind_log.txt ./LOG_FILE.txt
